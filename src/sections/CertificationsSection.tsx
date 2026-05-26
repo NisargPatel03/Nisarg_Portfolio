@@ -39,7 +39,7 @@ export const CertificationsSection: React.FC = () => {
     {
       title: 'How to Write a Scientific Research Paper',
       issuer: 'Coursera / Stanford University',
-      category: 'academic',
+      category: 'professional',
       badge: 'Research Excellence',
       details: 'Mastered core structural guidelines, research methodologies, literature reviews, and peer-reviewed publishing workflows.',
       icon: <BookOpen className="w-6 h-6 text-teal-400" />,
@@ -77,7 +77,7 @@ export const CertificationsSection: React.FC = () => {
     {
       title: 'Data Structures and Algorithms using Java',
       issuer: 'NPTEL (IIT Kharagpur)',
-      category: 'nptel',
+      category: 'professional',
       badge: 'National Topper (Top 1-2%)',
       details: 'Advanced certification in algorithmic mapping, tree traversals, graphs, and Java OOP engineering.',
       icon: <BadgePercent className="w-6 h-6 text-purple-400" />,
