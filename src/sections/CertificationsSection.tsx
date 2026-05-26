@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FadeIn } from '../components/FadeIn';
-import { Award, ShieldCheck, Database, Cpu, BookOpen, Trophy, BadgePercent, GraduationCap, FileText } from 'lucide-react';
+import { Award, ShieldCheck, Database, Cpu, BookOpen, Trophy, BadgePercent, GraduationCap, FileText, ExternalLink } from 'lucide-react';
 
 interface Certification {
   title: string;
@@ -10,6 +10,7 @@ interface Certification {
   badge?: string;
   details: string;
   icon: React.ReactNode;
+  pdf?: string;
 }
 
 export const CertificationsSection: React.FC = () => {
@@ -24,6 +25,7 @@ export const CertificationsSection: React.FC = () => {
       badge: 'First Rank Excellence',
       details: 'Awarded for securing the prime semester rank across the IT and Computer Science departments.',
       icon: <Trophy className="w-6 h-6 text-[#BE4C00]" />,
+      pdf: '/certificates/devang_mehta_award.pdf',
     },
     {
       title: 'GATE 2026 Scorecard',
@@ -32,6 +34,16 @@ export const CertificationsSection: React.FC = () => {
       badge: 'National Technical Exam',
       details: 'High-percentile performance in the Graduate Aptitude Test in Engineering (Computer Science).',
       icon: <GraduationCap className="w-6 h-6 text-blue-400" />,
+      pdf: '/certificates/gate_2026_scorecard.pdf',
+    },
+    {
+      title: 'How to Write a Scientific Research Paper',
+      issuer: 'Coursera / Stanford University',
+      category: 'academic',
+      badge: 'Research Excellence',
+      details: 'Mastered core structural guidelines, research methodologies, literature reviews, and peer-reviewed publishing workflows.',
+      icon: <BookOpen className="w-6 h-6 text-teal-400" />,
+      pdf: '/certificates/how_to_write_research_paper.pdf',
     },
     {
       title: 'Fake News Detection using Machine Learning',
@@ -40,6 +52,7 @@ export const CertificationsSection: React.FC = () => {
       badge: 'Research Publication',
       details: 'Published research certificate exploring vector modeling and NLP classification for fake news.',
       icon: <FileText className="w-6 h-6 text-teal-400" />,
+      pdf: '/certificates/fake_news_paper.pdf',
     },
     {
       title: 'Ranked First in University Class',
@@ -48,6 +61,7 @@ export const CertificationsSection: React.FC = () => {
       badge: 'University Topper',
       details: 'Official rank recognition for outstanding academic performance across engineering semesters.',
       icon: <Award className="w-6 h-6 text-[#B600A8]" />,
+      pdf: '/certificates/university_rank_topper.pdf',
     },
 
     // NPTEL Toppers
@@ -58,14 +72,16 @@ export const CertificationsSection: React.FC = () => {
       badge: 'National Topper (Top 1-2%)',
       details: 'Completed with Elite+Gold/Silver status, specializing in transaction models, normalization, and relational algebra.',
       icon: <Database className="w-6 h-6 text-[#7621B0]" />,
+      pdf: '/certificates/nptel_dbms.pdf',
     },
     {
-      title: 'Data Structure & Algorithms using Java',
+      title: 'Data Structures and Algorithms using Java',
       issuer: 'NPTEL (IIT Kharagpur)',
       category: 'nptel',
       badge: 'National Topper (Top 1-2%)',
       details: 'Advanced certification in algorithmic mapping, tree traversals, graphs, and Java OOP engineering.',
       icon: <BadgePercent className="w-6 h-6 text-purple-400" />,
+      pdf: '/certificates/nptel_dsa.pdf',
     },
     {
       title: 'Design and Analysis of Algorithms',
@@ -74,6 +90,7 @@ export const CertificationsSection: React.FC = () => {
       badge: 'National Topper (Top 1-2%)',
       details: 'Elite status in asymptotic analysis, dynamic programming, network flows, and NP-completeness.',
       icon: <Cpu className="w-6 h-6 text-pink-400" />,
+      pdf: '/certificates/nptel_daa.pdf',
     },
 
     // Professional & Coursera
@@ -84,6 +101,7 @@ export const CertificationsSection: React.FC = () => {
       badge: 'Professional MERN Generalist',
       details: 'Comprehensive full-stack credential covering Redux stores, Express routes, JWT auth, and Atlas database setup.',
       icon: <ShieldCheck className="w-6 h-6 text-[#B600A8]" />,
+      pdf: '/certificates/udemy_mern.pdf',
     },
     {
       title: 'Machine Learning with Python',
@@ -92,6 +110,7 @@ export const CertificationsSection: React.FC = () => {
       badge: 'Data Science Specialist',
       details: 'Supervised & unsupervised learning algorithms, regression matrices, decision trees, and SVM modeling.',
       icon: <Cpu className="w-6 h-6 text-[#BE4C00]" />,
+      pdf: '/certificates/coursera_ml_python.pdf',
     },
     {
       title: 'Programming with Java',
@@ -100,6 +119,7 @@ export const CertificationsSection: React.FC = () => {
       badge: 'Java System Architecture',
       details: 'Object-oriented software systems, interface designs, concurrency models, and thread operations.',
       icon: <BookOpen className="w-6 h-6 text-indigo-400" />,
+      pdf: '/certificates/coursera_programming_java.pdf',
     },
     {
       title: 'IBM DevOps, Cloud & Agile Foundations',
@@ -108,6 +128,7 @@ export const CertificationsSection: React.FC = () => {
       badge: 'Cloud & Agile Architect',
       details: 'Continuous integration (CI/CD), containers, microservice architectures, and Agile scrum management.',
       icon: <Layers className="w-6 h-6 text-blue-400" /> as any,
+      pdf: '/certificates/coursera_ibm_devops.pdf',
     },
     {
       title: 'Cybersecurity Fundamentals',
@@ -116,6 +137,7 @@ export const CertificationsSection: React.FC = () => {
       badge: 'Security Engineer',
       details: 'System vulnerabilities, encryption models, security auditing protocols, and digital access barriers.',
       icon: <ShieldCheck className="w-6 h-6 text-green-400" />,
+      pdf: '/certificates/coursera_cybersecurity.pdf',
     },
     {
       title: 'Introduction to Software Development',
@@ -124,6 +146,7 @@ export const CertificationsSection: React.FC = () => {
       badge: 'Software Foundations',
       details: 'Git branching, web application frameworks, architecture design patterns, and programming tools.',
       icon: <BookOpen className="w-6 h-6 text-amber-400" />,
+      pdf: '/certificates/coursera_software_dev.pdf',
     },
   ];
 
@@ -183,32 +206,49 @@ export const CertificationsSection: React.FC = () => {
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.3 }}
                 key={cert.title}
-                className="bg-[#121212] border border-[#232323] hover:border-[#B600A8]/30 rounded-3xl p-6 flex flex-col justify-between gap-5 transition-all duration-300 group hover:shadow-[0_10px_25px_rgba(182,0,168,0.06)] relative"
+                className="bg-[#121212] border border-[#232323] hover:border-[#B600A8]/30 rounded-3xl p-6 flex flex-col justify-between gap-5 transition-all duration-300 group hover:shadow-[0_10px_25px_rgba(182,0,168,0.06)] relative h-full"
               >
-                {/* Header Icon + Badge */}
-                <div className="flex justify-between items-start gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-[#1c1c1c] border border-white/5 flex justify-center items-center group-hover:border-[#B600A8]/30 transition-colors">
-                    {cert.icon}
+                {/* Upper section details */}
+                <div className="flex flex-col gap-4">
+                  {/* Header Icon + Badge */}
+                  <div className="flex justify-between items-start gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-[#1c1c1c] border border-white/5 flex justify-center items-center group-hover:border-[#B600A8]/30 transition-colors">
+                      {cert.icon}
+                    </div>
+                    {cert.badge && (
+                      <span className="bg-[#B600A8]/10 border border-[#B600A8]/20 text-[#B600A8] text-[9px] sm:text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">
+                        {cert.badge}
+                      </span>
+                    )}
                   </div>
-                  {cert.badge && (
-                    <span className="bg-[#B600A8]/10 border border-[#B600A8]/20 text-[#B600A8] text-[9px] sm:text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">
-                      {cert.badge}
+
+                  {/* Body Details */}
+                  <div className="flex flex-col gap-2">
+                    <h4 className="text-white font-bold text-base sm:text-lg uppercase tracking-wide leading-snug group-hover:text-[#B600A8] transition-colors">
+                      {cert.title}
+                    </h4>
+                    <span className="font-mono text-[#D7E2EA]/50 uppercase tracking-widest text-[9px] sm:text-[10px]">
+                      {cert.issuer}
                     </span>
-                  )}
+                    <p className="text-[#D7E2EA]/70 text-xs sm:text-sm font-light leading-relaxed mt-2">
+                      {cert.details}
+                    </p>
+                  </div>
                 </div>
 
-                {/* Body Details */}
-                <div className="flex flex-col gap-2">
-                  <h4 className="text-white font-bold text-base sm:text-lg uppercase tracking-wide leading-snug group-hover:text-blue-400 transition-colors">
-                    {cert.title}
-                  </h4>
-                  <span className="font-mono text-[#D7E2EA]/50 uppercase tracking-widest text-[9px] sm:text-[10px]">
-                    {cert.issuer}
-                  </span>
-                  <p className="text-[#D7E2EA]/70 text-xs sm:text-sm font-light leading-relaxed mt-2">
-                    {cert.details}
-                  </p>
-                </div>
+                {/* View Action Button */}
+                {cert.pdf && (
+                  <a
+                    href={cert.pdf}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="mt-4 w-full py-2.5 rounded-2xl border border-white/10 hover:border-[#B600A8]/50 hover:bg-[#B600A8]/5 transition-all text-[10px] sm:text-xs font-bold text-center uppercase tracking-widest text-[#D7E2EA] hover:text-white flex justify-center items-center gap-2 group/btn"
+                  >
+                    <span>View Certificate</span>
+                    <ExternalLink className="w-3.5 h-3.5 opacity-60 group-hover/btn:opacity-100 transition-opacity" />
+                  </a>
+                )}
               </motion.div>
             ))}
           </AnimatePresence>
