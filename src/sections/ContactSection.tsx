@@ -7,14 +7,41 @@ export const ContactSection: React.FC = () => {
   const [formState, setFormState] = useState({ name: '', email: '', message: '' });
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formState.name && formState.email && formState.message) {
-      setIsSubmitted(true);
-      setTimeout(() => {
-        setIsSubmitted(false);
-        setFormState({ name: '', email: '', message: '' });
-      }, 3500);
+      try {
+        const response = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            // Fallback to a placeholder, but looks up VITE_WEB3FORMS_KEY from your environment variables
+            access_key: import.meta.env.VITE_WEB3FORMS_KEY || "YOUR_ACCESS_KEY_HERE",
+            name: formState.name,
+            email: formState.email,
+            message: formState.message,
+            subject: `New Portfolio Inquiry from ${formState.name}`,
+            from_name: "Nisarg Portfolio Inquiries"
+          })
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          setIsSubmitted(true);
+          setFormState({ name: '', email: '', message: '' });
+          setTimeout(() => {
+            setIsSubmitted(false);
+          }, 4500);
+        } else {
+          alert('Submission failed. Please email Nisarg directly at kbnisargpatel001454@gmail.com');
+        }
+      } catch (error) {
+        console.error('Error sending message:', error);
+        alert('Could not submit form. Please reach out to Nisarg directly via email!');
+      }
     }
   };
 
