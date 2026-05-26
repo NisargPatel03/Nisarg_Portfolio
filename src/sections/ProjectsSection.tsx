@@ -142,7 +142,7 @@ export const ProjectsSection: React.FC = () => {
       id: '09',
       name: 'Blood Testing Management',
       category: 'Backend Dashboard System',
-      github: 'https://github.com/NisargPatel03',
+      github: 'https://github.com/cs-cspit/23CS-SEM4-CS210_70_75_106/tree/main',
       description: 'A secure clinical patient laboratory system deployed on XAMPP, handling blood appointments, patients, and PDF diagnostics.',
       points: [
         'Clinical patient slot reservation schedulers.',
