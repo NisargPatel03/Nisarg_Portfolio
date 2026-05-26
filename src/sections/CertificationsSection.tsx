@@ -25,7 +25,7 @@ export const CertificationsSection: React.FC = () => {
       badge: 'First Rank Excellence',
       details: 'Awarded for securing the prime semester rank across the IT and Computer Science departments.',
       icon: <Trophy className="w-6 h-6 text-[#BE4C00]" />,
-      pdf: '/certificates/devang_mehta_award.pdf',
+      pdf: 'https://nisarg-portfolio-tan.vercel.app/',
     },
     {
       title: 'GATE 2026 Scorecard',
