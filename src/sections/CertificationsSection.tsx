@@ -77,7 +77,7 @@ export const CertificationsSection: React.FC = () => {
     {
       title: 'Data Structures and Algorithms using Java',
       issuer: 'NPTEL (IIT Kharagpur)',
-      category: 'professional',
+      category: 'nptel',
       badge: 'National Topper (Top 1-2%)',
       details: 'Advanced certification in algorithmic mapping, tree traversals, graphs, and Java OOP engineering.',
       icon: <BadgePercent className="w-6 h-6 text-purple-400" />,
@@ -94,6 +94,15 @@ export const CertificationsSection: React.FC = () => {
     },
 
     // Professional & Coursera
+    {
+      title: 'Data Structures and Algorithms',
+      issuer: 'Coursera / UC San Diego',
+      category: 'professional',
+      badge: 'Professional Credential',
+      details: 'Mastered standard collections, tree mappings, hashing, sorting algorithms, and complexity analysis.',
+      icon: <BadgePercent className="w-6 h-6 text-indigo-400" />,
+      pdf: '/certificates/data_structures_and_algorithms.pdf',
+    },
     {
       title: 'MERN Stack Front to Back Full Stack React, Redux, NodeJs',
       issuer: 'Packt Publishing / Udemy',
