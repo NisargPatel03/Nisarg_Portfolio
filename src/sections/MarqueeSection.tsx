@@ -1,5 +1,4 @@
 import React, { useRef, useState } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
 
 interface TechItem {
   name: string;
@@ -12,15 +11,6 @@ export const MarqueeSection: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
 
-  // Track scroll coordinates relative to this section
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start end', 'end start'],
-  });
-
-  // Map scroll progress to horizontal translation
-  const x1 = useTransform(scrollYProgress, [0, 1], [-220, 220]);
-  const x2 = useTransform(scrollYProgress, [0, 1], [220, -220]);
 
   // Row 1 (Frontend, Core Languages & Mobile Core)
   const row1Skills: TechItem[] = [
@@ -286,9 +276,9 @@ export const MarqueeSection: React.FC = () => {
     },
   ];
 
-  // Triplicate the lists to make the horizontal scroll infinite and thick on all viewport resolutions
-  const displayRow1 = [...row1Skills, ...row1Skills, ...row1Skills, ...row1Skills];
-  const displayRow2 = [...row2Skills, ...row2Skills, ...row2Skills, ...row2Skills];
+  // Duplicate the lists to make the horizontal scroll infinite and seamless in CSS marquee loops
+  const displayRow1 = [...row1Skills, ...row1Skills];
+  const displayRow2 = [...row2Skills, ...row2Skills];
 
   return (
     <div
@@ -309,10 +299,10 @@ export const MarqueeSection: React.FC = () => {
       </div>
 
       {/* 2. DUAL-ROW CONVEYOR BELTS */}
-      <div className="flex flex-col gap-8 w-full relative">
-        {/* Row 1 (Slides Right) */}
-        <div className="flex w-[400vw] sm:w-[300vw] -translate-x-[60vw]">
-          <motion.div style={{ x: x1 }} className="flex gap-5 sm:gap-7 w-full py-2">
+      <div className="flex flex-col gap-8 w-full relative overflow-hidden">
+        {/* Row 1 (Slides Right - Continuous CSS loop) */}
+        <div className="flex overflow-hidden w-full marquee-track-pause">
+          <div className="flex gap-5 sm:gap-7 py-2 animate-marquee-right w-max min-w-full">
             {displayRow1.map((skill, i) => {
               const isHovered = hoveredSkill === `row1-${skill.name}-${i}`;
               return (
@@ -350,12 +340,12 @@ export const MarqueeSection: React.FC = () => {
                 </div>
               );
             })}
-          </motion.div>
+          </div>
         </div>
 
-        {/* Row 2 (Slides Left) */}
-        <div className="flex w-[400vw] sm:w-[300vw] -translate-x-[30vw]">
-          <motion.div style={{ x: x2 }} className="flex gap-5 sm:gap-7 w-full py-2">
+        {/* Row 2 (Slides Left - Continuous CSS loop) */}
+        <div className="flex overflow-hidden w-full marquee-track-pause">
+          <div className="flex gap-5 sm:gap-7 py-2 animate-marquee-left w-max min-w-full">
             {displayRow2.map((skill, i) => {
               const isHovered = hoveredSkill === `row2-${skill.name}-${i}`;
               return (
@@ -393,7 +383,7 @@ export const MarqueeSection: React.FC = () => {
                 </div>
               );
             })}
-          </motion.div>
+          </div>
         </div>
       </div>
     </div>

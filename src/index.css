@@ -46,4 +46,36 @@
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
+
+  /* Infinite Smooth Marquee Animations */
+  @keyframes marquee-left {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes marquee-right {
+    0% {
+      transform: translateX(-50%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+
+  .animate-marquee-left {
+    animation: marquee-left 38s linear infinite;
+  }
+
+  .animate-marquee-right {
+    animation: marquee-right 38s linear infinite;
+  }
+
+  .marquee-track-pause:hover .animate-marquee-left,
+  .marquee-track-pause:hover .animate-marquee-right {
+    animation-play-state: paused;
+  }
 }
