@@ -7,7 +7,7 @@ interface FadeInProps {
   duration?: number;
   x?: number;
   y?: number;
-  as?: any;
+  as?: string;
   className?: string;
 }
 
@@ -20,9 +20,8 @@ export const FadeIn: React.FC<FadeInProps> = ({
   as = 'div',
   className = '',
 }) => {
-  // Use motion.create to create a motion component dynamically based on the 'as' prop.
-  // Explicitly casting to avoid complex TypeScript index signature issues.
-  const MotionComponent = motion.create(as as any);
+  // Access the static pre-created motion component to avoid recreating it on every render
+  const MotionComponent = (motion as any)[as] || motion.div;
 
   return (
     <MotionComponent
