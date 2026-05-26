@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { FadeIn } from '../components/FadeIn';
 import { Briefcase, GraduationCap, Trophy, CheckCircle2 } from 'lucide-react';
 
@@ -15,6 +16,18 @@ export const WorkExperience: React.FC = () => {
   const items: TimelineItem[] = [
     {
       id: 1,
+      role: 'Lead Full-Stack Developer',
+      company: 'CSPIT & MTIN Department Collaboration',
+      date: 'Jan 2026 - July 2026',
+      points: [
+        'Engineered a secure, fully responsive Survey Health Care Form Web Application to bridge CSPIT and MTIN department metrics.',
+        'Designed dynamic data-collection fields, clinician dashboard portals, and real-time analytical evaluation reporting graphs.',
+        'Maintained strict clinical evaluation data protocols and deployed production-ready modules with optimal privacy compliances.',
+      ],
+      icon: <Briefcase className="w-5 h-5 text-[#FF00C7]" />,
+    },
+    {
+      id: 2,
       role: 'MERN Stack Intern',
       company: 'Mamo Technolabs LLP',
       date: 'May 2025 - July 2025',
@@ -24,18 +37,6 @@ export const WorkExperience: React.FC = () => {
         'Acquired extensive expertise in RESTful APIs, MongoDB Atlas integrations, and global state management with Redux.',
       ],
       icon: <Briefcase className="w-5 h-5 text-[#B600A8]" />,
-    },
-    {
-      id: 2,
-      role: 'B.Tech in Computer Science & Engineering',
-      company: 'Charotar University of Science & Technology (CHARUSAT)',
-      date: '2023 - 2027',
-      points: [
-        'Engaged in rigorous academic study specializing in software design, database schemas, and algorithms.',
-        'Ranked in the top 1-2% nationally across three core NPTEL computer science courses (DSA, DBMS, DAA).',
-        'Constructed multiple responsive commercial-grade web applications utilizing MERN, Supabase, and PHP.',
-      ],
-      icon: <GraduationCap className="w-5 h-5 text-[#7621B0]" />,
     },
     {
       id: 3,
@@ -48,6 +49,18 @@ export const WorkExperience: React.FC = () => {
         'Represented the computer science department in advanced developer symposiums.',
       ],
       icon: <Trophy className="w-5 h-5 text-[#BE4C00]" />,
+    },
+    {
+      id: 4,
+      role: 'B.Tech in Computer Science & Engineering',
+      company: 'Charotar University of Science & Technology (CHARUSAT)',
+      date: '2023 - 2027',
+      points: [
+        'Engaged in rigorous academic study specializing in software design, database schemas, and algorithms.',
+        'Ranked in the top 1-2% nationally across three core NPTEL computer science courses (DSA, DBMS, DAA).',
+        'Constructed multiple responsive commercial-grade web applications utilizing MERN, Supabase, and PHP.',
+      ],
+      icon: <GraduationCap className="w-5 h-5 text-[#7621B0]" />,
     },
   ];
 
@@ -87,10 +100,11 @@ export const WorkExperience: React.FC = () => {
               >
                 {isEven ? (
                   /* Even card placed on left side (desktop) */
-                  <FadeIn
-                    x={-40}
-                    y={0}
-                    delay={0.1 * index}
+                  <motion.div
+                    initial={{ opacity: 0, x: -250 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: false, amount: 0.1, margin: "-80px 0px" }}
+                    transition={{ type: 'spring', stiffness: 45, damping: 14, delay: 0.05 }}
                     className="w-full pl-12 md:pl-0 md:pr-10"
                   >
                     <div className="bg-gradient-to-br from-blue-950/40 to-slate-950/70 border border-blue-900/30 hover:border-[#B600A8]/40 transition-colors p-6 rounded-3xl relative group shadow-[0_15px_35px_rgba(0,0,0,0.5)]">
@@ -115,31 +129,34 @@ export const WorkExperience: React.FC = () => {
                         ))}
                       </ul>
                     </div>
-                  </FadeIn>
+                  </motion.div>
                 ) : (
                   /* Odd date placed on left side (desktop) */
-                  <FadeIn
-                    x={-30}
-                    y={0}
-                    delay={0.1 * index}
+                  <motion.div
+                    initial={{ opacity: 0, x: -150 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: false, amount: 0.1, margin: "-80px 0px" }}
+                    transition={{ type: 'spring', stiffness: 45, damping: 14, delay: 0.1 }}
                     className="hidden md:block w-full pr-10 text-right"
                   >
                     <span className="text-white font-bold uppercase tracking-widest text-sm lg:text-base opacity-75">
                       {item.date}
                     </span>
-                  </FadeIn>
+                  </motion.div>
                 )}
               </div>
 
               {/* CENTER COLUMN: Central vertical node containing Lucide Icon */}
               <div className="absolute left-6 md:static flex justify-center items-center col-span-1 order-1 md:order-2">
-                <FadeIn
-                  y={0}
-                  delay={0.1 * index}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.4 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: false, amount: 0.1 }}
+                  transition={{ type: 'spring', stiffness: 90, damping: 12 }}
                   className="w-12 h-12 rounded-full bg-[#121212] border-2 border-blue-950/70 hover:border-[#7621B0] transition-colors flex justify-center items-center z-20 shadow-[0_0_15px_rgba(118,33,176,0.3)] bg-slate-900"
                 >
                   {item.icon}
-                </FadeIn>
+                </motion.div>
               </div>
 
               {/* DESKTOP RIGHT COLUMN: Card (if odd) or Date (if even) */}
@@ -150,19 +167,26 @@ export const WorkExperience: React.FC = () => {
               >
                 {isEven ? (
                   /* Even date placed on right side (desktop) */
-                  <FadeIn
-                    x={30}
-                    y={0}
-                    delay={0.1 * index}
+                  <motion.div
+                    initial={{ opacity: 0, x: 150 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: false, amount: 0.1, margin: "-80px 0px" }}
+                    transition={{ type: 'spring', stiffness: 45, damping: 14, delay: 0.1 }}
                     className="hidden md:block w-full text-left"
                   >
                     <span className="text-white font-bold uppercase tracking-widest text-sm lg:text-base opacity-75">
                       {item.date}
                     </span>
-                  </FadeIn>
+                  </motion.div>
                 ) : (
                   /* Odd card placed on right side (desktop) */
-                  <FadeIn x={40} y={0} delay={0.1 * index} className="w-full">
+                  <motion.div
+                    initial={{ opacity: 0, x: 250 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: false, amount: 0.1, margin: "-80px 0px" }}
+                    transition={{ type: 'spring', stiffness: 45, damping: 14, delay: 0.05 }}
+                    className="w-full"
+                  >
                     <div className="bg-gradient-to-br from-blue-950/40 to-slate-950/70 border border-blue-900/30 hover:border-[#7621B0]/40 transition-colors p-6 rounded-3xl relative group shadow-[0_15px_35px_rgba(0,0,0,0.5)]">
                       {/* Arrow pointer targeting the center line */}
                       <div className="absolute left-full top-6 -translate-x-[9px] border-[10px] border-transparent border-l-blue-950/40 hidden md:block" />
@@ -185,7 +209,7 @@ export const WorkExperience: React.FC = () => {
                         ))}
                       </ul>
                     </div>
-                  </FadeIn>
+                  </motion.div>
                 )}
               </div>
             </div>
