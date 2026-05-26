@@ -25,9 +25,7 @@ export const ContactSection: React.FC = () => {
             message: formState.message,
             subject: `New Portfolio Inquiry from ${formState.name}`,
             from_name: "Nisarg Portfolio Inquiries",
-            replyto: formState.email, // Instantly reply to the sender on click!
-            theme: "dark", // Premium dark theme card
-            theme_color: "#7621B0" // Matches your brand purple!
+            replyto: formState.email // Instantly reply to the sender on click!
           })
         });
 
