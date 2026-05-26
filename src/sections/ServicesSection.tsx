@@ -23,8 +23,85 @@ export const ServicesSection: React.FC = () => {
 
         {/* 2. COMMERCIAL CASE STUDIES GRID */}
         <div className="flex flex-col gap-16 md:gap-24">
+
+          {/* Project 1: Blaze Overseas LLP */}
+          <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 border-t border-slate-900/10 pt-12 items-start">
+            {/* Left Column: Client metadata */}
+            <div className="w-full lg:w-1/3 flex flex-col gap-4 lg:sticky lg:top-24">
+              <span className="font-mono text-xs text-slate-500 uppercase tracking-widest">
+                Acquisition & Commercial Launch
+              </span>
+              <h3 className="font-extrabold uppercase text-2xl sm:text-3xl text-slate-900 tracking-wide leading-tight">
+                Blaze Overseas LLP Portal
+              </h3>
+              
+              <div className="flex flex-col gap-3 mt-2 text-sm text-slate-700">
+                <div className="flex justify-between py-1.5 border-b border-slate-900/5">
+                  <span className="font-semibold text-slate-900">Client:</span>
+                  <span>Blaze Overseas LLP</span>
+                </div>
+                <div className="flex justify-between py-1.5 border-b border-slate-900/5">
+                  <span className="font-semibold text-slate-900">Contract Value:</span>
+                  <span className="text-emerald-700 font-bold">₹30,000 INR</span>
+                </div>
+                <div className="flex justify-between py-1.5 border-b border-slate-900/5">
+                  <span className="font-semibold text-slate-900">Timeline:</span>
+                  <span>Feb - March 2026</span>
+                </div>
+                <div className="flex justify-between py-1.5 border-b border-slate-900/5">
+                  <span className="font-semibold text-slate-900">Role:</span>
+                  <span>Lead Full-Stack Web Architect</span>
+                </div>
+                <div className="flex justify-between py-1.5 border-b border-slate-900/5">
+                  <span className="font-semibold text-slate-900">Vercel Deployment:</span>
+                  <a href="https://blaze-overseas-llp.vercel.app/" target="_blank" rel="noreferrer" className="text-blue-600 hover:text-blue-800 underline transition-colors">Live App</a>
+                </div>
+                <div className="flex justify-between py-1.5 border-b border-slate-900/5">
+                  <span className="font-semibold text-slate-900">GitHub Codebase:</span>
+                  <a href="https://github.com/NisargPatel03/Blaze_Overseas_LLP" target="_blank" rel="noreferrer" className="text-blue-600 hover:text-blue-800 underline transition-colors">Repository</a>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-1.5 mt-2">
+                {['React', 'TypeScript', 'Tailwind CSS', 'Framer Motion'].map(t => (
+                  <span key={t} className="bg-slate-100 text-slate-800 text-[10px] sm:text-xs font-semibold px-2.5 py-1 rounded-full uppercase">
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Right Column: Project details */}
+            <div className="w-full lg:w-2/3 flex flex-col gap-6">
+              <h4 className="font-extrabold uppercase text-xs sm:text-sm text-slate-500 tracking-wider">
+                Project Overview & Scope
+              </h4>
+              <p className="text-slate-700 leading-relaxed text-sm sm:text-base font-light">
+                A premium, responsive corporate platform engineered to represent international trade services, global commodities exchange directories, and client consultation pathways. Nisarg Patel contracted as lead architect, executing commercial deployment for an acquisition sum of ₹30,000.
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
+                <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/50 flex flex-col gap-2">
+                  <span className="font-bold text-slate-900 text-sm uppercase">🌍 Global Commodities Directory</span>
+                  <p className="text-xs text-slate-600 leading-relaxed">Integrated commodities search engine with filters, helping international trade buyers explore products effortlessly.</p>
+                </div>
+                <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/50 flex flex-col gap-2">
+                  <span className="font-bold text-slate-900 text-sm uppercase">📈 Automated Sales Funnel</span>
+                  <p className="text-xs text-slate-600 leading-relaxed">Lead generation dashboard with automated consultation scheduling forms and custom email notification triggers.</p>
+                </div>
+                <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/50 flex flex-col gap-2">
+                  <span className="font-bold text-slate-900 text-sm uppercase">✨ Sub-Second Page Delivery</span>
+                  <p className="text-xs text-slate-600 leading-relaxed">Serverless build optimization using Vite and TypeScript configurations to guarantee instantaneous asset loading across global networks.</p>
+                </div>
+                <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/50 flex flex-col gap-2">
+                  <span className="font-bold text-slate-900 text-sm uppercase">💎 Premium User Experience</span>
+                  <p className="text-xs text-slate-600 leading-relaxed">Crafted using smooth scroll indicators, glassmorphic layout tokens, and physics-based entrance transitions mapping to international branding.</p>
+                </div>
+              </div>
+            </div>
+          </div>
           
-          {/* Project 1: Savaliya Ice Cream POS System */}
+          {/* Project 2: Savaliya Ice Cream POS System */}
           <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 border-t border-slate-900/10 pt-12 items-start">
             {/* Left Column: Client metadata */}
             <div className="w-full lg:w-1/3 flex flex-col gap-4 lg:sticky lg:top-24">
@@ -105,79 +182,6 @@ export const ServicesSection: React.FC = () => {
             </div>
           </div>
 
-          {/* Project 2: Blaze Overseas LLP */}
-          <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 border-t border-slate-900/10 pt-12 items-start">
-            {/* Left Column: Client metadata */}
-            <div className="w-full lg:w-1/3 flex flex-col gap-4 lg:sticky lg:top-24">
-              <span className="font-mono text-xs text-slate-500 uppercase tracking-widest">
-                Acquisition & Commercial Launch
-              </span>
-              <h3 className="font-extrabold uppercase text-2xl sm:text-3xl text-slate-900 tracking-wide leading-tight">
-                Blaze Overseas LLP Portal
-              </h3>
-              
-              <div className="flex flex-col gap-3 mt-2 text-sm text-slate-700">
-                <div className="flex justify-between py-1.5 border-b border-slate-900/5">
-                  <span className="font-semibold text-slate-900">Client:</span>
-                  <span>Blaze Overseas LLP</span>
-                </div>
-                <div className="flex justify-between py-1.5 border-b border-slate-900/5">
-                  <span className="font-semibold text-slate-900">Contract Value:</span>
-                  <span className="text-emerald-700 font-bold">₹30,000 INR</span>
-                </div>
-                <div className="flex justify-between py-1.5 border-b border-slate-900/5">
-                  <span className="font-semibold text-slate-900">Role:</span>
-                  <span>Lead Full-Stack Web Architect</span>
-                </div>
-                <div className="flex justify-between py-1.5 border-b border-slate-900/5">
-                  <span className="font-semibold text-slate-900">Vercel Deployment:</span>
-                  <a href="https://blaze-overseas-llp.vercel.app/" target="_blank" rel="noreferrer" className="text-blue-600 hover:text-blue-800 underline transition-colors">Live App</a>
-                </div>
-                <div className="flex justify-between py-1.5 border-b border-slate-900/5">
-                  <span className="font-semibold text-slate-900">GitHub Codebase:</span>
-                  <a href="https://github.com/NisargPatel03/Blaze_Overseas_LLP" target="_blank" rel="noreferrer" className="text-blue-600 hover:text-blue-800 underline transition-colors">Repository</a>
-                </div>
-              </div>
-
-              <div className="flex flex-wrap gap-1.5 mt-2">
-                {['React', 'TypeScript', 'Tailwind CSS', 'Framer Motion'].map(t => (
-                  <span key={t} className="bg-slate-100 text-slate-800 text-[10px] sm:text-xs font-semibold px-2.5 py-1 rounded-full uppercase">
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Right Column: Project details */}
-            <div className="w-full lg:w-2/3 flex flex-col gap-6">
-              <h4 className="font-extrabold uppercase text-xs sm:text-sm text-slate-500 tracking-wider">
-                Project Overview & Scope
-              </h4>
-              <p className="text-slate-700 leading-relaxed text-sm sm:text-base font-light">
-                A premium, responsive corporate platform engineered to represent international trade services, global commodities exchange directories, and client consultation pathways. Nisarg Patel contracted as lead architect, executing commercial deployment for an acquisition sum of ₹30,000.
-              </p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
-                <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/50 flex flex-col gap-2">
-                  <span className="font-bold text-slate-900 text-sm uppercase">🌍 Global Commodities Directory</span>
-                  <p className="text-xs text-slate-600 leading-relaxed">Integrated commodities search engine with filters, helping international trade buyers explore products effortlessly.</p>
-                </div>
-                <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/50 flex flex-col gap-2">
-                  <span className="font-bold text-slate-900 text-sm uppercase">📈 Automated Sales Funnel</span>
-                  <p className="text-xs text-slate-600 leading-relaxed">Lead generation dashboard with automated consultation scheduling forms and custom email notification triggers.</p>
-                </div>
-                <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/50 flex flex-col gap-2">
-                  <span className="font-bold text-slate-900 text-sm uppercase">✨ Sub-Second Page Delivery</span>
-                  <p className="text-xs text-slate-600 leading-relaxed">Serverless build optimization using Vite and TypeScript configurations to guarantee instantaneous asset loading across global networks.</p>
-                </div>
-                <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/50 flex flex-col gap-2">
-                  <span className="font-bold text-slate-900 text-sm uppercase">💎 Premium User Experience</span>
-                  <p className="text-xs text-slate-600 leading-relaxed">Crafted using smooth scroll indicators, glassmorphic layout tokens, and physics-based entrance transitions mapping to international branding.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          
         </div>
       </div>
     </section>
