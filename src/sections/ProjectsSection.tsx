@@ -166,6 +166,21 @@ export const ProjectsSection: React.FC = () => {
       techs: ['React', 'Node.js', 'Express', 'MongoDB', 'Tailwind CSS'],
       image: '/sports_venue_mockup.png',
     },
+    {
+      id: '11',
+      name: 'Skill Swap Platform',
+      category: 'MERN Stack Web App',
+      vercel: 'https://skill-swap-web-app.vercel.app/',
+      github: 'https://github.com/NisargPatel03',
+      description: 'A peer-to-peer web application that facilitates users exchanging professional skills. Includes responsive profiles and scheduling systems.',
+      points: [
+        'Peer-to-peer matching algorithm for professional skills.',
+        'Dynamic user profile reviews and endorsement matrices.',
+        'Integrated live scheduling calendars and room logs.'
+      ],
+      techs: ['MongoDB', 'Express', 'React', 'Node.js', 'Redux'],
+      image: '/skill_swap_mockup.png',
+    },
   ];
 
   return (
@@ -231,7 +246,7 @@ const Card: React.FC<CardProps> = ({ project, index, total }) => {
       <motion.div
         style={{
           scale,
-          top: `calc(100px + ${index * 32}px)`, // Offset each card slightly to stack cleanly at the top
+          top: `calc(90px + ${index * 48}px)`, // Exactly 48px vertical stacking offset! Overlaps 80-85% and keeps 15-20% header tab visible.
         }}
         className="sticky w-full rounded-[30px] sm:rounded-[40px] md:rounded-[50px] border-2 border-[#D7E2EA]/20 bg-[#0C0C0C] p-6 sm:p-8 flex flex-col gap-6 shadow-[0_25px_60px_rgba(0,0,0,0.85)]"
       >
