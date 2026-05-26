@@ -76,7 +76,10 @@ export const HeroSection: React.FC = () => {
       <div className="flex-grow flex items-center justify-center relative z-20 px-6 md:px-10">
         <div className="overflow-hidden w-full text-center mt-6 sm:mt-4 md:-mt-5">
           <FadeIn y={40} delay={0.15} duration={0.8}>
-            <h1 className="hero-heading font-black uppercase tracking-tight leading-none whitespace-nowrap w-full text-[13.5vw] sm:text-[14.5vw] md:text-[15.5vw] lg:text-[17vw]">
+            <h1 
+              className="hero-heading font-black uppercase tracking-tight leading-none whitespace-nowrap w-full"
+              style={{ fontSize: 'clamp(2.2rem, 11.2vw, 165px)' }}
+            >
               Hi, i&apos;m nisarg
             </h1>
           </FadeIn>
