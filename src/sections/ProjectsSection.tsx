@@ -203,7 +203,7 @@ export const ProjectsSection: React.FC = () => {
         </FadeIn>
 
         {/* 2. STICKY STACKING CARDS CONTAINER */}
-        <div className="flex flex-col gap-10">
+        <div className="flex flex-col gap-24 md:gap-32">
           {projects.map((project, index) => (
             <Card
               key={project.id}
@@ -240,15 +240,17 @@ const Card: React.FC<CardProps> = ({ project, index, total }) => {
   return (
     <div
       ref={containerRef}
-      className="h-[80vh] sm:h-[85vh] md:h-[90vh] w-full flex flex-col justify-start items-center relative"
+      style={{
+        top: `calc(90px + ${index * 50}px)`, // Exactly 50px offset creates the gorgeous stack showing the rounded headers visible!
+      }}
+      className="sticky w-full h-[75vh] sm:h-[80vh] md:h-[85vh] flex flex-col justify-start items-center"
     >
       {/* Sticky card framing */}
       <motion.div
         style={{
           scale,
-          top: `calc(90px + ${index * 50}px)`, // Exactly 50px offset creates the gorgeous stack showing the rounded headers visible!
         }}
-        className="sticky w-full rounded-[35px] sm:rounded-[45px] md:rounded-[55px] border-2 border-white bg-[#0C0C0C] p-6 sm:p-8 flex flex-col gap-6 shadow-[0_25px_60px_rgba(0,0,0,0.85)]"
+        className="w-full h-full rounded-[35px] sm:rounded-[45px] md:rounded-[55px] border-2 border-white bg-[#0C0C0C] p-6 sm:p-8 flex flex-col gap-6 shadow-[0_25px_60px_rgba(0,0,0,0.85)]"
       >
         {/* Card Header Row */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center w-full gap-4 pb-2 border-b border-[#D7E2EA]/10">
