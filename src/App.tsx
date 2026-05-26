@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import Lenis from 'lenis';
 import { HeroSection } from './sections/HeroSection';
 import { MarqueeSection } from './sections/MarqueeSection';
 import { AboutSection } from './sections/AboutSection';
@@ -9,6 +11,27 @@ import { CertificationsSection } from './sections/CertificationsSection';
 import { ContactSection } from './sections/ContactSection';
 
 function App() {
+  useEffect(() => {
+    // Initialize Lenis buttery-smooth momentum scroll
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Premium exponential deceleration curve
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+    });
+
+    function raf(time: number) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+
+    return () => {
+      lenis.destroy();
+    };
+  }, []);
+
   return (
     <div className="w-full min-h-screen bg-[#0C0C0C] text-[#D7E2EA] overflow-x-clip select-none">
       {/* 1. HERO SECTION */}
