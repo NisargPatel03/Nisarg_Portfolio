@@ -60,10 +60,16 @@
 
 @layer utilities {
   .hero-heading {
-    background: linear-gradient(180deg, #646973 0%, #BBCCD7 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #E2E8F0;
+  }
+
+  @media (min-width: 768px) {
+    .hero-heading {
+      background: linear-gradient(180deg, #646973 0%, #BBCCD7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
   }
 
   /* Infinite Smooth Marquee Animations */

@@ -121,8 +121,8 @@ export const HeroSection: React.FC = () => {
         <div className="overflow-hidden w-full text-center mt-6 sm:mt-4 md:-mt-5">
           <FadeIn y={40} delay={0.15} duration={0.8}>
             <h1 
-              className="hero-heading font-black uppercase tracking-tight leading-none whitespace-nowrap w-full"
-              style={{ fontSize: 'clamp(2.2rem, 11.2vw, 165px)' }}
+              className="hero-heading font-black uppercase tracking-tighter leading-none whitespace-nowrap w-full"
+              style={{ fontSize: 'clamp(1.8rem, 10vw, 165px)' }}
             >
               Hi, i&apos;m nisarg
             </h1>
