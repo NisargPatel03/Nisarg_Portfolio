@@ -246,9 +246,9 @@ const Card: React.FC<CardProps> = ({ project, index, total }) => {
       <motion.div
         style={{
           scale,
-          top: `calc(90px + ${index * 48}px)`, // Exactly 48px vertical stacking offset! Overlaps 80-85% and keeps 15-20% header tab visible.
+          top: `calc(90px + ${index * 50}px)`, // Exactly 50px offset creates the gorgeous stack showing the rounded headers visible!
         }}
-        className="sticky w-full rounded-[30px] sm:rounded-[40px] md:rounded-[50px] border-2 border-[#D7E2EA]/20 bg-[#0C0C0C] p-6 sm:p-8 flex flex-col gap-6 shadow-[0_25px_60px_rgba(0,0,0,0.85)]"
+        className="sticky w-full rounded-[35px] sm:rounded-[45px] md:rounded-[55px] border-2 border-white bg-[#0C0C0C] p-6 sm:p-8 flex flex-col gap-6 shadow-[0_25px_60px_rgba(0,0,0,0.85)]"
       >
         {/* Card Header Row */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center w-full gap-4 pb-2 border-b border-[#D7E2EA]/10">
@@ -279,7 +279,7 @@ const Card: React.FC<CardProps> = ({ project, index, total }) => {
               href={project.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border-2 border-[#D7E2EA]/30 hover:border-white transition-colors flex justify-center items-center text-[#D7E2EA]/60 hover:text-white"
+              className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border-2 border-white hover:border-[#B600A8] transition-colors flex justify-center items-center text-[#D7E2EA]/60 hover:text-white"
               title="View Repository"
             >
               <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
