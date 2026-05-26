@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FadeIn } from '../components/FadeIn';
 import { Magnet } from '../components/Magnet';
 import { ContactButton } from '../components/ContactButton';
+import { Menu, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export const HeroSection: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const navItems = [
     { label: 'About', id: 'about' },
     { label: 'Work Experience', id: 'work-experience' },
@@ -32,8 +35,8 @@ export const HeroSection: React.FC = () => {
             N.P
           </div>
           
-          {/* Evenly spaced links */}
-          <div className="flex items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10">
+          {/* Desktop links */}
+          <div className="hidden md:flex items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10">
             {navItems.map((item) => (
               <button
                 key={item.id}
@@ -45,8 +48,47 @@ export const HeroSection: React.FC = () => {
               </button>
             ))}
           </div>
+
+          {/* Mobile hamburger button */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="flex md:hidden text-[#D7E2EA] hover:text-[#B600A8] transition-colors z-40 p-2"
+            type="button"
+            aria-label="Toggle menu"
+          >
+            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
         </div>
       </FadeIn>
+
+      {/* Mobile Drawer Overlay */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="fixed inset-0 bg-[#0C0C0C] z-30 flex flex-col justify-center items-center gap-8 md:hidden backdrop-blur-xl bg-opacity-95"
+          >
+            {navItems.map((item, idx) => (
+              <motion.button
+                key={item.id}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.05 }}
+                onClick={() => {
+                  setIsOpen(false);
+                  handleNavClick(item.id);
+                }}
+                className="text-white font-extrabold uppercase tracking-widest text-lg sm:text-xl hover:text-[#B600A8] transition-colors"
+              >
+                {item.label}
+              </motion.button>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* 2. HERO PORTRAIT (Absolute center layering) */}
       <div className="absolute inset-0 flex justify-center items-end sm:items-end overflow-hidden pointer-events-none z-10">

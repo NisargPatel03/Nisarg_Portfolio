@@ -101,10 +101,10 @@ export const WorkExperience: React.FC = () => {
                 {isEven ? (
                   /* Even card placed on left side (desktop) */
                   <motion.div
-                    initial={{ opacity: 0, x: -250 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: false, amount: 0.1, margin: "-80px 0px" }}
-                    transition={{ type: 'spring', stiffness: 45, damping: 14, delay: 0.05 }}
+                    initial={{ opacity: 0, y: 45 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.05 }}
+                    transition={{ type: 'spring', stiffness: 50, damping: 15, delay: 0.05 }}
                     className="w-full pl-12 md:pl-0 md:pr-10"
                   >
                     <div className="bg-gradient-to-br from-blue-950/40 to-slate-950/70 border border-blue-900/30 hover:border-[#B600A8]/40 transition-colors p-6 rounded-3xl relative group shadow-[0_15px_35px_rgba(0,0,0,0.5)]">
@@ -133,10 +133,10 @@ export const WorkExperience: React.FC = () => {
                 ) : (
                   /* Odd date placed on left side (desktop) */
                   <motion.div
-                    initial={{ opacity: 0, x: -150 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: false, amount: 0.1, margin: "-80px 0px" }}
-                    transition={{ type: 'spring', stiffness: 45, damping: 14, delay: 0.1 }}
+                    initial={{ opacity: 0, y: 25 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.05 }}
+                    transition={{ type: 'spring', stiffness: 50, damping: 15, delay: 0.1 }}
                     className="hidden md:block w-full pr-10 text-right"
                   >
                     <span className="text-white font-bold uppercase tracking-widest text-sm lg:text-base opacity-75">
@@ -151,7 +151,7 @@ export const WorkExperience: React.FC = () => {
                 <motion.div
                   initial={{ opacity: 0, scale: 0.4 }}
                   whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: false, amount: 0.1 }}
+                  viewport={{ once: true, amount: 0.05 }}
                   transition={{ type: 'spring', stiffness: 90, damping: 12 }}
                   className="w-12 h-12 rounded-full bg-[#121212] border-2 border-blue-950/70 hover:border-[#7621B0] transition-colors flex justify-center items-center z-20 shadow-[0_0_15px_rgba(118,33,176,0.3)] bg-slate-900"
                 >
@@ -168,10 +168,10 @@ export const WorkExperience: React.FC = () => {
                 {isEven ? (
                   /* Even date placed on right side (desktop) */
                   <motion.div
-                    initial={{ opacity: 0, x: 150 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: false, amount: 0.1, margin: "-80px 0px" }}
-                    transition={{ type: 'spring', stiffness: 45, damping: 14, delay: 0.1 }}
+                    initial={{ opacity: 0, y: 25 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.05 }}
+                    transition={{ type: 'spring', stiffness: 50, damping: 15, delay: 0.1 }}
                     className="hidden md:block w-full text-left"
                   >
                     <span className="text-white font-bold uppercase tracking-widest text-sm lg:text-base opacity-75">
@@ -181,10 +181,10 @@ export const WorkExperience: React.FC = () => {
                 ) : (
                   /* Odd card placed on right side (desktop) */
                   <motion.div
-                    initial={{ opacity: 0, x: 250 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: false, amount: 0.1, margin: "-80px 0px" }}
-                    transition={{ type: 'spring', stiffness: 45, damping: 14, delay: 0.05 }}
+                    initial={{ opacity: 0, y: 45 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.05 }}
+                    transition={{ type: 'spring', stiffness: 50, damping: 15, delay: 0.05 }}
                     className="w-full"
                   >
                     <div className="bg-gradient-to-br from-blue-950/40 to-slate-950/70 border border-blue-900/30 hover:border-[#7621B0]/40 transition-colors p-6 rounded-3xl relative group shadow-[0_15px_35px_rgba(0,0,0,0.5)]">

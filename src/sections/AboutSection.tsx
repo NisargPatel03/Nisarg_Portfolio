@@ -13,7 +13,7 @@ export const AboutSection: React.FC = () => {
       {/* 1. FOUR DECORATIVE 3D ASSETS IN CORNERS */}
 
       {/* Top-Left: Moon Icon */}
-      <div className="absolute top-[4%] left-[1%] sm:left-[2%] md:left-[4%] z-10 pointer-events-none">
+      <div className="absolute top-[4%] left-[1%] sm:left-[2%] md:left-[4%] z-10 pointer-events-none hidden md:block">
         <FadeIn x={-80} y={0} delay={0.1} duration={0.9}>
           <img
             src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/moon_icon.11395d36.png"
@@ -25,7 +25,7 @@ export const AboutSection: React.FC = () => {
       </div>
 
       {/* Bottom-Left: 3D Object */}
-      <div className="absolute bottom-[8%] left-[3%] sm:left-[6%] md:left-[10%] z-10 pointer-events-none">
+      <div className="absolute bottom-[8%] left-[3%] sm:left-[6%] md:left-[10%] z-10 pointer-events-none hidden md:block">
         <FadeIn x={-80} y={0} delay={0.25} duration={0.9}>
           <img
             src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/p59_1.4659672e.png"
@@ -37,7 +37,7 @@ export const AboutSection: React.FC = () => {
       </div>
 
       {/* Top-Right: Lego Icon */}
-      <div className="absolute top-[4%] right-[1%] sm:right-[2%] md:right-[4%] z-10 pointer-events-none">
+      <div className="absolute top-[4%] right-[1%] sm:right-[2%] md:right-[4%] z-10 pointer-events-none hidden md:block">
         <FadeIn x={80} y={0} delay={0.15} duration={0.9}>
           <img
             src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/lego_icon-1.703bb594.png"
@@ -49,7 +49,7 @@ export const AboutSection: React.FC = () => {
       </div>
 
       {/* Bottom-Right: 3D Group */}
-      <div className="absolute bottom-[8%] right-[3%] sm:right-[6%] md:right-[10%] z-10 pointer-events-none">
+      <div className="absolute bottom-[8%] right-[3%] sm:right-[6%] md:right-[10%] z-10 pointer-events-none hidden md:block">
         <FadeIn x={80} y={0} delay={0.3} duration={0.9}>
           <img
             src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/Group_134-1.2e04f3ce.png"
@@ -73,8 +73,7 @@ export const AboutSection: React.FC = () => {
       {/* 3. CORE SCROLL-DRIVEN BIO TEXT */}
       <div className="z-20 w-full flex flex-col items-center gap-8 sm:gap-10">
         <AnimatedText
-          text="With more than two years of experience in design, i focus on branding,
-          web design, and user experience, i truly enjoy working with businesses that aim to stand out and present their best image. Let's build something incredible together!"
+          text="With more than two years of experience in design, i focus on branding, web design, and user experience, i truly enjoy working with businesses that aim to stand out and present their best image. Let's build something incredible together!"
           className="text-[#D7E2EA] font-medium text-center leading-relaxed max-w-[720px] text-lg sm:text-xl md:text-2xl"
           style={{ fontSize: 'clamp(1rem, 2vw, 1.35rem)' }}
         />
