@@ -24,7 +24,6 @@ dist-ssr
 *.sw?
 
 # Personal Documents & Academic Scorecards
-GATE_2026_ScoreCard.pdf
 NISARG_PATEL_RESUME.pdf
 
 # Environment Variables
