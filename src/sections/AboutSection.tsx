@@ -11,7 +11,7 @@ export const AboutSection: React.FC = () => {
       className="relative bg-[#0C0C0C] min-h-screen py-24 md:py-32 flex flex-col items-center justify-center overflow-hidden w-full px-6 md:px-10 gap-10 sm:gap-14 md:gap-16"
     >
       {/* 1. FOUR DECORATIVE 3D ASSETS IN CORNERS */}
-      
+
       {/* Top-Left: Moon Icon */}
       <div className="absolute top-[4%] left-[1%] sm:left-[2%] md:left-[4%] z-10 pointer-events-none">
         <FadeIn x={-80} y={0} delay={0.1} duration={0.9}>
@@ -62,7 +62,7 @@ export const AboutSection: React.FC = () => {
 
       {/* 2. SECTION HEADING */}
       <FadeIn y={40} delay={0} duration={0.8} className="z-20 text-center">
-        <h2 
+        <h2
           className="hero-heading font-black uppercase leading-none tracking-tight text-center"
           style={{ fontSize: 'clamp(3rem, 10vw, 120px)' }}
         >
@@ -73,7 +73,8 @@ export const AboutSection: React.FC = () => {
       {/* 3. CORE SCROLL-DRIVEN BIO TEXT */}
       <div className="z-20 w-full flex flex-col items-center gap-8 sm:gap-10">
         <AnimatedText
-          text="With more than five years of experience in design, i focus on branding, web design, and user experience, i truly enjoy working with businesses that aim to stand out and present their best image. Let's build something incredible together!"
+          text="With more than two years of experience in design, i focus on branding,
+          web design, and user experience, i truly enjoy working with businesses that aim to stand out and present their best image. Let's build something incredible together!"
           className="text-[#D7E2EA] font-medium text-center leading-relaxed max-w-[720px] text-lg sm:text-xl md:text-2xl"
           style={{ fontSize: 'clamp(1rem, 2vw, 1.35rem)' }}
         />
