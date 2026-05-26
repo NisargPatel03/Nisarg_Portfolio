@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { FadeIn } from '../components/FadeIn';
+import { ArrowUpRight, CheckCircle2, ShieldCheck, DollarSign, Calendar, Users, Award, Tag } from 'lucide-react';
 
 export const ServicesSection: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<'blaze' | 'savaliya'>('blaze');
+
   return (
     <section
       id="services"
@@ -9,179 +13,260 @@ export const ServicesSection: React.FC = () => {
     >
       <div className="max-w-5xl mx-auto">
         {/* 1. HEADING */}
-        <FadeIn y={30} delay={0} duration={0.8} className="text-center mb-16 sm:mb-20 md:mb-28">
+        <FadeIn y={30} delay={0} duration={0.8} className="text-center mb-10 sm:mb-14">
           <span className="text-[#B600A8] uppercase font-bold tracking-widest text-xs sm:text-sm">
             Commercial Engagements
           </span>
           <h2
             className="font-black uppercase tracking-tight text-[#0C0C0C] leading-none mt-2"
-            style={{ fontSize: 'clamp(2.5rem, 9vw, 120px)' }}
+            style={{ fontSize: 'clamp(2.5rem, 9vw, 110px)' }}
           >
             Client Projects.
           </h2>
         </FadeIn>
 
-        {/* 2. COMMERCIAL CASE STUDIES GRID */}
-        <div className="flex flex-col gap-16 md:gap-24">
+        {/* 2. DYNAMIC SEGMENT TAB BAR */}
+        <FadeIn y={20} delay={0.1} duration={0.8} className="flex justify-center w-full mb-16">
+          <div className="bg-slate-100 p-1.5 rounded-full flex gap-1 border border-slate-200 shadow-inner relative max-w-lg w-full">
+            {/* Tab 1: Blaze Overseas */}
+            <button
+              onClick={() => setActiveTab('blaze')}
+              className={`flex-1 py-3 px-4 rounded-full text-xs sm:text-sm font-extrabold uppercase tracking-wide relative z-10 transition-colors duration-300 ${
+                activeTab === 'blaze' ? 'text-white' : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              {activeTab === 'blaze' && (
+                <motion.div
+                  layoutId="activeCommercialTab"
+                  className="absolute inset-0 bg-[#0C0C0C] rounded-full -z-10"
+                  transition={{ type: 'spring', stiffness: 350, damping: 28 }}
+                />
+              )}
+              Blaze Overseas
+            </button>
 
-          {/* Project 1: Blaze Overseas LLP */}
-          <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 border-t border-slate-900/10 pt-12 items-start">
-            {/* Left Column: Client metadata */}
-            <div className="w-full lg:w-1/3 flex flex-col gap-4 lg:sticky lg:top-24">
-              <span className="font-mono text-xs text-slate-500 uppercase tracking-widest">
-                Acquisition & Commercial Launch
-              </span>
-              <h3 className="font-extrabold uppercase text-2xl sm:text-3xl text-slate-900 tracking-wide leading-tight">
-                Blaze Overseas LLP Portal
-              </h3>
-              
-              <div className="flex flex-col gap-3 mt-2 text-sm text-slate-700">
-                <div className="flex justify-between py-1.5 border-b border-slate-900/5">
-                  <span className="font-semibold text-slate-900">Client:</span>
-                  <span>Blaze Overseas LLP</span>
-                </div>
-                <div className="flex justify-between py-1.5 border-b border-slate-900/5">
-                  <span className="font-semibold text-slate-900">Contract Value:</span>
-                  <span className="text-emerald-700 font-bold">₹30,000 INR</span>
-                </div>
-                <div className="flex justify-between py-1.5 border-b border-slate-900/5">
-                  <span className="font-semibold text-slate-900">Timeline:</span>
-                  <span>Feb - March 2026</span>
-                </div>
-                <div className="flex justify-between py-1.5 border-b border-slate-900/5">
-                  <span className="font-semibold text-slate-900">Role:</span>
-                  <span>Lead Full-Stack Web Architect</span>
-                </div>
-                <div className="flex justify-between py-1.5 border-b border-slate-900/5">
-                  <span className="font-semibold text-slate-900">Vercel Deployment:</span>
-                  <a href="https://blaze-overseas-llp.vercel.app/" target="_blank" rel="noreferrer" className="text-blue-600 hover:text-blue-800 underline transition-colors">Live App</a>
-                </div>
-                <div className="flex justify-between py-1.5 border-b border-slate-900/5">
-                  <span className="font-semibold text-slate-900">GitHub Codebase:</span>
-                  <a href="https://github.com/NisargPatel03/Blaze_Overseas_LLP" target="_blank" rel="noreferrer" className="text-blue-600 hover:text-blue-800 underline transition-colors">Repository</a>
-                </div>
-              </div>
-
-              <div className="flex flex-wrap gap-1.5 mt-2">
-                {['React', 'TypeScript', 'Tailwind CSS', 'Framer Motion'].map(t => (
-                  <span key={t} className="bg-slate-100 text-slate-800 text-[10px] sm:text-xs font-semibold px-2.5 py-1 rounded-full uppercase">
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Right Column: Project details */}
-            <div className="w-full lg:w-2/3 flex flex-col gap-6">
-              <h4 className="font-extrabold uppercase text-xs sm:text-sm text-slate-500 tracking-wider">
-                Project Overview & Scope
-              </h4>
-              <p className="text-slate-700 leading-relaxed text-sm sm:text-base font-light">
-                A premium, responsive corporate platform engineered to represent international trade services, global commodities exchange directories, and client consultation pathways. Nisarg Patel contracted as lead architect, executing commercial deployment for an acquisition sum of ₹30,000.
-              </p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
-                <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/50 flex flex-col gap-2">
-                  <span className="font-bold text-slate-900 text-sm uppercase">🌍 Global Commodities Directory</span>
-                  <p className="text-xs text-slate-600 leading-relaxed">Integrated commodities search engine with filters, helping international trade buyers explore products effortlessly.</p>
-                </div>
-                <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/50 flex flex-col gap-2">
-                  <span className="font-bold text-slate-900 text-sm uppercase">📈 Automated Sales Funnel</span>
-                  <p className="text-xs text-slate-600 leading-relaxed">Lead generation dashboard with automated consultation scheduling forms and custom email notification triggers.</p>
-                </div>
-                <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/50 flex flex-col gap-2">
-                  <span className="font-bold text-slate-900 text-sm uppercase">✨ Sub-Second Page Delivery</span>
-                  <p className="text-xs text-slate-600 leading-relaxed">Serverless build optimization using Vite and TypeScript configurations to guarantee instantaneous asset loading across global networks.</p>
-                </div>
-                <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/50 flex flex-col gap-2">
-                  <span className="font-bold text-slate-900 text-sm uppercase">💎 Premium User Experience</span>
-                  <p className="text-xs text-slate-600 leading-relaxed">Crafted using smooth scroll indicators, glassmorphic layout tokens, and physics-based entrance transitions mapping to international branding.</p>
-                </div>
-              </div>
-            </div>
+            {/* Tab 2: Savaliya Ice Cream */}
+            <button
+              onClick={() => setActiveTab('savaliya')}
+              className={`flex-1 py-3 px-4 rounded-full text-xs sm:text-sm font-extrabold uppercase tracking-wide relative z-10 transition-colors duration-300 ${
+                activeTab === 'savaliya' ? 'text-white' : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              {activeTab === 'savaliya' && (
+                <motion.div
+                  layoutId="activeCommercialTab"
+                  className="absolute inset-0 bg-[#0C0C0C] rounded-full -z-10"
+                  transition={{ type: 'spring', stiffness: 350, damping: 28 }}
+                />
+              )}
+              Savaliya Ice Cream
+            </button>
           </div>
-          
-          {/* Project 2: Savaliya Ice Cream POS System */}
-          <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 border-t border-slate-900/10 pt-12 items-start">
-            {/* Left Column: Client metadata */}
-            <div className="w-full lg:w-1/3 flex flex-col gap-4 lg:sticky lg:top-24">
-              <span className="font-mono text-xs text-slate-500 uppercase tracking-widest">
-                Academic Course Engagement
-              </span>
-              <h3 className="font-extrabold uppercase text-2xl sm:text-3xl text-slate-900 tracking-wide leading-tight">
-                Savaliya Ice Cream POS System
-              </h3>
-              
-              <div className="flex flex-col gap-3 mt-2 text-sm text-slate-700">
-                <div className="flex justify-between py-1.5 border-b border-slate-900/5">
-                  <span className="font-semibold text-slate-900">Client:</span>
-                  <span>Mr. Manish Shah (Owner)</span>
-                </div>
-                <div className="flex justify-between py-1.5 border-b border-slate-900/5">
-                  <span className="font-semibold text-slate-900">Location:</span>
-                  <span>Nadiad, Gujarat</span>
-                </div>
-                <div className="flex justify-between py-1.5 border-b border-slate-900/5">
-                  <span className="font-semibold text-slate-900">Developers:</span>
-                  <span>Nisarg Patel (23CS070), Megh, Tejas</span>
-                </div>
-                <div className="flex justify-between py-1.5 border-b border-slate-900/5">
-                  <span className="font-semibold text-slate-900">Agreement Date:</span>
-                  <span>6th July, 2025</span>
-                </div>
-                <div className="flex justify-between py-1.5 border-b border-slate-900/5">
-                  <span className="font-semibold text-slate-900">Completed:</span>
-                  <span>30th November, 2025</span>
-                </div>
-              </div>
+        </FadeIn>
 
-              <div className="flex flex-wrap gap-1.5 mt-2">
-                {['React', 'Excel Storage', 'Dine-In/Parcel', 'Thermal Printer'].map(t => (
-                  <span key={t} className="bg-slate-100 text-slate-800 text-[10px] sm:text-xs font-semibold px-2.5 py-1 rounded-full uppercase">
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </div>
+        {/* 3. DYNAMIC ACTIVE SLIDE WORKSPACE */}
+        <div className="relative w-full min-h-[500px]">
+          <AnimatePresence mode="wait">
+            {activeTab === 'blaze' ? (
+              /* SLIDE 1: BLAZE OVERSEAS LLP */
+              <motion.div
+                key="blaze"
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                className="flex flex-col lg:flex-row gap-10 lg:gap-16 border-t border-slate-900/10 pt-10 items-start w-full"
+              >
+                {/* Left Pane: Brand metadata card */}
+                <div className="w-full lg:w-1/3 flex flex-col gap-5 lg:sticky lg:top-24">
+                  {/* Glowing contract tag */}
+                  <div className="inline-flex items-center gap-2 self-start bg-emerald-50 text-emerald-700 border border-emerald-300/40 px-3.5 py-1.5 rounded-full font-mono text-[10px] sm:text-xs font-bold uppercase tracking-wider shadow-sm">
+                    <DollarSign className="w-3.5 h-3.5" />
+                    <span>₹30,000 INR Commercial Value</span>
+                  </div>
 
-            {/* Right Column: Project details */}
-            <div className="w-full lg:w-2/3 flex flex-col gap-6">
-              <h4 className="font-extrabold uppercase text-xs sm:text-sm text-slate-500 tracking-wider">
-                Project Overview & Scope
-              </h4>
-              <p className="text-slate-700 leading-relaxed text-sm sm:text-base font-light">
-                Savaliya Ice Cream contracted the student development team of CSPIT to design and engineer a custom local Point of Sale (POS) system tailored specifically for high-efficiency ice-cream parlor catalog dispatching and order logs. Deployed for real business operations at the Nadiad Welcome Plazza outlet.
-              </p>
+                  <h3 className="font-extrabold uppercase text-3xl sm:text-4xl text-slate-900 tracking-wide leading-tight">
+                    Blaze Overseas LLP Portal
+                  </h3>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
-                <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/50 flex flex-col gap-2">
-                  <span className="font-bold text-slate-900 text-sm uppercase">🚀 Lightning POS Interface</span>
-                  <p className="text-xs text-slate-600 leading-relaxed">Local-based, button-driven sales dashboard for sub-second catalog selection and cash register dispatching.</p>
-                </div>
-                <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/50 flex flex-col gap-2">
-                  <span className="font-bold text-slate-900 text-sm uppercase">💰 Multi-Mode Settlement</span>
-                  <p className="text-xs text-slate-600 leading-relaxed">Integrated support for multiple flexible payment channels including cash, bank cheque, and digital Paytm ledger inputs.</p>
-                </div>
-                <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/50 flex flex-col gap-2">
-                  <span className="font-bold text-slate-900 text-sm uppercase">📊 Local Excel Data Vault</span>
-                  <p className="text-xs text-slate-600 leading-relaxed">Transaction records, menus, and customer databases are compiled and securely structured directly in Excel formats.</p>
-                </div>
-                <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/50 flex flex-col gap-2">
-                  <span className="font-bold text-slate-900 text-sm uppercase">⚡ Hold & Recall Queue</span>
-                  <p className="text-xs text-slate-600 leading-relaxed">Built-in order queue hold/recall triggers, ideal for managing active dine-in groups and simultaneous parcel orders.</p>
-                </div>
-                <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/50 flex flex-col gap-2">
-                  <span className="font-bold text-slate-900 text-sm uppercase">⏰ Pre-Order Reminders</span>
-                  <p className="text-xs text-slate-600 leading-relaxed">Automatic alert system notifying operators 20 minutes prior to a due advance order, minimizing processing delays.</p>
-                </div>
-                <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/50 flex flex-col gap-2">
-                  <span className="font-bold text-slate-900 text-sm uppercase">🖨️ Thermal Bill Printer</span>
-                  <p className="text-xs text-slate-600 leading-relaxed">Integrated GST compliant receipt formatting with raw printer drivers to generate and print hard-copy bills immediately.</p>
-                </div>
-              </div>
-            </div>
-          </div>
+                  <div className="flex flex-col gap-3.5 mt-2 text-sm text-slate-700">
+                    <div className="flex justify-between py-2 border-b border-slate-900/5">
+                      <span className="font-semibold text-slate-900 flex items-center gap-2"><Users className="w-4 h-4 text-slate-400" /> Client:</span>
+                      <span>Blaze Overseas LLP</span>
+                    </div>
+                    <div className="flex justify-between py-2 border-b border-slate-900/5">
+                      <span className="font-semibold text-slate-900 flex items-center gap-2"><Calendar className="w-4 h-4 text-slate-400" /> Timeline:</span>
+                      <span>Feb - March 2026</span>
+                    </div>
+                    <div className="flex justify-between py-2 border-b border-slate-900/5">
+                      <span className="font-semibold text-slate-900 flex items-center gap-2"><Award className="w-4 h-4 text-slate-400" /> Role:</span>
+                      <span>Lead Full-Stack Web Architect</span>
+                    </div>
+                    <div className="flex justify-between py-2 border-b border-slate-900/5">
+                      <span className="font-semibold text-slate-900 flex items-center gap-2"><Tag className="w-4 h-4 text-slate-400" /> Deploys:</span>
+                      <a href="https://blaze-overseas-llp.vercel.app/" target="_blank" rel="noreferrer" className="text-blue-600 hover:text-blue-800 font-medium inline-flex items-center gap-1 transition-colors">
+                        Live App <ArrowUpRight className="w-3 h-3" />
+                      </a>
+                    </div>
+                    <div className="flex justify-between py-2 border-b border-slate-900/5">
+                      <span className="font-semibold text-slate-900 flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-slate-400" /> Codebase:</span>
+                      <a href="https://github.com/NisargPatel03/Blaze_Overseas_LLP" target="_blank" rel="noreferrer" className="text-blue-600 hover:text-blue-800 font-medium inline-flex items-center gap-1 transition-colors">
+                        Repository <ArrowUpRight className="w-3 h-3" />
+                      </a>
+                    </div>
+                  </div>
 
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {['React', 'TypeScript', 'Tailwind CSS', 'Framer Motion'].map(t => (
+                      <span key={t} className="bg-slate-100 text-slate-800 text-[10px] sm:text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Right Pane: Features deck */}
+                <div className="w-full lg:w-2/3 flex flex-col gap-6">
+                  <h4 className="font-extrabold uppercase text-xs sm:text-sm text-slate-500 tracking-wider">
+                    Project Overview & Engineering Scope
+                  </h4>
+                  <p className="text-slate-700 leading-relaxed text-sm sm:text-base font-light">
+                    A premium, responsive corporate platform engineered to represent international trade services, global commodities exchange directories, and client consultation pathways. Nisarg Patel contracted as lead architect, executing commercial deployment for an acquisition sum of ₹30,000.
+                  </p>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
+                    <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200/50 hover:border-slate-300 hover:bg-slate-100/50 transition-all duration-300 flex flex-col gap-3 shadow-sm">
+                      <span className="font-bold text-slate-950 text-sm uppercase tracking-wide flex items-center gap-2">
+                        🌍 Global Cargo Directory
+                      </span>
+                      <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-light">Integrated commodities search engine with filters, helping international trade buyers explore products effortlessly.</p>
+                    </div>
+                    <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200/50 hover:border-slate-300 hover:bg-slate-100/50 transition-all duration-300 flex flex-col gap-3 shadow-sm">
+                      <span className="font-bold text-slate-950 text-sm uppercase tracking-wide flex items-center gap-2">
+                        📈 Automated Sales Funnel
+                      </span>
+                      <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-light">Lead generation dashboard with automated consultation scheduling forms and custom email notification triggers.</p>
+                    </div>
+                    <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200/50 hover:border-slate-300 hover:bg-slate-100/50 transition-all duration-300 flex flex-col gap-3 shadow-sm">
+                      <span className="font-bold text-slate-950 text-sm uppercase tracking-wide flex items-center gap-2">
+                        ⚡ Sub-Second Asset Loads
+                      </span>
+                      <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-light">Serverless build optimization using Vite and TypeScript configurations to guarantee instantaneous asset loading across global networks.</p>
+                    </div>
+                    <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200/50 hover:border-slate-300 hover:bg-slate-100/50 transition-all duration-300 flex flex-col gap-3 shadow-sm">
+                      <span className="font-bold text-slate-950 text-sm uppercase tracking-wide flex items-center gap-2">
+                        💎 Premium UX Directives
+                      </span>
+                      <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-light">Crafted using smooth scroll indicators, glassmorphic layout tokens, and physics-based entrance transitions mapping to international branding.</p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ) : (
+              /* SLIDE 2: SAVALIYA ICE CREAM POS SYSTEM */
+              <motion.div
+                key="savaliya"
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                className="flex flex-col lg:flex-row gap-10 lg:gap-16 border-t border-slate-900/10 pt-10 items-start w-full"
+              >
+                {/* Left Pane: Brand metadata card */}
+                <div className="w-full lg:w-1/3 flex flex-col gap-5 lg:sticky lg:top-24">
+                  {/* Glowing contract tag */}
+                  <div className="inline-flex items-center gap-2 self-start bg-pink-50 text-pink-700 border border-pink-300/40 px-3.5 py-1.5 rounded-full font-mono text-[10px] sm:text-xs font-bold uppercase tracking-wider shadow-sm">
+                    <ShieldCheck className="w-3.5 h-3.5" />
+                    <span>Official CSPIT Collaboration</span>
+                  </div>
+
+                  <h3 className="font-extrabold uppercase text-3xl sm:text-4xl text-slate-900 tracking-wide leading-tight">
+                    Savaliya Ice Cream POS System
+                  </h3>
+
+                  <div className="flex flex-col gap-3.5 mt-2 text-sm text-slate-700">
+                    <div className="flex justify-between py-2 border-b border-slate-900/5">
+                      <span className="font-semibold text-slate-900 flex items-center gap-2"><Users className="w-4 h-4 text-slate-400" /> Client:</span>
+                      <span>Mr. Manish Shah (Owner)</span>
+                    </div>
+                    <div className="flex justify-between py-2 border-b border-slate-900/5">
+                      <span className="font-semibold text-slate-900 flex items-center gap-2"><Calendar className="w-4 h-4 text-slate-400" /> Timeline:</span>
+                      <span>July - Nov 2025</span>
+                    </div>
+                    <div className="flex justify-between py-2 border-b border-slate-900/5">
+                      <span className="font-semibold text-slate-900 flex items-center gap-2"><Users className="w-4 h-4 text-slate-400" /> Developers:</span>
+                      <span className="text-right">Nisarg (23CS070), Megh, Tejas</span>
+                    </div>
+                    <div className="flex justify-between py-2 border-b border-slate-900/5">
+                      <span className="font-semibold text-slate-900 flex items-center gap-2"><Award className="w-4 h-4 text-slate-400" /> Signed Date:</span>
+                      <span>6th July, 2025</span>
+                    </div>
+                    <div className="flex justify-between py-2 border-b border-slate-900/5">
+                      <span className="font-semibold text-slate-900 flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-slate-400" /> Affiliation:</span>
+                      <span>CHARUSAT CSPIT CSE Team</span>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {['React', 'Excel Storage', 'Dine-In & Parcel', 'Thermal Driver'].map(t => (
+                      <span key={t} className="bg-slate-100 text-slate-800 text-[10px] sm:text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Right Pane: Features deck */}
+                <div className="w-full lg:w-2/3 flex flex-col gap-6">
+                  <h4 className="font-extrabold uppercase text-xs sm:text-sm text-slate-500 tracking-wider">
+                    Project Overview & Engineering Scope
+                  </h4>
+                  <p className="text-slate-700 leading-relaxed text-sm sm:text-base font-light">
+                    Savaliya Ice Cream contracted the student development team of CSPIT to design and engineer a custom local Point of Sale (POS) system tailored specifically for high-efficiency ice-cream parlor catalog dispatching and order logs. Deployed for real business operations at the Nadiad Welcome Plazza outlet.
+                  </p>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
+                    <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200/50 hover:border-slate-300 hover:bg-slate-100/50 transition-all duration-300 flex flex-col gap-3 shadow-sm">
+                      <span className="font-bold text-slate-950 text-sm uppercase tracking-wide flex items-center gap-2">
+                        🚀 Lightning POS Interface
+                      </span>
+                      <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-light">Local-based, button-driven sales dashboard for sub-second catalog selection and cash register dispatching.</p>
+                    </div>
+                    <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200/50 hover:border-slate-300 hover:bg-slate-100/50 transition-all duration-300 flex flex-col gap-3 shadow-sm">
+                      <span className="font-bold text-slate-950 text-sm uppercase tracking-wide flex items-center gap-2">
+                        💰 Multi-Mode Settlement
+                      </span>
+                      <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-light">Integrated support for multiple flexible payment channels including cash, bank cheque, and digital Paytm ledger inputs.</p>
+                    </div>
+                    <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200/50 hover:border-slate-300 hover:bg-slate-100/50 transition-all duration-300 flex flex-col gap-3 shadow-sm">
+                      <span className="font-bold text-slate-950 text-sm uppercase tracking-wide flex items-center gap-2">
+                        📊 Local Excel Data Vault
+                      </span>
+                      <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-light">Transaction records, menus, and customer databases are compiled and securely structured directly in Excel formats.</p>
+                    </div>
+                    <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200/50 hover:border-slate-300 hover:bg-slate-100/50 transition-all duration-300 flex flex-col gap-3 shadow-sm">
+                      <span className="font-bold text-slate-950 text-sm uppercase tracking-wide flex items-center gap-2">
+                        ⚡ Hold & Recall Queue
+                      </span>
+                      <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-light">Built-in order queue hold/recall triggers, ideal for managing active dine-in groups and simultaneous parcel orders.</p>
+                    </div>
+                    <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200/50 hover:border-slate-300 hover:bg-slate-100/50 transition-all duration-300 flex flex-col gap-3 shadow-sm">
+                      <span className="font-bold text-slate-950 text-sm uppercase tracking-wide flex items-center gap-2">
+                        ⏰ Pre-Order Reminders
+                      </span>
+                      <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-light">Automatic alert system notifying operators 20 minutes prior to a due advance order, minimizing processing delays.</p>
+                    </div>
+                    <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200/50 hover:border-slate-300 hover:bg-slate-100/50 transition-all duration-300 flex flex-col gap-3 shadow-sm">
+                      <span className="font-bold text-slate-950 text-sm uppercase tracking-wide flex items-center gap-2">
+                        🖨️ Thermal Bill Printer
+                      </span>
+                      <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-light">Integrated GST compliant receipt formatting with raw printer drivers to generate and print hard-copy bills immediately.</p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </section>
