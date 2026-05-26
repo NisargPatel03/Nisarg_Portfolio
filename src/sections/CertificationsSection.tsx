@@ -52,7 +52,7 @@ export const CertificationsSection: React.FC = () => {
       badge: 'Research Publication',
       details: 'Published research certificate exploring vector modeling and NLP classification for fake news.',
       icon: <FileText className="w-6 h-6 text-teal-400" />,
-      pdf: '/certificates/fake_news_paper.pdf',
+      pdf: '/certificates/fake_news_paper.jpg',
     },
     {
       title: 'Ranked First in University Class',
