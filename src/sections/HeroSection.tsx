@@ -69,6 +69,7 @@ export const HeroSection: React.FC = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
+            onClick={() => setIsOpen(false)}
             className="fixed inset-0 bg-[#0C0C0C] z-30 flex flex-col justify-center items-center gap-8 md:hidden backdrop-blur-xl bg-opacity-95"
           >
             {navItems.map((item, idx) => (
@@ -77,7 +78,8 @@ export const HeroSection: React.FC = () => {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.05 }}
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   setIsOpen(false);
                   handleNavClick(item.id);
                 }}
@@ -103,7 +105,7 @@ export const HeroSection: React.FC = () => {
             strength={3}
             activeTransition="transform 0.3s ease-out"
             inactiveTransition="transform 0.6s ease-in-out"
-            className="absolute left-1/2 -translate-x-1/2 bottom-1/2 translate-y-1/2 sm:translate-y-0 sm:bottom-0 w-[260px] sm:w-[340px] md:w-[420px] lg:w-[480px] xl:w-[500px]"
+            className="absolute left-[40%] sm:left-1/2 -translate-x-1/2 bottom-1/2 translate-y-1/2 sm:translate-y-0 sm:bottom-0 w-[240px] sm:w-[340px] md:w-[420px] lg:w-[480px] xl:w-[500px]"
           >
             <img
               src="https://shrug-person-78902957.figma.site/_components/v2/d24c01ad3a56fc65e942a1f501eb73db42d7cf9a/Rectangle_40443.81459862.png"

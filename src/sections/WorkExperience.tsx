@@ -101,8 +101,8 @@ export const WorkExperience: React.FC = () => {
                 {isEven ? (
                   /* Even card placed on left side (desktop) */
                   <motion.div
-                    initial={{ opacity: 0, y: 45 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, x: -100 }}
+                    whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true, amount: 0.05 }}
                     transition={{ type: 'spring', stiffness: 50, damping: 15, delay: 0.05 }}
                     className="w-full pl-12 md:pl-0 md:pr-10"
@@ -181,8 +181,8 @@ export const WorkExperience: React.FC = () => {
                 ) : (
                   /* Odd card placed on right side (desktop) */
                   <motion.div
-                    initial={{ opacity: 0, y: 45 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, x: 100 }}
+                    whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true, amount: 0.05 }}
                     transition={{ type: 'spring', stiffness: 50, damping: 15, delay: 0.05 }}
                     className="w-full"

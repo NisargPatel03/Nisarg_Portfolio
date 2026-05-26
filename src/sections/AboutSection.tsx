@@ -13,48 +13,48 @@ export const AboutSection: React.FC = () => {
       {/* 1. FOUR DECORATIVE 3D ASSETS IN CORNERS */}
 
       {/* Top-Left: Moon Icon */}
-      <div className="absolute top-[4%] left-[1%] sm:left-[2%] md:left-[4%] z-10 pointer-events-none hidden md:block">
+      <div className="absolute top-[4%] left-[1%] sm:left-[2%] md:left-[4%] z-10 pointer-events-none">
         <FadeIn x={-80} y={0} delay={0.1} duration={0.9}>
           <img
             src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/moon_icon.11395d36.png"
             alt="Moon Asset"
-            className="w-[100px] sm:w-[140px] md:w-[180px] lg:w-[210px] h-auto object-contain filter drop-shadow-[0_10px_30px_rgba(255,255,255,0.05)] animate-pulse"
+            className="w-[50px] sm:w-[100px] md:w-[180px] lg:w-[210px] h-auto object-contain filter drop-shadow-[0_10px_30px_rgba(255,255,255,0.05)] animate-pulse"
             style={{ animationDuration: '4s' }}
           />
         </FadeIn>
       </div>
 
       {/* Bottom-Left: 3D Object */}
-      <div className="absolute bottom-[8%] left-[3%] sm:left-[6%] md:left-[10%] z-10 pointer-events-none hidden md:block">
+      <div className="absolute bottom-[8%] left-[3%] sm:left-[6%] md:left-[10%] z-10 pointer-events-none">
         <FadeIn x={-80} y={0} delay={0.25} duration={0.9}>
           <img
             src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/p59_1.4659672e.png"
             alt="3D Spike Asset"
-            className="w-[85px] sm:w-[120px] md:w-[150px] lg:w-[180px] h-auto object-contain filter drop-shadow-[0_15px_35px_rgba(182,0,168,0.1)] animate-bounce"
+            className="w-[45px] sm:w-[85px] md:w-[150px] lg:w-[180px] h-auto object-contain filter drop-shadow-[0_15px_35px_rgba(182,0,168,0.1)] animate-bounce"
             style={{ animationDuration: '6s' }}
           />
         </FadeIn>
       </div>
 
       {/* Top-Right: Lego Icon */}
-      <div className="absolute top-[4%] right-[1%] sm:right-[2%] md:right-[4%] z-10 pointer-events-none hidden md:block">
+      <div className="absolute top-[4%] right-[1%] sm:right-[2%] md:right-[4%] z-10 pointer-events-none">
         <FadeIn x={80} y={0} delay={0.15} duration={0.9}>
           <img
             src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/lego_icon-1.703bb594.png"
             alt="Lego Asset"
-            className="w-[100px] sm:w-[140px] md:w-[180px] lg:w-[210px] h-auto object-contain filter drop-shadow-[0_10px_30px_rgba(255,255,255,0.05)] animate-pulse"
+            className="w-[50px] sm:w-[100px] md:w-[180px] lg:w-[210px] h-auto object-contain filter drop-shadow-[0_10px_30px_rgba(255,255,255,0.05)] animate-pulse"
             style={{ animationDuration: '5s' }}
           />
         </FadeIn>
       </div>
 
       {/* Bottom-Right: 3D Group */}
-      <div className="absolute bottom-[8%] right-[3%] sm:right-[6%] md:right-[10%] z-10 pointer-events-none hidden md:block">
+      <div className="absolute bottom-[8%] right-[3%] sm:right-[6%] md:right-[10%] z-10 pointer-events-none">
         <FadeIn x={80} y={0} delay={0.3} duration={0.9}>
           <img
             src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/Group_134-1.2e04f3ce.png"
             alt="3D Composition Asset"
-            className="w-[110px] sm:w-[140px] md:w-[180px] lg:w-[220px] h-auto object-contain filter drop-shadow-[0_20px_40px_rgba(118,33,176,0.15)] animate-bounce"
+            className="w-[60px] sm:w-[110px] md:w-[180px] lg:w-[220px] h-auto object-contain filter drop-shadow-[0_20px_40px_rgba(118,33,176,0.15)] animate-bounce"
             style={{ animationDuration: '7s' }}
           />
         </FadeIn>
