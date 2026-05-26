@@ -6,7 +6,6 @@ import { AboutSection } from './sections/AboutSection';
 import { WorkExperience } from './sections/WorkExperience';
 import { ServicesSection } from './sections/ServicesSection';
 import { ProjectsSection } from './sections/ProjectsSection';
-import { ExtraProjects } from './sections/ExtraProjects';
 import { CertificationsSection } from './sections/CertificationsSection';
 import { ContactSection } from './sections/ContactSection';
 
@@ -52,10 +51,7 @@ function App() {
       {/* 6. PROJECTS SECTION (Sticky scaling cards) */}
       <ProjectsSection />
 
-      {/* 7. EXTRA PROJECTS SHOWCASE GRID */}
-      <ExtraProjects />
-
-      {/* 8. CERTIFICATIONS FILTER BROWSER */}
+      {/* 7. CERTIFICATIONS FILTER BROWSER */}
       <CertificationsSection />
 
       {/* 9. CONTACT & FOOTER */}

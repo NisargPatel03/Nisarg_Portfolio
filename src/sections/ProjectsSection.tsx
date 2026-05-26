@@ -281,6 +281,7 @@ const Card: React.FC<CardProps> = ({ project, index, total }) => {
               href={project.github}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
               className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border-2 border-white hover:border-[#B600A8] transition-colors flex justify-center items-center text-[#D7E2EA]/60 hover:text-white"
               title="View Repository"
             >

@@ -14,7 +14,8 @@ export const LiveProjectButton: React.FC<LiveProjectButtonProps> = ({
   className = '',
   onClick,
 }) => {
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (onClick) {
       onClick();
     } else if (link) {
