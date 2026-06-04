@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import Lenis from 'lenis';
 import { HeroSection } from './sections/HeroSection';
 import { MarqueeSection } from './sections/MarqueeSection';
+import { ArchitectureSection } from './sections/ArchitectureSection';
 import { AboutSection } from './sections/AboutSection';
 import { WorkExperience } from './sections/WorkExperience';
 import { ServicesSection } from './sections/ServicesSection';
@@ -38,6 +39,9 @@ function App() {
 
       {/* 2. MARQUEE SECTION */}
       <MarqueeSection />
+
+      {/* 2b. SYSTEM ARCHITECTURE BLUEPRINT SECTION */}
+      <ArchitectureSection />
 
       {/* 3. ABOUT SECTION */}
       <AboutSection />
