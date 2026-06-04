@@ -35,6 +35,21 @@ export const ProjectsSection: React.FC = () => {
     },
     {
       id: '02',
+      name: 'BharatBudget',
+      category: 'Public Finance Command Center',
+      vercel: 'https://bharat-budget-beta.vercel.app/',
+      github: 'https://github.com/NisargPatel03/BharatBudget',
+      description: 'A premium public finance command center, simulation sandbox, and interactive visualization portal decoding Indian Union Budget data.',
+      points: [
+        'Interactive 16th Finance Commission Devolution Sandbox and State Tax Devolution SVG map.',
+        'Macroeconomic Stress-Testing Simulator mapping oil surges, monsoon failures, and global recessions in real-time.',
+        'Rich UI with global multi-year timelines, dynamic Recharts visualizations, and a Ctrl+K command palette.'
+      ],
+      techs: ['React', 'TypeScript', 'Zustand', 'Recharts', 'Tailwind CSS'],
+      image: '/bharatbudget_mockup.png',
+    },
+    {
+      id: '03',
       name: 'DRHV Cricket Tournament',
       category: 'Sports Management Platform',
       vercel: 'https://drhv-cricket-tournament.vercel.app/',
@@ -49,7 +64,7 @@ export const ProjectsSection: React.FC = () => {
       image: '/drhv_cricket_mockup.png',
     },
     {
-      id: '03',
+      id: '04',
       name: 'Blaze Overseas LLP Portal',
       category: 'Commercial Business Platform',
       vercel: 'https://blaze-overseas-llp.vercel.app/',
@@ -64,7 +79,7 @@ export const ProjectsSection: React.FC = () => {
       image: '/blaze_overseas_mockup.png',
     },
     {
-      id: '04',
+      id: '05',
       name: 'EcoLearn Environmental Portal',
       category: 'Ecology Learning Platform',
       vercel: 'https://ecolearn-frontend-delta.vercel.app/',
@@ -79,7 +94,7 @@ export const ProjectsSection: React.FC = () => {
       image: '/ecolearn_mockup.png',
     },
     {
-      id: '05',
+      id: '06',
       name: 'Savaliya Scoops POS System',
       category: 'Client Point of Sale (POS)',
       vercel: 'https://savaliya-scoops-system.vercel.app/',
@@ -94,7 +109,7 @@ export const ProjectsSection: React.FC = () => {
       image: '/savaliya_scoops_mockup.png',
     },
     {
-      id: '06',
+      id: '07',
       name: 'NextGenSociety Portal',
       category: 'Smart Society POS Portal',
       vercel: 'https://next-gen-society.vercel.app/',
@@ -109,7 +124,7 @@ export const ProjectsSection: React.FC = () => {
       image: '/nextgensociety_mockup.png',
     },
     {
-      id: '07',
+      id: '08',
       name: 'QuickStay Hotel Booking',
       category: 'Client Project (MERN Full-stack)',
       vercel: 'https://quickstay-phi.vercel.app/',
@@ -124,7 +139,7 @@ export const ProjectsSection: React.FC = () => {
       image: '/quickstay_hotel_mockup.png',
     },
     {
-      id: '08',
+      id: '09',
       name: 'Car Rental System',
       category: 'Personal Project (MERN Full-stack)',
       vercel: 'https://car-rental-ivory-five.vercel.app/',
@@ -139,7 +154,7 @@ export const ProjectsSection: React.FC = () => {
       image: '/car_rental_mockup.png',
     },
     {
-      id: '09',
+      id: '10',
       name: 'Blood Testing Management',
       category: 'Backend Dashboard System',
       github: 'https://github.com/cs-cspit/23CS-SEM4-CS210_70_75_106/tree/main',
@@ -153,7 +168,7 @@ export const ProjectsSection: React.FC = () => {
       image: '/blood_testing_mockup.png',
     },
     {
-      id: '10',
+      id: '11',
       name: 'Sports Venue Booking System',
       category: 'Management & Reservation Suite',
       github: 'https://github.com/Meghpatel2810/Sports_Venue_Booking_System',
@@ -167,7 +182,7 @@ export const ProjectsSection: React.FC = () => {
       image: '/sports_venue_mockup.png',
     },
     {
-      id: '11',
+      id: '12',
       name: 'Skill Swap Platform',
       category: 'MERN Stack Web App',
       vercel: 'https://skill-swap-web-app.vercel.app/',
