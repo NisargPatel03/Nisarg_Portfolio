@@ -1,5 +1,4 @@
-import React, { useRef, useState } from 'react';
-import { useScroll, useTransform, useSpring, motion } from 'framer-motion';
+import React, { useState } from 'react';
 
 interface TechItem {
   name: string;
@@ -8,12 +7,69 @@ interface TechItem {
   icon: React.ReactNode;
 }
 
+interface MarqueeRowProps {
+  skills: TechItem[];
+  animationClass: string;
+  rowPrefix: string;
+  hoveredSkill: string | null;
+  setHoveredSkill: (id: string | null) => void;
+}
+
+const MarqueeRow: React.FC<MarqueeRowProps> = ({
+  skills,
+  animationClass,
+  rowPrefix,
+  hoveredSkill,
+  setHoveredSkill,
+}) => {
+  const displaySkills = [...skills, ...skills];
+
+  return (
+    <div className="marquee-fade-edges marquee-track-pause flex overflow-hidden w-full">
+      <div className={`flex gap-4 sm:gap-5 py-2 w-max ${animationClass}`}>
+        {displaySkills.map((skill, i) => {
+          const key = `${rowPrefix}-${skill.name}-${i}`;
+          const isHovered = hoveredSkill === key;
+          return (
+            <div
+              key={key}
+              onMouseEnter={() => setHoveredSkill(key)}
+              onMouseLeave={() => setHoveredSkill(null)}
+              className="flex-shrink-0 flex items-center gap-3 sm:gap-4 px-6 sm:px-8 py-3.5 sm:py-4 rounded-full bg-[#121212]/80 border border-white/5 backdrop-blur-md transition-all duration-300 cursor-pointer relative group"
+              style={{
+                borderColor: isHovered ? skill.color : 'rgba(255,255,255,0.05)',
+                boxShadow: isHovered ? `0 0 28px ${skill.color}45, 0 8px 24px rgba(0,0,0,0.35)` : 'none',
+                transform: isHovered ? 'scale(1.05) translateY(-4px)' : 'scale(1) translateY(0)',
+              }}
+            >
+              <div
+                className="transition-colors duration-300 [&>svg]:w-7 [&>svg]:h-7 sm:[&>svg]:w-8 sm:[&>svg]:h-8"
+                style={{ color: isHovered ? skill.color : '#D7E2EA' }}
+              >
+                {skill.icon}
+              </div>
+              <div className="flex flex-col min-w-0">
+                <span className="text-white font-bold text-sm sm:text-base tracking-wide uppercase whitespace-nowrap">
+                  {skill.name}
+                </span>
+                <span
+                  className="font-mono text-[9px] sm:text-[10px] uppercase tracking-wider text-[#D7E2EA]/40 group-hover:text-white/90 transition-colors block max-w-0 overflow-hidden group-hover:max-w-[180px] duration-500 whitespace-nowrap"
+                  style={{ transitionProperty: 'max-width, color' }}
+                >
+                  {skill.badge}
+                </span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
 export const MarqueeSection: React.FC = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
 
-
-  // Row 1 (Frontend, Core Languages & Mobile Core)
   const row1Skills: TechItem[] = [
     {
       name: 'C++',
@@ -90,19 +146,6 @@ export const MarqueeSection: React.FC = () => {
       ),
     },
     {
-      name: 'React',
-      color: '#00D8FF',
-      badge: 'MERN Stack Core',
-      icon: (
-        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(30 12 12)" />
-          <ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(90 12 12)" />
-          <ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(150 12 12)" />
-          <circle cx="12" cy="12" r="1.5" />
-        </svg>
-      ),
-    },
-    {
       name: 'TypeScript',
       color: '#3178C6',
       badge: 'Type-Safe Systems',
@@ -135,7 +178,6 @@ export const MarqueeSection: React.FC = () => {
     },
   ];
 
-  // Row 2 (Backend, Databases, Tools & Machine Learning Core)
   const row2Skills: TechItem[] = [
     {
       name: 'Machine Learning',
@@ -232,16 +274,6 @@ export const MarqueeSection: React.FC = () => {
       ),
     },
     {
-      name: 'Supabase',
-      color: '#3ECF8E',
-      badge: 'Postgres & Auth Services',
-      icon: (
-        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-        </svg>
-      ),
-    },
-    {
       name: 'Express',
       color: '#F7DF1E',
       badge: 'Fast API Router',
@@ -277,31 +309,138 @@ export const MarqueeSection: React.FC = () => {
     },
   ];
 
-  // Duplicate the lists to make the horizontal scroll infinite and seamless
-  const displayRow1 = [...row1Skills, ...row1Skills];
-  const displayRow2 = [...row2Skills, ...row2Skills];
-
-  // Track scroll progress of the container relative to viewport
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"]
-  });
-
-  const springConfig = { stiffness: 60, damping: 25, mass: 0.5 };
-
-  // Row 1 slides Right, Row 2 slides Left
-  const rawX1 = useTransform(scrollYProgress, [0, 1], [-600, 200]);
-  const rawX2 = useTransform(scrollYProgress, [0, 1], [200, -600]);
-
-  const x1 = useSpring(rawX1, springConfig);
-  const x2 = useSpring(rawX2, springConfig);
+  const row3Skills: TechItem[] = [
+    {
+      name: 'React',
+      color: '#61DAFB',
+      badge: 'Component UI Layer',
+      icon: (
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(30 12 12)" />
+          <ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(90 12 12)" />
+          <ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(150 12 12)" />
+          <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+        </svg>
+      ),
+    },
+    {
+      name: 'Next.js',
+      color: '#FFFFFF',
+      badge: 'SSR & App Router',
+      icon: (
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M8 16V8l8 4-8 4z" />
+        </svg>
+      ),
+    },
+    {
+      name: 'Supabase',
+      color: '#3ECF8E',
+      badge: 'Postgres & Auth',
+      icon: (
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+        </svg>
+      ),
+    },
+    {
+      name: 'Firebase',
+      color: '#FFCA28',
+      badge: 'Realtime & Hosting',
+      icon: (
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 2L4 18h4l4-8 4 8h4L12 2z" />
+        </svg>
+      ),
+    },
+    {
+      name: 'WebGL',
+      color: '#990000',
+      badge: 'GPU Rendering',
+      icon: (
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="2" y="4" width="20" height="16" rx="2" />
+          <path d="M8 12h8M12 8v8" />
+        </svg>
+      ),
+    },
+    {
+      name: 'Three.js',
+      color: '#049EF4',
+      badge: '3D Web Scenes',
+      icon: (
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 2l9 5v10l-9 5-9-5V7l9-5z" />
+          <path d="M12 12l9-5M12 12v10M12 12L3 7" />
+        </svg>
+      ),
+    },
+    {
+      name: 'Docker',
+      color: '#2496ED',
+      badge: 'Containerized Deploys',
+      icon: (
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="2" y="8" width="20" height="12" rx="2" />
+          <path d="M6 8V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2" />
+          <path d="M8 14h2v2H8zM12 14h2v2h-2zM16 14h2v2h-2z" />
+        </svg>
+      ),
+    },
+    {
+      name: 'GraphQL',
+      color: '#E10098',
+      badge: 'Typed API Queries',
+      icon: (
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polygon points="12 2 20 7 20 17 12 22 4 17 4 7" />
+          <circle cx="12" cy="12" r="3" />
+        </svg>
+      ),
+    },
+    {
+      name: 'Redis',
+      color: '#DC382D',
+      badge: 'In-Memory Cache',
+      icon: (
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <ellipse cx="12" cy="6" rx="9" ry="3" />
+          <path d="M3 6v12c0 1.66 4 3 9 3s9-1.34 9-3V6" />
+          <path d="M3 10c0 1.66 4 3 9 3s9-1.34 9-3" />
+        </svg>
+      ),
+    },
+    {
+      name: 'Figma',
+      color: '#F24E1E',
+      badge: 'UI Prototyping',
+      icon: (
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="3" width="8" height="8" rx="4" />
+          <rect x="13" y="3" width="8" height="5" rx="2.5" />
+          <rect x="13" y="10" width="8" height="8" rx="4" />
+          <rect x="3" y="13" width="8" height="8" rx="4" />
+        </svg>
+      ),
+    },
+    {
+      name: 'Linux',
+      color: '#FCC624',
+      badge: 'Server & DevOps',
+      icon: (
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+          <line x1="9" y1="9" x2="9.01" y2="9" />
+          <line x1="15" y1="9" x2="15.01" y2="9" />
+        </svg>
+      ),
+    },
+  ];
 
   return (
-    <div
-      ref={containerRef}
-      className="bg-[#0C0C0C] pt-28 sm:pt-36 md:pt-44 pb-14 w-full overflow-hidden flex flex-col gap-8 sm:gap-10 select-none"
-    >
-      {/* 1. SECTION LOGO LABEL */}
+    <div className="bg-[#0C0C0C] pt-28 sm:pt-36 md:pt-44 pb-14 w-full overflow-hidden flex flex-col gap-6 sm:gap-8 select-none">
       <div className="max-w-5xl mx-auto w-full px-6 md:px-10 mb-2">
         <div className="flex items-center gap-3">
           <svg className="w-4 h-4 text-[#FF00C7]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -314,99 +453,28 @@ export const MarqueeSection: React.FC = () => {
         </div>
       </div>
 
-      {/* 2. DUAL-ROW CONVEYOR BELTS */}
-      <div className="flex flex-col gap-8 w-full relative overflow-hidden">
-        {/* Row 1 (Slides Right - Scroll Parallax) */}
-        <div className="flex overflow-hidden w-full">
-          <motion.div 
-            style={{ x: x1 }}
-            className="flex gap-5 sm:gap-7 py-3 w-max"
-          >
-            {displayRow1.map((skill, i) => {
-              const isHovered = hoveredSkill === `row1-${skill.name}-${i}`;
-              return (
-                <div
-                  key={`row1-${skill.name}-${i}`}
-                  onMouseEnter={() => setHoveredSkill(`row1-${skill.name}-${i}`)}
-                  onMouseLeave={() => setHoveredSkill(null)}
-                  className="flex-shrink-0 flex items-center gap-5 px-12 py-7 rounded-2xl bg-[#121212]/80 border border-white/5 backdrop-blur-md transition-all duration-300 cursor-pointer relative group"
-                  style={{
-                    borderColor: isHovered ? skill.color : 'rgba(255,255,255,0.05)',
-                    boxShadow: isHovered ? `0 0 25px ${skill.color}38` : 'none',
-                    transform: isHovered ? 'scale(1.06) translateY(-3px)' : 'scale(1)',
-                  }}
-                >
-                  {/* Brand Vector Icon Wrapper */}
-                  <div
-                    className="transition-colors duration-300 [&>svg]:w-9 [&>svg]:h-9"
-                    style={{ color: isHovered ? skill.color : '#D7E2EA' }}
-                  >
-                    {skill.icon}
-                  </div>
-                  
-                  {/* Name & Hover Specialty Badge */}
-                  <div className="flex flex-col">
-                    <span className="text-white font-black text-lg sm:text-xl tracking-wider uppercase">
-                      {skill.name}
-                    </span>
-                    <span
-                      className="font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-[#D7E2EA]/40 group-hover:text-white transition-colors block max-w-0 overflow-hidden group-hover:max-w-[200px] duration-500 whitespace-nowrap"
-                      style={{ transitionProperty: 'max-width, color' }}
-                    >
-                      {skill.badge}
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-          </motion.div>
-        </div>
-
-        {/* Row 2 (Slides Left - Scroll Parallax) */}
-        <div className="flex overflow-hidden w-full">
-          <motion.div 
-            style={{ x: x2 }}
-            className="flex gap-5 sm:gap-7 py-3 w-max"
-          >
-            {displayRow2.map((skill, i) => {
-              const isHovered = hoveredSkill === `row2-${skill.name}-${i}`;
-              return (
-                <div
-                  key={`row2-${skill.name}-${i}`}
-                  onMouseEnter={() => setHoveredSkill(`row2-${skill.name}-${i}`)}
-                  onMouseLeave={() => setHoveredSkill(null)}
-                  className="flex-shrink-0 flex items-center gap-5 px-12 py-7 rounded-2xl bg-[#121212]/80 border border-white/5 backdrop-blur-md transition-all duration-300 cursor-pointer relative group"
-                  style={{
-                    borderColor: isHovered ? skill.color : 'rgba(255,255,255,0.05)',
-                    boxShadow: isHovered ? `0 0 25px ${skill.color}38` : 'none',
-                    transform: isHovered ? 'scale(1.06) translateY(-3px)' : 'scale(1)',
-                  }}
-                >
-                  {/* Brand Vector Icon Wrapper */}
-                  <div
-                    className="transition-colors duration-300 [&>svg]:w-9 [&>svg]:h-9"
-                    style={{ color: isHovered ? skill.color : '#D7E2EA' }}
-                  >
-                    {skill.icon}
-                  </div>
-
-                  {/* Name & Hover Specialty Badge */}
-                  <div className="flex flex-col">
-                    <span className="text-white font-black text-lg sm:text-xl tracking-wider uppercase">
-                      {skill.name}
-                    </span>
-                    <span
-                      className="font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-[#D7E2EA]/40 group-hover:text-white transition-colors block max-w-0 overflow-hidden group-hover:max-w-[200px] duration-500 whitespace-nowrap"
-                      style={{ transitionProperty: 'max-width, color' }}
-                    >
-                      {skill.badge}
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-          </motion.div>
-        </div>
+      <div className="flex flex-col gap-5 sm:gap-6 w-full">
+        <MarqueeRow
+          skills={row1Skills}
+          animationClass="animate-marquee-left-fast"
+          rowPrefix="row1"
+          hoveredSkill={hoveredSkill}
+          setHoveredSkill={setHoveredSkill}
+        />
+        <MarqueeRow
+          skills={row2Skills}
+          animationClass="animate-marquee-right-medium"
+          rowPrefix="row2"
+          hoveredSkill={hoveredSkill}
+          setHoveredSkill={setHoveredSkill}
+        />
+        <MarqueeRow
+          skills={row3Skills}
+          animationClass="animate-marquee-left-slow"
+          rowPrefix="row3"
+          hoveredSkill={hoveredSkill}
+          setHoveredSkill={setHoveredSkill}
+        />
       </div>
     </div>
   );
