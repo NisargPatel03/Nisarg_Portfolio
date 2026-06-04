@@ -91,16 +91,16 @@
     }
   }
 
-  .animate-marquee-left {
-    animation: marquee-left 38s linear infinite;
+  .animate-marquee-left-fast {
+    animation: marquee-left 34s linear infinite;
   }
 
-  .animate-marquee-right {
-    animation: marquee-right 38s linear infinite;
+  .animate-marquee-left-slow {
+    animation: marquee-left 46s linear infinite;
   }
 
-  .marquee-track-pause:hover .animate-marquee-left,
-  .marquee-track-pause:hover .animate-marquee-right {
+  .marquee-track-pause:hover .animate-marquee-left-fast,
+  .marquee-track-pause:hover .animate-marquee-left-slow {
     animation-play-state: paused;
   }
 }

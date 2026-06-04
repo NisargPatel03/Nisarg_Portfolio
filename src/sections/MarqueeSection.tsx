@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { useScroll, useTransform, useSpring, motion } from 'framer-motion';
 
 interface TechItem {
   name: string;
@@ -276,9 +277,24 @@ export const MarqueeSection: React.FC = () => {
     },
   ];
 
-  // Duplicate the lists to make the horizontal scroll infinite and seamless in CSS marquee loops
+  // Duplicate the lists to make the horizontal scroll infinite and seamless
   const displayRow1 = [...row1Skills, ...row1Skills];
   const displayRow2 = [...row2Skills, ...row2Skills];
+
+  // Track scroll progress of the container relative to viewport
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+
+  const springConfig = { stiffness: 60, damping: 25, mass: 0.5 };
+
+  // Row 1 slides Right, Row 2 slides Left
+  const rawX1 = useTransform(scrollYProgress, [0, 1], [-600, 200]);
+  const rawX2 = useTransform(scrollYProgress, [0, 1], [200, -600]);
+
+  const x1 = useSpring(rawX1, springConfig);
+  const x2 = useSpring(rawX2, springConfig);
 
   return (
     <div
@@ -300,9 +316,12 @@ export const MarqueeSection: React.FC = () => {
 
       {/* 2. DUAL-ROW CONVEYOR BELTS */}
       <div className="flex flex-col gap-8 w-full relative overflow-hidden">
-        {/* Row 1 (Slides Right - Continuous CSS loop) */}
-        <div className="flex overflow-hidden w-full marquee-track-pause">
-          <div className="flex gap-5 sm:gap-7 py-2 animate-marquee-right w-max min-w-full">
+        {/* Row 1 (Slides Right - Scroll Parallax) */}
+        <div className="flex overflow-hidden w-full">
+          <motion.div 
+            style={{ x: x1 }}
+            className="flex gap-5 sm:gap-7 py-3 w-max"
+          >
             {displayRow1.map((skill, i) => {
               const isHovered = hoveredSkill === `row1-${skill.name}-${i}`;
               return (
@@ -310,7 +329,7 @@ export const MarqueeSection: React.FC = () => {
                   key={`row1-${skill.name}-${i}`}
                   onMouseEnter={() => setHoveredSkill(`row1-${skill.name}-${i}`)}
                   onMouseLeave={() => setHoveredSkill(null)}
-                  className="flex-shrink-0 flex items-center gap-3.5 px-8 py-5 rounded-2xl bg-[#121212]/80 border border-white/5 backdrop-blur-md transition-all duration-300 cursor-pointer relative group"
+                  className="flex-shrink-0 flex items-center gap-5 px-12 py-7 rounded-2xl bg-[#121212]/80 border border-white/5 backdrop-blur-md transition-all duration-300 cursor-pointer relative group"
                   style={{
                     borderColor: isHovered ? skill.color : 'rgba(255,255,255,0.05)',
                     boxShadow: isHovered ? `0 0 25px ${skill.color}38` : 'none',
@@ -319,7 +338,7 @@ export const MarqueeSection: React.FC = () => {
                 >
                   {/* Brand Vector Icon Wrapper */}
                   <div
-                    className="transition-colors duration-300"
+                    className="transition-colors duration-300 [&>svg]:w-9 [&>svg]:h-9"
                     style={{ color: isHovered ? skill.color : '#D7E2EA' }}
                   >
                     {skill.icon}
@@ -327,11 +346,11 @@ export const MarqueeSection: React.FC = () => {
                   
                   {/* Name & Hover Specialty Badge */}
                   <div className="flex flex-col">
-                    <span className="text-white font-extrabold text-base sm:text-lg tracking-wide uppercase">
+                    <span className="text-white font-black text-lg sm:text-xl tracking-wider uppercase">
                       {skill.name}
                     </span>
                     <span
-                      className="font-mono text-[9px] sm:text-[10px] uppercase tracking-wider text-[#D7E2EA]/40 group-hover:text-white transition-colors block max-w-0 overflow-hidden group-hover:max-w-[200px] duration-500 whitespace-nowrap"
+                      className="font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-[#D7E2EA]/40 group-hover:text-white transition-colors block max-w-0 overflow-hidden group-hover:max-w-[200px] duration-500 whitespace-nowrap"
                       style={{ transitionProperty: 'max-width, color' }}
                     >
                       {skill.badge}
@@ -340,12 +359,15 @@ export const MarqueeSection: React.FC = () => {
                 </div>
               );
             })}
-          </div>
+          </motion.div>
         </div>
 
-        {/* Row 2 (Slides Left - Continuous CSS loop) */}
-        <div className="flex overflow-hidden w-full marquee-track-pause">
-          <div className="flex gap-5 sm:gap-7 py-2 animate-marquee-left w-max min-w-full">
+        {/* Row 2 (Slides Left - Scroll Parallax) */}
+        <div className="flex overflow-hidden w-full">
+          <motion.div 
+            style={{ x: x2 }}
+            className="flex gap-5 sm:gap-7 py-3 w-max"
+          >
             {displayRow2.map((skill, i) => {
               const isHovered = hoveredSkill === `row2-${skill.name}-${i}`;
               return (
@@ -353,7 +375,7 @@ export const MarqueeSection: React.FC = () => {
                   key={`row2-${skill.name}-${i}`}
                   onMouseEnter={() => setHoveredSkill(`row2-${skill.name}-${i}`)}
                   onMouseLeave={() => setHoveredSkill(null)}
-                  className="flex-shrink-0 flex items-center gap-3.5 px-8 py-5 rounded-2xl bg-[#121212]/80 border border-white/5 backdrop-blur-md transition-all duration-300 cursor-pointer relative group"
+                  className="flex-shrink-0 flex items-center gap-5 px-12 py-7 rounded-2xl bg-[#121212]/80 border border-white/5 backdrop-blur-md transition-all duration-300 cursor-pointer relative group"
                   style={{
                     borderColor: isHovered ? skill.color : 'rgba(255,255,255,0.05)',
                     boxShadow: isHovered ? `0 0 25px ${skill.color}38` : 'none',
@@ -362,7 +384,7 @@ export const MarqueeSection: React.FC = () => {
                 >
                   {/* Brand Vector Icon Wrapper */}
                   <div
-                    className="transition-colors duration-300"
+                    className="transition-colors duration-300 [&>svg]:w-9 [&>svg]:h-9"
                     style={{ color: isHovered ? skill.color : '#D7E2EA' }}
                   >
                     {skill.icon}
@@ -370,11 +392,11 @@ export const MarqueeSection: React.FC = () => {
 
                   {/* Name & Hover Specialty Badge */}
                   <div className="flex flex-col">
-                    <span className="text-white font-extrabold text-base sm:text-lg tracking-wide uppercase">
+                    <span className="text-white font-black text-lg sm:text-xl tracking-wider uppercase">
                       {skill.name}
                     </span>
                     <span
-                      className="font-mono text-[9px] sm:text-[10px] uppercase tracking-wider text-[#D7E2EA]/40 group-hover:text-white transition-colors block max-w-0 overflow-hidden group-hover:max-w-[200px] duration-500 whitespace-nowrap"
+                      className="font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-[#D7E2EA]/40 group-hover:text-white transition-colors block max-w-0 overflow-hidden group-hover:max-w-[200px] duration-500 whitespace-nowrap"
                       style={{ transitionProperty: 'max-width, color' }}
                     >
                       {skill.badge}
@@ -383,7 +405,7 @@ export const MarqueeSection: React.FC = () => {
                 </div>
               );
             })}
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>

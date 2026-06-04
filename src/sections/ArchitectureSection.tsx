@@ -4,12 +4,21 @@ import { motion, AnimatePresence } from 'framer-motion';
 interface TechNode {
   id: string;
   name: string;
+  symbol: string;
   category: string;
-  column: 'client' | 'gateway' | 'ai' | 'database';
+  group: 'client' | 'backend' | 'ai' | 'data' | 'languages';
   color: string;
   description: string;
   pairedWith: string[];
-  icon: React.ReactNode;
+  subskills: string[];
+  // Physics parameters (handled in refs for performance)
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  baseX: number;
+  baseY: number;
+  radius: number;
 }
 
 interface Connection {
@@ -17,10 +26,24 @@ interface Connection {
   to: string;
 }
 
+interface MicroParticle {
+  id: string;
+  name: string;
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  color: string;
+  radius: number;
+  life: number; // decays from 1.0 to 0.0
+  decay: number;
+  parentTechId: string;
+}
+
 interface SimStep {
   nodeId: string;
   log: string;
-  duration: number; // relative delay in ms from start
+  duration: number; // delay in ms
 }
 
 interface SimulationFlow {
@@ -31,295 +54,815 @@ interface SimulationFlow {
 
 export const ArchitectureSection: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<SVGSVGElement>(null);
-  
-  const [hoveredNode, setHoveredNode] = useState<string | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const mouseRef = useRef<{ x: number | null; y: number | null }>({ x: null, y: null });
+  const nodesRef = useRef<TechNode[]>([]);
+  const microParticlesRef = useRef<MicroParticle[]>([]);
+  const animationFrameId = useRef<number | null>(null);
+  const rotationRef = useRef<number>(0);
+
+  const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null);
   const [activeSim, setActiveSim] = useState<string | null>(null);
   const [simStepIndex, setSimStepIndex] = useState<number>(-1);
   const [simLogs, setSimLogs] = useState<string[]>([]);
-  const [nodePositions, setNodePositions] = useState<Record<string, DOMRect>>({});
-  const [canvasPosition, setCanvasPosition] = useState<DOMRect | null>(null);
 
-  // Define the tech nodes in a precise 4x3 row-major order:
-  // Row 1: Client, Gateway, AI, Database
-  // Row 2: Client, Gateway, AI, Database
-  // Row 3: Client, Gateway, AI, Database
-  const nodes: TechNode[] = [
-    // --- ROW 1 ---
+  // List of all 27 technical skills mapped from Nisarg's portfolio
+  const staticNodesData = [
+    // --- 1. CLIENT CORE ---
     {
       id: 'react',
       name: 'React',
+      symbol: 'Re',
       category: 'Web App Engine',
-      column: 'client',
+      group: 'client' as const,
       color: '#00D8FF',
       description: 'Used for crafting responsive, component-driven web interfaces, state management pipelines, and interactive dashboards.',
       pairedWith: ['TypeScript', 'Zustand', 'Tailwind CSS'],
-      icon: (
-        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(30 12 12)" />
-          <ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(90 12 12)" />
-          <ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(150 12 12)" />
-          <circle cx="12" cy="12" r="1.5" />
-        </svg>
-      )
+      subskills: ['Context API', 'Zustand', 'Hooks', 'Chart.js', 'Recharts']
     },
-    {
-      id: 'nodejs',
-      name: 'Node.js',
-      category: 'Backend Runtime',
-      column: 'gateway',
-      color: '#339933',
-      description: 'Core runtime for scaling server environments, handling non-blocking WebSockets, and running REST API logic.',
-      pairedWith: ['Express', 'MongoDB', 'Supabase'],
-      icon: (
-        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M12 12v10" />
-        </svg>
-      )
-    },
-    {
-      id: 'python',
-      name: 'Python AI',
-      category: 'AI Pipeline Core',
-      column: 'ai',
-      color: '#3776AB',
-      description: 'Primary script environment for cleaning data sets, constructing predictive analytics, and loading neural models.',
-      pairedWith: ['TensorFlow', 'PyTorch', 'Node.js'],
-      icon: (
-        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-        </svg>
-      )
-    },
-    {
-      id: 'supabase',
-      name: 'Supabase',
-      category: 'Cloud Postgres',
-      column: 'database',
-      color: '#3ECF8E',
-      description: 'Backend-as-a-service cloud provider, delivering real-time PostgreSQL listeners, Edge functions, and secure authentication.',
-      pairedWith: ['React', 'Flutter', 'PostgreSQL'],
-      icon: (
-        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-        </svg>
-      )
-    },
-
-    // --- ROW 2 ---
     {
       id: 'flutter',
       name: 'Flutter',
-      category: 'Mobile Core SDK',
-      column: 'client',
+      symbol: 'Fl',
+      category: 'Mobile SDK',
+      group: 'client' as const,
       color: '#02569B',
-      description: 'Engine for compiling compiled native mobile apps for iOS and Android from a single Dart codebase.',
+      description: 'Engine for compiling native cross-platform mobile apps for iOS and Android from a single Dart codebase.',
       pairedWith: ['Dart', 'Supabase', 'REST APIs'],
-      icon: (
-        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M14 2L6 10l8 8M20 2L12 10l8 8" />
-        </svg>
-      )
+      subskills: ['Widgets', 'Pub.dev', 'Cupertino', 'State Management']
+    },
+    {
+      id: 'typescript',
+      name: 'TypeScript',
+      symbol: 'Ts',
+      category: 'Type Safety',
+      group: 'client' as const,
+      color: '#3178C6',
+      description: 'Brings type integrity and OOP practices to frontend modules, protecting app architectures against unexpected regressions.',
+      pairedWith: ['React', 'Node.js', 'Express'],
+      subskills: ['Interfaces', 'Generics', 'Union Types', 'Compiler']
+    },
+    {
+      id: 'tailwind',
+      name: 'Tailwind CSS',
+      symbol: 'Tw',
+      category: 'Utility Styling',
+      group: 'client' as const,
+      color: '#38BDF8',
+      description: 'A utility-first CSS framework for rapid UI styling, custom configurations, and responsive systems.',
+      pairedWith: ['React', 'Framer Motion'],
+      subskills: ['Flexbox', 'Grid', 'Utility Classes', 'JIT Compiler']
+    },
+    {
+      id: 'framer',
+      name: 'Framer Motion',
+      symbol: 'Fm',
+      category: 'Motion Physics',
+      group: 'client' as const,
+      color: '#FF00C7',
+      description: 'Production-ready motion library for React, powering high-fidelity animations and scroll-linked transitions.',
+      pairedWith: ['React', 'Tailwind CSS'],
+      subskills: ['AnimatePresence', 'motion.div', 'Spring', 'LayoutId']
+    },
+    {
+      id: 'redux',
+      name: 'Redux',
+      symbol: 'Rx',
+      category: 'State Store',
+      group: 'client' as const,
+      color: '#764ABC',
+      description: 'Global state management library commonly paired with React for predictable state updates and debugging.',
+      pairedWith: ['React', 'TypeScript'],
+      subskills: ['Redux Toolkit', 'Actions', 'Reducers', 'Thunks']
+    },
+    {
+      id: 'context',
+      name: 'Context API',
+      symbol: 'Cx',
+      category: 'State Propagation',
+      group: 'client' as const,
+      color: '#61DAFB',
+      description: 'React’s built-in state propagation system, eliminating prop drilling in complex component trees.',
+      pairedWith: ['React', 'JavaScript'],
+      subskills: ['useContext', 'Providers', 'State sharing']
+    },
+
+    // --- 2. APIS & RUNTIMES ---
+    {
+      id: 'nodejs',
+      name: 'Node.js',
+      symbol: 'Nj',
+      category: 'Server Runtime',
+      group: 'backend' as const,
+      color: '#339933',
+      description: 'Core runtime for scaling server environments, handling non-blocking WebSockets, and running REST API logic.',
+      pairedWith: ['Express', 'MongoDB', 'Supabase'],
+      subskills: ['V8 Engine', 'Event Loop', 'NPM', 'HTTP Modules']
     },
     {
       id: 'express',
       name: 'Express',
+      symbol: 'Ex',
       category: 'API Routing',
-      column: 'gateway',
-      color: '#F7DF1E',
+      group: 'backend' as const,
+      color: '#828282',
       description: 'Lightweight web framework utilized to build secure endpoints, orchestrate middleware, and manage REST requests.',
       pairedWith: ['Node.js', 'MongoDB', 'TypeScript'],
-      icon: (
-        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <rect x="3" y="3" width="18" height="18" rx="2" />
-          <path d="M7 8h10M7 12h10M7 16h6" />
-        </svg>
-      )
+      subskills: ['Middleware', 'Router', 'JWT Auth', 'CORS Config']
+    },
+    {
+      id: 'php',
+      name: 'PHP',
+      symbol: 'Ph',
+      category: 'Server Scripting',
+      group: 'backend' as const,
+      color: '#777BB4',
+      description: 'Used for scripting on-premise local dashboards, local database integration, and legacy blood bank systems.',
+      pairedWith: ['MySQL', 'Bootstrap', 'XAMPP'],
+      subskills: ['PDO', 'Sessions', 'Composer', 'Apache']
+    },
+    {
+      id: 'xampp',
+      name: 'XAMPP',
+      symbol: 'Xa',
+      category: 'Dev Environment',
+      group: 'backend' as const,
+      color: '#FB7A24',
+      description: 'Local development environment compiling Apache, MariaDB/MySQL, and PHP scripts.',
+      pairedWith: ['PHP', 'MySQL'],
+      subskills: ['Apache Server', 'Control Panel', 'Localhost', 'phpMyAdmin']
+    },
+    {
+      id: 'excel',
+      name: 'Excel API',
+      symbol: 'Xl',
+      category: 'Data Exporter',
+      group: 'backend' as const,
+      color: '#107C41',
+      description: 'API endpoints integrated to read, write, and export spreadsheet invoices for POS inventory controllers.',
+      pairedWith: ['React', 'Supabase'],
+      subskills: ['SheetJS', 'CSV Parsing', 'Blob Downloads', 'File System']
+    },
+
+    // --- 3. AI & INTELLIGENCE ---
+    {
+      id: 'python',
+      name: 'Python',
+      symbol: 'Py',
+      category: 'Scientific Logic',
+      group: 'ai' as const,
+      color: '#3776AB',
+      description: 'Primary script environment for cleaning data sets, constructing predictive analytics, and loading neural models.',
+      pairedWith: ['TensorFlow', 'PyTorch', 'Node.js'],
+      subskills: ['Pandas', 'NumPy', 'Scikit-learn', 'Anaconda']
+    },
+    {
+      id: 'ml',
+      name: 'Machine Learning',
+      symbol: 'Ml',
+      category: 'Statistical Math',
+      group: 'ai' as const,
+      color: '#FF6F00',
+      description: 'Algorithmic architectures performing classification, regressions, and predictive data analytics.',
+      pairedWith: ['Python', 'Deep Learning'],
+      subskills: ['Linear Regression', 'SVM', 'Random Forest', 'KNN']
+    },
+    {
+      id: 'dl',
+      name: 'Deep Learning',
+      symbol: 'Dl',
+      category: 'Neural Networks',
+      group: 'ai' as const,
+      color: '#9C27B0',
+      description: 'Multi-layered neural architectures solving high-dimensional computer vision and text classifications.',
+      pairedWith: ['TensorFlow', 'PyTorch'],
+      subskills: ['CNN', 'RNN', 'Backpropagation', 'Optimizers']
     },
     {
       id: 'tensorflow',
       name: 'TensorFlow',
-      category: 'Deep Learning',
-      column: 'ai',
+      symbol: 'Tf',
+      category: 'Tensor Flowing',
+      group: 'ai' as const,
       color: '#FF9900',
       description: 'Powerhouse ML library used for compiling neural classifications and hosting inference models.',
       pairedWith: ['Python', 'Deep Learning'],
-      icon: (
-        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <rect x="2" y="2" width="20" height="20" rx="5" />
-          <path d="M12 6v12M8 10h8" />
-        </svg>
-      )
-    },
-    {
-      id: 'mongodb',
-      name: 'MongoDB',
-      category: 'Document Storage',
-      column: 'database',
-      color: '#47A248',
-      description: 'Document database hosting complex user profiles, application logs, and message boards for web portals.',
-      pairedWith: ['Node.js', 'Express', 'React'],
-      icon: (
-        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M12 2c0 0-5 4-5 9s3 7 5 11c2-4 5-7 5-11s-5-9-5-9z" />
-        </svg>
-      )
-    },
-
-    // --- ROW 3 ---
-    {
-      id: 'typescript',
-      name: 'TypeScript',
-      category: 'Type Safety',
-      column: 'client',
-      color: '#3178C6',
-      description: 'Brings type integrity and OOP practices to the frontend modules, protecting app architectures against unexpected regressions.',
-      pairedWith: ['React', 'Node.js', 'Express'],
-      icon: (
-        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <rect x="3" y="3" width="18" height="18" rx="2" />
-          <path d="M8 8h6M11 8v8M16 11c0-1-1-2-2-2s-2 1-2 2v2c0 1 1 2 2 2s2-1 2-2" />
-        </svg>
-      )
-    },
-    {
-      id: 'php',
-      name: 'PHP / XAMPP',
-      category: 'Local APIs & Legacy',
-      column: 'gateway',
-      color: '#777BB4',
-      description: 'Used for scripting on-premise local dashboards, local database integration, and legacy blood bank dashboard systems.',
-      pairedWith: ['MySQL', 'Bootstrap', 'XAMPP'],
-      icon: (
-        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <ellipse cx="12" cy="12" rx="10" ry="6" />
-          <path d="M8 9h4a2 2 0 1 1 0 4H8v3M16 9h4a2 2 0 1 1 0 4h-4v3" />
-        </svg>
-      )
+      subskills: ['Keras', 'Neural Layers', 'Conv2D', 'Tensorboard']
     },
     {
       id: 'pytorch',
       name: 'PyTorch',
-      category: 'Deep Learning',
-      column: 'ai',
+      symbol: 'Pt',
+      category: 'Dynamic Graph ML',
+      group: 'ai' as const,
       color: '#EE4C2C',
       description: 'An open-source machine learning library used for training deep neural networks, computer vision, and NLP models.',
-      pairedWith: ['Python', 'TensorFlow', 'Deep Learning'],
-      icon: (
-        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <circle cx="12" cy="12" r="10" />
-          <path d="M12 8v8M9 12h6" />
-        </svg>
-      )
+      pairedWith: ['Python', 'TensorFlow'],
+      subskills: ['Tensors', 'Autograd', 'TorchVision', 'NLP Models']
+    },
+
+    // --- 4. DATA & CLOUD ---
+    {
+      id: 'mongodb',
+      name: 'MongoDB',
+      symbol: 'Mg',
+      category: 'NoSQL Storage',
+      group: 'data' as const,
+      color: '#47A248',
+      description: 'Document database hosting complex user profiles, application logs, and message boards for web portals.',
+      pairedWith: ['Node.js', 'Express', 'React'],
+      subskills: ['Mongoose', 'BSON Schema', 'Aggregations', 'Indexing']
+    },
+    {
+      id: 'supabase',
+      name: 'Supabase',
+      symbol: 'Sb',
+      category: 'Cloud Postgres',
+      group: 'data' as const,
+      color: '#3ECF8E',
+      description: 'Backend-as-a-service cloud provider, delivering real-time PostgreSQL listeners, Edge functions, and secure authentication.',
+      pairedWith: ['React', 'Flutter', 'PostgreSQL'],
+      subskills: ['Realtime Sync', 'Auth GoTrue', 'PostgREST', 'Storage Buckets']
     },
     {
       id: 'mysql',
       name: 'MySQL',
+      symbol: 'My',
       category: 'Relational DB',
-      column: 'database',
+      group: 'data' as const,
       color: '#00758F',
       description: 'Structured database manager processing ledger audits, relational user grids, and cricket tournament rosters.',
       pairedWith: ['PHP', 'Node.js', 'XAMPP'],
-      icon: (
-        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <ellipse cx="12" cy="6" rx="9" ry="3" />
-          <path d="M3 6v12c0 1.66 4 3 9 3s9-1.34 9-3V6" />
-          <path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3" />
-        </svg>
-      )
+      subskills: ['SQL Joins', 'Triggers', 'Stored Procedures', 'Indexing']
     },
+    {
+      id: 'vercel',
+      name: 'Vercel',
+      symbol: 'Vc',
+      category: 'Serverless Edge',
+      group: 'data' as const,
+      color: '#FFFFFF',
+      description: 'Frontend cloud platform optimized for serverless deployments, edge caching, and automated Git CI/CD.',
+      pairedWith: ['React', 'Git'],
+      subskills: ['Edge Functions', 'CI/CD Pipelines', 'Analytics', 'DNS Routing']
+    },
+    {
+      id: 'git',
+      name: 'Git',
+      symbol: 'Gt',
+      category: 'Version Control',
+      group: 'data' as const,
+      color: '#F05032',
+      description: 'Distributed version control system logging source code changes, branches, and remote repositories.',
+      pairedWith: ['Vercel', 'GitHub'],
+      subskills: ['Branching', 'Merging', 'Rebasing', 'Git Hooks']
+    },
+
+    // --- 5. LANGUAGES ---
+    {
+      id: 'cpp',
+      name: 'C++',
+      symbol: 'C+',
+      category: 'Systems Language',
+      group: 'languages' as const,
+      color: '#00599C',
+      description: 'Fast systems language used for algorithmic foundations, competitive programming, and Hackerrank milestones.',
+      pairedWith: ['C', 'Java'],
+      subskills: ['STL Libraries', 'Pointers', 'OOP', 'Memory Management']
+    },
+    {
+      id: 'java',
+      name: 'Java',
+      symbol: 'Jv',
+      category: 'OOP Software',
+      group: 'languages' as const,
+      color: '#E76F51',
+      description: 'Object-oriented programming language driving cross-platform enterprise software and backend databases.',
+      pairedWith: ['C++', 'SQL'],
+      subskills: ['Multithreading', 'JVM Virtual Machine', 'Spring Boot', 'Collections']
+    },
+    {
+      id: 'c',
+      name: 'C',
+      symbol: 'C',
+      category: 'Foundations',
+      group: 'languages' as const,
+      color: '#A8B9CC',
+      description: 'Procedural system foundation language teaching memory management and hardware-level operations.',
+      pairedWith: ['C++', 'Assembly'],
+      subskills: ['Pointers', 'Structs', 'Malloc/Free', 'Header Files']
+    },
+    {
+      id: 'dart',
+      name: 'Dart',
+      symbol: 'Dt',
+      category: 'UI Compiler',
+      group: 'languages' as const,
+      color: '#00B4AB',
+      description: 'Client-optimized programming language compiling native mobile apps via the Flutter SDK.',
+      pairedWith: ['Flutter'],
+      subskills: ['Asynchronous Streams', 'AOT Compilers', 'Sound Null Safety']
+    },
+    {
+      id: 'javascript',
+      name: 'JavaScript',
+      symbol: 'Js',
+      category: 'Scripting Core',
+      group: 'languages' as const,
+      color: '#F7DF1E',
+      description: 'The core scripting engine of the web, powering frontend UI reactivity and server-side runtimes.',
+      pairedWith: ['React', 'TypeScript', 'Node.js'],
+      subskills: ['ES6 Syntax', 'Promises', 'Asynchronous Events', 'Closures']
+    }
   ];
 
-  // System connection paths
+  // Inter-node connection paths representing architectural dependencies
   const connections: Connection[] = [
-    { from: 'react', to: 'nodejs' },
-    { from: 'react', to: 'express' },
-    { from: 'react', to: 'php' },
-    { from: 'flutter', to: 'nodejs' },
+    { from: 'javascript', to: 'typescript' },
+    { from: 'javascript', to: 'react' },
+    { from: 'javascript', to: 'nodejs' },
     { from: 'typescript', to: 'react' },
     { from: 'typescript', to: 'nodejs' },
+    { from: 'typescript', to: 'express' },
     
-    { from: 'nodejs', to: 'python' },
-    { from: 'express', to: 'python' },
+    { from: 'react', to: 'redux' },
+    { from: 'react', to: 'context' },
+    { from: 'react', to: 'tailwind' },
+    { from: 'react', to: 'framer' },
     
+    { from: 'nodejs', to: 'express' },
     { from: 'nodejs', to: 'mongodb' },
     { from: 'nodejs', to: 'supabase' },
+    { from: 'express', to: 'mongodb' },
     { from: 'express', to: 'supabase' },
     
+    { from: 'php', to: 'xampp' },
     { from: 'php', to: 'mysql' },
-    { from: 'nodejs', to: 'mysql' },
+    { from: 'xampp', to: 'mysql' },
+    { from: 'excel', to: 'supabase' },
     
+    { from: 'python', to: 'ml' },
+    { from: 'python', to: 'dl' },
     { from: 'python', to: 'tensorflow' },
     { from: 'python', to: 'pytorch' },
+    { from: 'ml', to: 'dl' },
+    { from: 'dl', to: 'tensorflow' },
+    { from: 'dl', to: 'pytorch' },
+    
+    { from: 'flutter', to: 'dart' },
+    { from: 'flutter', to: 'supabase' },
+    
+    { from: 'cpp', to: 'c' },
+    { from: 'cpp', to: 'java' },
+    { from: 'java', to: 'c' },
+    
+    { from: 'git', to: 'vercel' },
+    { from: 'vercel', to: 'react' }
   ];
 
-  // Simulation workflows
+  // Live simulation workflows
   const workflows: Record<string, SimulationFlow> = {
     welfare: {
       name: 'Welfare Eligibility Profile Match',
-      description: 'Simulates a user assessing benefit eligibility with real-time neural sorting.',
+      description: 'User submits profile (income, age) on React frontend, runs AI eligibility analysis, logs to Supabase.',
       steps: [
-        { nodeId: 'react', log: 'User submits profile (income: ₹3L, age: 21) on frontend form', duration: 0 },
-        { nodeId: 'express', log: 'POST request received by Express router, initiating validation', duration: 800 },
-        { nodeId: 'python', log: 'Express calls Python backend running AI sorting scripts', duration: 1600 },
-        { nodeId: 'tensorflow', log: 'TensorFlow model predicts eligibility compatibility at 98%', duration: 2400 },
-        { nodeId: 'supabase', log: 'Persisting audited eligibility lookup to cloud PostgreSQL', duration: 3200 },
-        { nodeId: 'react', log: 'Success! Dynamic results render to citizen dashboard', duration: 4000 }
+        { nodeId: 'react', log: 'User submits profile metrics on React frontend form', duration: 0 },
+        { nodeId: 'express', log: 'Secure POST request verified by Express REST endpoints', duration: 800 },
+        { nodeId: 'python', log: 'Python analysis engine initiates data cleaning & feature parsing', duration: 1600 },
+        { nodeId: 'tensorflow', log: 'TensorFlow ML model outputs compatibility predictions', duration: 2400 },
+        { nodeId: 'supabase', log: 'Persisting audited eligibility records inside Cloud Supabase DB', duration: 3200 },
+        { nodeId: 'react', log: 'Success! Results rendered to citizen dashboard UI', duration: 4000 }
       ]
     },
     tournament: {
       name: 'Tournament Scoreboard Update',
-      description: 'Simulates real-time mobile referee scoreboard updates syncing to the web client.',
+      description: 'Referee increments scores on Flutter mobile app, logs securely to Node.js, syncing to MySQL DB.',
       steps: [
-        { nodeId: 'flutter', log: 'Referee increments match run counter on Flutter mobile app', duration: 0 },
-        { nodeId: 'nodejs', log: 'Secure Socket connection payload received by Node.js middleware', duration: 800 },
-        { nodeId: 'mysql', log: 'Writing score registry transactions to relational MySQL DB', duration: 1600 },
-        { nodeId: 'react', log: 'Broadcasting updates; React scoreboard client polls & updates', duration: 2400 }
+        { nodeId: 'flutter', log: 'Referee registers score events on Flutter mobile client', duration: 0 },
+        { nodeId: 'nodejs', log: 'Socket event packets verified by Node.js web runtime controller', duration: 800 },
+        { nodeId: 'mysql', log: 'Recording transactional ledger registers to relational MySQL', duration: 1600 },
+        { nodeId: 'react', log: 'Success! Broadcaster synced updates to React spectator boards', duration: 2400 }
       ]
     },
     pos: {
       name: 'Savaliya Scoops POS Checkout',
-      description: 'Simulates offline POS systems processing orders and queueing receipts.',
+      description: 'POS Operator initiates cash checkout on React panel, triggering local PHP logs and Excel spreadsheets.',
       steps: [
-        { nodeId: 'react', log: 'POS Operator clicks complete checkout on web interface', duration: 0 },
-        { nodeId: 'php', log: 'Forwarding transaction logs locally to XAMPP / PHP API server', duration: 800 },
-        { nodeId: 'mysql', log: 'Auditing receipt order entries locally inside MySQL schema', duration: 1600 },
-        { nodeId: 'php', log: 'PHP backend starts raw protocol transmission to thermal printer', duration: 2400 }
+        { nodeId: 'react', log: 'POS Operator presses complete checkout button in React panel', duration: 0 },
+        { nodeId: 'php', log: 'Forwarding transaction logs locally to local PHP server script', duration: 800 },
+        { nodeId: 'mysql', log: 'Committing local receipt invoice orders inside MySQL database', duration: 1600 },
+        { nodeId: 'excel', log: 'Success! PHP script triggers Excel API to export POS report', duration: 2400 }
       ]
     }
   };
 
-  // Measure positions of the nodes on screen resize or load
-  const measurePositions = () => {
-    if (!containerRef.current || !canvasRef.current) return;
-    const canvasRect = canvasRef.current.getBoundingClientRect();
-    setCanvasPosition(canvasRect);
-
-    const positions: Record<string, DOMRect> = {};
-    nodes.forEach((node) => {
-      const el = document.getElementById(`node-${node.id}`);
-      if (el) {
-        positions[node.id] = el.getBoundingClientRect();
-      }
-    });
-    setNodePositions(positions);
+  // Calculates gravity centers depending on screen size
+  const getClusterCenters = (width: number, height: number) => {
+    if (width < 640) {
+      // Mobile stack layout
+      return {
+        client: { x: width * 0.5, y: height * 0.16 },
+        backend: { x: width * 0.5, y: height * 0.36 },
+        ai: { x: width * 0.5, y: height * 0.56 },
+        data: { x: width * 0.5, y: height * 0.74 },
+        languages: { x: width * 0.5, y: height * 0.88 }
+      };
+    } else {
+      // Tablet/Desktop constellations
+      return {
+        client: { x: width * 0.22, y: height * 0.28 },
+        backend: { x: width * 0.5, y: height * 0.22 },
+        ai: { x: width * 0.78, y: height * 0.32 },
+        data: { x: width * 0.68, y: height * 0.72 },
+        languages: { x: width * 0.32, y: height * 0.72 }
+      };
+    }
   };
 
+  // Initialize node arrays and start loop
   useEffect(() => {
-    measurePositions();
-    window.addEventListener('resize', measurePositions);
-    // Extra timeouts to handle any layout shifts after initial load
-    const timer1 = setTimeout(measurePositions, 200);
-    const timer2 = setTimeout(measurePositions, 800);
-    
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const parent = canvas.parentElement;
+    if (!parent) return;
+
+    const width = parent.clientWidth;
+    const height = parent.clientHeight;
+    canvas.width = width;
+    canvas.height = height;
+
+    const centers = getClusterCenters(width, height);
+
+    // Initialize tech nodes with positioning & velocities
+    const initializedNodes: TechNode[] = staticNodesData.map((node) => {
+      const center = centers[node.group];
+      const offsetAngle = Math.random() * Math.PI * 2;
+      const offsetDist = 30 + Math.random() * 50;
+      return {
+        ...node,
+        x: center.x + Math.cos(offsetAngle) * offsetDist,
+        y: center.y + Math.sin(offsetAngle) * offsetDist,
+        vx: 0,
+        vy: 0,
+        baseX: center.x,
+        baseY: center.y,
+        radius: width < 640 ? 30 : 38
+      };
+    });
+
+    nodesRef.current = initializedNodes;
+
+    // Resizing listener
+    const handleResize = () => {
+      const innerCanvas = canvasRef.current;
+      if (!innerCanvas) return;
+      const innerParent = innerCanvas.parentElement;
+      if (!innerParent) return;
+      
+      const newW = innerParent.clientWidth;
+      const newH = innerParent.clientHeight;
+      innerCanvas.width = newW;
+      innerCanvas.height = newH;
+
+      const innerCenters = getClusterCenters(newW, newH);
+      nodesRef.current.forEach((n) => {
+        const center = innerCenters[n.group];
+        n.baseX = center.x;
+        n.baseY = center.y;
+        n.radius = newW < 640 ? 30 : 38;
+      });
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Animation physics loop
+    const render = () => {
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      const w = canvas.width;
+      const h = canvas.height;
+
+      // Clear with background opacity trail effect
+      ctx.fillStyle = 'rgba(12, 12, 12, 0.22)';
+      ctx.fillRect(0, 0, w, h);
+
+      const mx = mouseRef.current.x;
+      const my = mouseRef.current.y;
+
+      // Rotation counters for spinning UI details
+      rotationRef.current += 0.015;
+
+      // --- PHYSICS CALCULATION ---
+      const activeStepNodeId = (activeSim && simStepIndex !== -1)
+        ? workflows[activeSim].steps[simStepIndex].nodeId
+        : null;
+
+      nodesRef.current.forEach((node) => {
+        // 1. Attraction to cluster center
+        let attractionStrength = 0.008;
+        if (node.id === activeStepNodeId) attractionStrength = 0.02; // Pull focused node quickly to front
+        
+        const dx = node.baseX - node.x;
+        const dy = node.baseY - node.y;
+        node.vx += dx * attractionStrength;
+        node.vy += dy * attractionStrength;
+
+        // 2. Mouse gravity pull
+        if (mx !== null && my !== null) {
+          const mdx = mx - node.x;
+          const mdy = my - node.y;
+          const mdist = Math.hypot(mdx, mdy);
+          if (mdist < 200) {
+            const pull = (200 - mdist) * 0.015;
+            node.vx += (mdx / mdist) * pull;
+            node.vy += (mdy / mdist) * pull;
+          }
+        }
+
+        // 3. Collision repulsion from other nodes
+        nodesRef.current.forEach((other) => {
+          if (node.id === other.id) return;
+          const odx = other.x - node.x;
+          const ody = other.y - node.y;
+          const odist = Math.hypot(odx, ody);
+          const minDist = node.radius + other.radius + 38;
+          if (odist < minDist) {
+            const push = (minDist - odist) * 0.018;
+            const angle = Math.atan2(ody, odx);
+            node.vx -= Math.cos(angle) * push;
+            node.vy -= Math.sin(angle) * push;
+            other.vx += Math.cos(angle) * push;
+            other.vy += Math.sin(angle) * push;
+          }
+        });
+
+        // 4. Update coordinates & apply damping friction
+        node.vx *= 0.85;
+        node.vy *= 0.85;
+        node.x += node.vx;
+        node.y += node.vy;
+
+        // 5. Keep nodes inside canvas walls
+        const margin = node.radius + 15;
+        if (node.x < margin) { node.x = margin; node.vx *= -0.5; }
+        if (node.x > w - margin) { node.x = w - margin; node.vx *= -0.5; }
+        if (node.y < margin) { node.y = margin; node.vy *= -0.5; }
+        if (node.y > h - margin) { node.y = h - margin; node.vy *= -0.5; }
+      });
+
+      // --- UPDATE MICRO PARTICLES (CLICK DETONATION) ---
+      microParticlesRef.current.forEach((p) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vx *= 0.94;
+        p.vy *= 0.94;
+
+        // Gravity pull back to parent node
+        const parent = nodesRef.current.find((n) => n.id === p.parentTechId);
+        if (parent && p.life < 0.6) {
+          const pdx = parent.x - p.x;
+          const pdy = parent.y - p.y;
+          const pdist = Math.hypot(pdx, pdy);
+          p.vx += (pdx / pdist) * 0.16;
+          p.vy += (pdy / pdist) * 0.16;
+        }
+
+        p.life -= p.decay;
+      });
+
+      // Filter out microparticles that decayed fully
+      microParticlesRef.current = microParticlesRef.current.filter((p) => p.life > 0.02);
+
+      // --- RENDERING CONNECTIONS ---
+      connections.forEach((conn) => {
+        const fromNode = nodesRef.current.find((n) => n.id === conn.from);
+        const toNode = nodesRef.current.find((n) => n.id === conn.to);
+        if (!fromNode || !toNode) return;
+
+        const dist = Math.hypot(fromNode.x - toNode.x, fromNode.y - toNode.y);
+        const maxDist = 280;
+
+        if (dist < maxDist) {
+          // Highlight connection if nodes are hovered or running in active simulation path
+          let isActive = false;
+          if (hoveredNodeId === fromNode.id || hoveredNodeId === toNode.id) {
+            isActive = true;
+          }
+          if (activeSim && simStepIndex !== -1) {
+            const steps = workflows[activeSim].steps.slice(0, simStepIndex + 1).map((s) => s.nodeId);
+            const fromIdx = steps.indexOf(fromNode.id);
+            const toIdx = steps.indexOf(toNode.id);
+            if (fromIdx !== -1 && toIdx !== -1 && Math.abs(fromIdx - toIdx) <= 1) {
+              isActive = true;
+            }
+          }
+
+          ctx.strokeStyle = isActive ? fromNode.color : 'rgba(255, 255, 255, 0.03)';
+          ctx.lineWidth = isActive ? 1.6 : 0.6;
+          ctx.beginPath();
+          ctx.moveTo(fromNode.x, fromNode.y);
+          ctx.lineTo(toNode.x, toNode.y);
+          ctx.stroke();
+
+          // Spark particle tracking along connection line during simulation flow
+          if (activeSim && simStepIndex > 0) {
+            const steps = workflows[activeSim].steps;
+            const prevId = steps[simStepIndex - 1].nodeId;
+            const currId = steps[simStepIndex].nodeId;
+            if ((prevId === fromNode.id && currId === toNode.id) || (prevId === toNode.id && currId === fromNode.id)) {
+              const progress = (Date.now() % 1200) / 1200;
+              const spx = fromNode.x + (toNode.x - fromNode.x) * progress;
+              const spy = fromNode.y + (toNode.y - fromNode.y) * progress;
+              ctx.fillStyle = fromNode.color;
+              ctx.shadowColor = fromNode.color;
+              ctx.shadowBlur = 8;
+              ctx.beginPath();
+              ctx.arc(spx, spy, 4.5, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.shadowBlur = 0;
+            }
+          }
+        }
+      });
+
+      // --- RENDERING TECH NODES ---
+      nodesRef.current.forEach((node) => {
+        const isHovered = hoveredNodeId === node.id;
+        const isSimFocused = node.id === activeStepNodeId;
+        const isSimPassed = activeSim && workflows[activeSim].steps.slice(0, simStepIndex).some((s) => s.nodeId === node.id);
+
+        ctx.save();
+
+        // Node Glow Backdrop
+        const grad = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, node.radius + 18);
+        grad.addColorStop(0, isHovered || isSimFocused ? `${node.color}35` : isSimPassed ? `${node.color}15` : `${node.color}05`);
+        grad.addColorStop(1, 'transparent');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, node.radius + 18, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Dotted Spinning Halo Outer Border
+        if (isHovered || isSimFocused) {
+          ctx.strokeStyle = node.color;
+          ctx.lineWidth = 1.2;
+          ctx.setLineDash([4, 4]);
+          ctx.beginPath();
+          ctx.arc(node.x, node.y, node.radius + 8, rotationRef.current, rotationRef.current + Math.PI * 2);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+
+        // Base capsule pill drawing
+        ctx.fillStyle = 'rgba(10, 10, 10, 0.95)';
+        ctx.strokeStyle = isHovered || isSimFocused ? node.color : 'rgba(255, 255, 255, 0.08)';
+        ctx.lineWidth = isHovered || isSimFocused ? 2.5 : 1;
+        ctx.shadowColor = node.color;
+        ctx.shadowBlur = isHovered || isSimFocused ? 14 : 0;
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.shadowBlur = 0; // reset
+
+        // Abbreviated Symbol Label in Center
+        ctx.fillStyle = isHovered || isSimFocused || isSimPassed ? node.color : '#FFFFFF';
+        ctx.font = `bold ${node.radius * 0.5}px monospace`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(node.symbol, node.x, node.y - 4);
+
+        // Subtitle Title below Symbol
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.55)';
+        ctx.font = `${node.radius * 0.28}px sans-serif`;
+        ctx.fillText(node.name, node.x, node.y + (node.radius * 0.45));
+
+        ctx.restore();
+      });
+
+      // --- RENDERING MICRO PARTICLES ---
+      microParticlesRef.current.forEach((p) => {
+        ctx.save();
+        ctx.globalAlpha = p.life;
+        ctx.shadowColor = p.color;
+        ctx.shadowBlur = 6;
+        
+        ctx.fillStyle = 'rgba(15, 15, 15, 0.95)';
+        ctx.strokeStyle = p.color;
+        ctx.lineWidth = 1;
+        
+        ctx.font = '8px monospace';
+        const txtWidth = ctx.measureText(p.name).width;
+        const pHeight = 16;
+        const pWidth = txtWidth + 14;
+
+        ctx.beginPath();
+        ctx.roundRect(p.x - pWidth / 2, p.y - pHeight / 2, pWidth, pHeight, 8);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = '#FFFFFF';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(p.name, p.x, p.y);
+
+        ctx.restore();
+      });
+
+      // --- RENDERING CONSTELATION NAMES (Labels) ---
+      if (w > 640) {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+        ctx.font = 'bold 9px monospace';
+        ctx.letterSpacing = '1px';
+        ctx.textAlign = 'center';
+        ctx.fillText('CLIENT CORE', centers.client.x, centers.client.y - 100);
+        ctx.fillText('APIs & RUNTIMES', centers.backend.x, centers.backend.y - 80);
+        ctx.fillText('AI & INTELLIGENCE', centers.ai.x, centers.ai.y - 100);
+        ctx.fillText('CLOUD & DATABASES', centers.data.x, centers.data.y + 100);
+        ctx.fillText('LANGUAGES', centers.languages.x, centers.languages.y + 100);
+      }
+
+      animationFrameId.current = requestAnimationFrame(render);
+    };
+
+    render();
+
     return () => {
-      window.removeEventListener('resize', measurePositions);
-      clearTimeout(timer1);
-      clearTimeout(timer2);
+      window.removeEventListener('resize', handleResize);
+      if (animationFrameId.current) cancelAnimationFrame(animationFrameId.current);
     };
   }, []);
 
-  // Simulation handler loop
+  // Track Mouse movement relative to canvas element
+  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+    mouseRef.current = { x: mx, y: my };
+
+    // Hover detection checks
+    let foundNodeId: string | null = null;
+    nodesRef.current.forEach((n) => {
+      const dist = Math.hypot(n.x - mx, n.y - my);
+      if (dist < n.radius + 8) {
+        foundNodeId = n.id;
+      }
+    });
+
+    if (foundNodeId !== hoveredNodeId) {
+      setHoveredNodeId(foundNodeId);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    mouseRef.current = { x: null, y: null };
+    setHoveredNodeId(null);
+  };
+
+  // Triggers click detonations on selected tech nodes
+  const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+
+    nodesRef.current.forEach((node) => {
+      const dist = Math.hypot(node.x - mx, node.y - my);
+      if (dist < node.radius + 8) {
+        spawnMicroParticles(node);
+      }
+    });
+  };
+
+  const spawnMicroParticles = (node: TechNode) => {
+    const skills = node.subskills;
+    const count = skills.length;
+    const newMicros: MicroParticle[] = skills.map((skill, idx) => {
+      const angle = (idx / count) * Math.PI * 2 + (Math.random() - 0.5) * 0.4;
+      const speed = 2.5 + Math.random() * 3.5;
+      return {
+        id: `${node.id}-micro-${idx}`,
+        name: skill,
+        x: node.x,
+        y: node.y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        color: node.color,
+        radius: 8,
+        life: 1.0,
+        decay: 0.004 + Math.random() * 0.004,
+        parentTechId: node.id
+      };
+    });
+
+    microParticlesRef.current = [...microParticlesRef.current, ...newMicros];
+  };
+
+  // Run simulation sequence handler
   useEffect(() => {
     if (!activeSim) {
       setSimStepIndex(-1);
@@ -342,11 +885,11 @@ export const ArchitectureSection: React.FC = () => {
         const sec = (step.duration / 1000).toFixed(2);
         setSimLogs((prev) => [...prev, `[${sec}s] ➜ ${step.log}`]);
         
-        // Auto-end simulation after last step
+        // Auto stop simulation
         if (idx === flow.steps.length - 1) {
           window.setTimeout(() => {
             setActiveSim(null);
-          }, 2000);
+          }, 3000);
         }
       }, step.duration);
       timers.push(timer);
@@ -357,152 +900,12 @@ export const ArchitectureSection: React.FC = () => {
     };
   }, [activeSim]);
 
-  // Check if a connection is active (hovered or currently in simulation)
-  const isConnectionActive = (from: string, to: string) => {
-    // 1. Hover state highlight
-    if (hoveredNode) {
-      if (from === hoveredNode || to === hoveredNode) {
-        return true;
-      }
-    }
-    
-    // 2. Simulation state highlight
-    if (activeSim && simStepIndex !== -1) {
-      const flow = workflows[activeSim];
-      
-      // Highlight the paths directly connecting the nodes executed in the workflow up to current step
-      const stepNodeIds = flow.steps.slice(0, simStepIndex + 1).map(s => s.nodeId);
-      const fromIdx = stepNodeIds.indexOf(from);
-      const toIdx = stepNodeIds.indexOf(to);
-      
-      if (fromIdx !== -1 && toIdx !== -1 && Math.abs(fromIdx - toIdx) <= 1) {
-        return true;
-      }
-    }
-
-    return false;
-  };
-
-  // Node highlight status helper
-  const getNodeState = (id: string) => {
-    if (activeSim && simStepIndex !== -1) {
-      const currentSimNodeId = workflows[activeSim].steps[simStepIndex].nodeId;
-      if (id === currentSimNodeId) return 'sim-active';
-      if (workflows[activeSim].steps.slice(0, simStepIndex).some(s => s.nodeId === id)) return 'sim-passed';
-    }
-    if (hoveredNode === id) return 'hovered';
-    if (hoveredNode) {
-      const activeTech = nodes.find(n => n.id === hoveredNode);
-      if (activeTech?.pairedWith.includes(nodes.find(n => n.id === id)?.name || '')) return 'paired';
-      return 'dimmed';
-    }
-    return 'idle';
-  };
-
-  // Path generator linking coordinates relative to SVG canvas
-  const renderPath = (conn: Connection) => {
-    const fromRect = nodePositions[conn.from];
-    const toRect = nodePositions[conn.to];
-    
-    if (!fromRect || !toRect || !canvasPosition) return null;
-
-    const x1_center = fromRect.left + fromRect.width / 2 - canvasPosition.left;
-    const y1_center = fromRect.top + fromRect.height / 2 - canvasPosition.top;
-    const x2_center = toRect.left + toRect.width / 2 - canvasPosition.left;
-    const y2_center = toRect.top + toRect.height / 2 - canvasPosition.top;
-
-    const isHorizontal = Math.abs(x1_center - x2_center) > Math.abs(y1_center - y2_center);
-
-    let x1 = x1_center;
-    let y1 = y1_center;
-    let x2 = x2_center;
-    let y2 = y2_center;
-
-    if (isHorizontal) {
-      if (x1_center < x2_center) {
-        x1 = fromRect.right - canvasPosition.left;
-        x2 = toRect.left - canvasPosition.left;
-      } else {
-        x1 = fromRect.left - canvasPosition.left;
-        x2 = toRect.right - canvasPosition.left;
-      }
-    } else {
-      if (y1_center < y2_center) {
-        y1 = fromRect.bottom - canvasPosition.top;
-        y2 = toRect.top - canvasPosition.top;
-      } else {
-        y1 = fromRect.top - canvasPosition.top;
-        y2 = toRect.bottom - canvasPosition.top;
-      }
-    }
-
-    const dx = Math.abs(x2 - x1);
-    const dy = Math.abs(y2 - y1);
-    
-    let path = '';
-    if (isHorizontal) {
-      const offset = dx * 0.45;
-      path = `M ${x1} ${y1} C ${x1 + offset} ${y1}, ${x2 - offset} ${y2}, ${x2} ${y2}`;
-    } else {
-      const offset = dy * 0.45;
-      path = `M ${x1} ${y1} C ${x1} ${y1 + offset}, ${x2} ${y2 - offset}, ${x2} ${y2}`;
-    }
-
-    const active = isConnectionActive(conn.from, conn.to);
-    const fromNode = nodes.find(n => n.id === conn.from);
-    const activeColor = fromNode?.color || '#FF00C7';
-
-    return (
-      <g key={`${conn.from}-${conn.to}`}>
-        {/* Base connection path */}
-        <path
-          d={path}
-          fill="none"
-          stroke={active ? activeColor : 'rgba(255, 255, 255, 0.05)'}
-          strokeWidth={active ? 2.5 : 1}
-          className="transition-all duration-300"
-        />
-
-        {/* Pulse effect overlay on active routes */}
-        {active && (
-          <path
-            d={path}
-            fill="none"
-            stroke={activeColor}
-            strokeWidth="3.5"
-            strokeLinecap="round"
-            className="animate-pulse opacity-40 blur-[1px]"
-          />
-        )}
-
-        {/* Moving glowing dot along the path during active/simulation state */}
-        {active && (
-          <motion.circle
-            r="4"
-            fill={activeColor}
-            initial={{ offsetDistance: "0%" }}
-            animate={{ offsetDistance: "100%" }}
-            transition={{
-              duration: 2.2,
-              ease: "easeInOut",
-              repeat: Infinity
-            }}
-            style={{
-              offsetPath: `path('${path}')`,
-              filter: `drop-shadow(0 0 6px ${activeColor})`
-            }}
-          />
-        )}
-      </g>
-    );
-  };
-
-  const currentHoveredNodeData = nodes.find(n => n.id === hoveredNode);
+  const activeHoveredNodeData = staticNodesData.find((n) => n.id === hoveredNodeId);
 
   return (
     <section 
       ref={containerRef}
-      className="bg-[#0C0C0C] text-[#D7E2EA] pb-24 md:pb-32 w-full relative select-none"
+      className="bg-[#0C0C0C] text-[#D7E2EA] pb-24 md:pb-32 w-full relative select-none overflow-hidden"
     >
       <div className="max-w-6xl mx-auto px-5 sm:px-8 md:px-10">
         
@@ -510,23 +913,24 @@ export const ArchitectureSection: React.FC = () => {
         <div className="flex flex-col mb-12 sm:mb-16">
           <div className="flex items-center gap-3 mb-6">
             <svg className="w-5 h-5 text-[#FF00C7]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 8v8M9 12h6" />
             </svg>
             <span className="font-mono text-[#D7E2EA]/50 uppercase tracking-widest text-[10px] sm:text-xs">
-              System Architecture Blueprint
+              Cybernetic Skill Synthesizer
             </span>
             <div className="flex-grow h-[1px] bg-white/5" />
           </div>
           
           <h3 className="text-white font-extrabold uppercase text-xl sm:text-2xl md:text-3xl tracking-wider mb-3">
-            Full-Stack Integration Map
+            Bioluminescent Neural Canvas
           </h3>
           <p className="text-[#D7E2EA]/60 text-xs sm:text-sm font-light leading-relaxed max-w-3xl">
-            This diagram maps out my core technical toolkits aligned in a structured architecture grid. Hover over any node to trace dependency paths, or trigger a simulator to trace a live data pipeline.
+            Explore 27 technical toolkits modeled as responsive floating nodes. Move your cursor to bend paths using gravitational force. Click any node to explode it into sub-libraries, or run pipeline workflows to trace live data packages.
           </p>
         </div>
 
-        {/* WORKFLOW SIMULATOR CONTROLLERS */}
+        {/* WORKFLOW PIPELINE SIMULATORS */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-12 bg-[#121212]/30 border border-white/5 p-4 rounded-3xl backdrop-blur-md">
           {Object.entries(workflows).map(([key, flow]) => {
             const isRunning = activeSim === key;
@@ -543,7 +947,7 @@ export const ArchitectureSection: React.FC = () => {
               >
                 <div className="flex items-center justify-between w-full">
                   <span className="font-mono text-[9px] uppercase tracking-wider text-[#D7E2EA]/40">
-                    Workflow Simulation
+                    Neural Pipeline Trace
                   </span>
                   {isRunning && (
                     <span className="w-2.5 h-2.5 bg-[#FF00C7] rounded-full animate-ping" />
@@ -560,114 +964,49 @@ export const ArchitectureSection: React.FC = () => {
           })}
         </div>
 
-        {/* BLUEPRINT BOARD CONTENT CONTAINER */}
+        {/* BLUEPRINT BOARD CONTENT GRID */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch w-full relative">
           
-          {/* LEFT COLUMN: INTERACTIVE BLUEPRINT CANVAS (8/12 Columns) */}
-          <div className="lg:col-span-8 flex flex-col bg-[#121212]/15 border border-white/5 rounded-3xl p-5 sm:p-7 relative min-h-[500px] overflow-hidden">
+          {/* PHYSICS CANVAS FIELD (8/12 Columns) */}
+          <div className="lg:col-span-8 bg-[#121212]/15 border border-white/5 rounded-3xl relative overflow-hidden min-h-[580px] sm:min-h-[640px] flex items-center justify-center">
             
-            {/* Column Headers: desktop-only alignment row */}
-            <div className="hidden md:grid grid-cols-4 w-full text-center mb-6 z-10 relative pb-2 border-b border-white/5">
-              <span className="font-mono text-[9px] text-[#D7E2EA]/35 uppercase tracking-widest">Client UI</span>
-              <span className="font-mono text-[9px] text-[#D7E2EA]/35 uppercase tracking-widest">APIs & Gateways</span>
-              <span className="font-mono text-[9px] text-[#D7E2EA]/35 uppercase tracking-widest">AI & Inference</span>
-              <span className="font-mono text-[9px] text-[#D7E2EA]/35 uppercase tracking-widest">Storage & Cloud</span>
-            </div>
-
-            {/* SVG Connector overlay behind node boxes */}
-            <svg
+            <canvas
               ref={canvasRef}
-              className="absolute inset-0 w-full h-full pointer-events-none z-0"
-              style={{ mixBlendMode: 'screen' }}
-            >
-              {connections.map((conn) => renderPath(conn))}
-            </svg>
-
-            {/* Flat 4x3 Grid (Row-major: Client -> Gateway -> AI -> DB) */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10 w-full z-10 relative my-auto">
-              {nodes.map((node) => {
-                const nodeState = getNodeState(node.id);
-                const isSimActive = nodeState === 'sim-active';
-                const isSimPassed = nodeState === 'sim-passed';
-                
-                // Determine indicator status dot color
-                let dotClass = 'bg-white/20';
-                if (isSimActive) dotClass = 'bg-[#FF00C7] animate-pulse shadow-[0_0_8px_#FF00C7]';
-                else if (isSimPassed) dotClass = 'bg-emerald-400 shadow-[0_0_8px_#34d399]';
-                else if (nodeState === 'hovered') dotClass = 'shadow-[0_0_8px_currentColor]';
-                
-                return (
-                  <div
-                    key={node.id}
-                    id={`node-${node.id}`}
-                    onMouseEnter={() => !activeSim && setHoveredNode(node.id)}
-                    onMouseLeave={() => !activeSim && setHoveredNode(null)}
-                    className={`flex flex-col items-center gap-2 px-3 py-4 rounded-2xl bg-[#121212] border backdrop-blur-md transition-all duration-300 cursor-crosshair text-center relative w-full ${
-                      nodeState === 'hovered' ? 'border-white/20' : 'border-white/5'
-                    } ${nodeState === 'dimmed' ? 'opacity-25 scale-95' : 'opacity-100 scale-100'} ${
-                      isSimActive ? 'ring-2 ring-offset-2 ring-offset-black ring-[#FF00C7]' : ''
-                    }`}
-                    style={{
-                      borderColor: nodeState === 'hovered' || isSimActive ? node.color : 'rgba(255,255,255,0.05)',
-                      boxShadow: nodeState === 'hovered' || isSimActive
-                        ? `0 0 25px ${node.color}25` 
-                        : isSimPassed 
-                        ? `0 0 10px ${node.color}15`
-                        : 'none',
-                    }}
-                  >
-                    {/* Glowing status indicator dot in node corner */}
-                    <div className="absolute top-2.5 right-2.5 flex items-center justify-center">
-                      <span 
-                        className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${dotClass}`} 
-                        style={{ color: node.color }} 
-                      />
-                    </div>
-
-                    {/* Node Brand Vector Icon */}
-                    <div 
-                      className="p-2.5 rounded-xl bg-[#181818] border border-white/5 transition-colors duration-300"
-                      style={{ color: nodeState === 'hovered' || isSimActive || isSimPassed ? node.color : '#D7E2EA' }}
-                    >
-                      {node.icon}
-                    </div>
-
-                    {/* Node Label Details */}
-                    <div className="flex flex-col gap-0.5 mt-1">
-                      <span className="text-white font-extrabold text-[11px] sm:text-xs tracking-wider uppercase">
-                        {node.name}
-                      </span>
-                      <span className="font-mono text-[8px] text-[#D7E2EA]/40 uppercase tracking-wide md:hidden">
-                        {node.column}
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+              onClick={handleCanvasClick}
+              className="absolute inset-0 w-full h-full cursor-crosshair"
+            />
+            
+            {/* Visual indicators */}
+            <div className="absolute top-4 left-4 font-mono text-[8px] text-[#D7E2EA]/30 pointer-events-none flex flex-col gap-1">
+              <span>CANV: HTML5_2D_ACTIVE</span>
+              <span>NODE_COUNT: 27</span>
+              <span>RENDER_RATE: 120_FPS_REFRESH</span>
             </div>
-
+            
           </div>
 
-          {/* RIGHT COLUMN: DETAIL DESCRIPTIONS / SIMULATOR LOGS (4/12 Columns) */}
+          {/* TELEMETRY INSPECTOR & CLI TERMINAL (4/12 Columns) */}
           <div className="lg:col-span-4 flex flex-col gap-6">
             
-            {/* Terminal Pipeline Simulator Log */}
-            <div className="bg-[#0e0e0e] border border-white/5 rounded-3xl p-5 flex flex-col gap-4 font-mono h-[240px] shadow-lg relative overflow-hidden group">
+            {/* Console Log Terminal */}
+            <div className="bg-[#0e0e0e] border border-white/5 rounded-3xl p-5 flex flex-col gap-4 font-mono h-[240px] shadow-lg relative overflow-hidden">
               <div className="flex items-center justify-between border-b border-white/5 pb-2">
                 <div className="flex gap-1.5">
                   <span className="w-2.5 h-2.5 bg-red-500 rounded-full opacity-60" />
                   <span className="w-2.5 h-2.5 bg-yellow-500 rounded-full opacity-60" />
                   <span className="w-2.5 h-2.5 bg-green-500 rounded-full opacity-60" />
                 </div>
-                <span className="text-[10px] text-[#D7E2EA]/30 uppercase tracking-widest">
+                <span className="text-[10px] text-[#D7E2EA]/35 uppercase tracking-widest">
                   Pipeline Shell
                 </span>
               </div>
               
-              <div className="flex-grow overflow-y-auto flex flex-col gap-2.5 text-[10px] sm:text-[11px] text-[#D7E2EA]/60 leading-normal scrollbar-none">
+              <div className="flex-grow overflow-y-auto flex flex-col gap-2.5 text-[10.5px] text-[#D7E2EA]/60 leading-normal scrollbar-none">
                 {simLogs.length === 0 ? (
                   <div className="text-[#D7E2EA]/30 italic h-full flex items-center justify-center text-center">
-                    Select a workflow above to execute a system data pipeline trace.
+                    Select a pipeline trace above to watch real-time connection signals travel down the network synapses.
                   </div>
                 ) : (
                   simLogs.map((log, lIdx) => (
@@ -675,7 +1014,7 @@ export const ArchitectureSection: React.FC = () => {
                       key={lIdx}
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.3 }}
+                      transition={{ duration: 0.25 }}
                       className="text-emerald-400 font-mono"
                     >
                       {log}
@@ -687,17 +1026,17 @@ export const ArchitectureSection: React.FC = () => {
               {activeSim && (
                 <div className="absolute bottom-4 right-4 flex items-center gap-1.5 text-[9px] uppercase tracking-wider text-[#FF00C7] font-semibold bg-[#FF00C7]/10 px-2 py-1 rounded-md border border-[#FF00C7]/20">
                   <span className="w-1.5 h-1.5 bg-[#FF00C7] rounded-full animate-ping" />
-                  Streaming Logs...
+                  Pulse Streaming
                 </div>
               )}
             </div>
 
-            {/* Dynamic Toolkit Info panel */}
-            <div className="flex-grow bg-[#121212]/30 border border-white/5 rounded-3xl p-6 flex flex-col gap-5 backdrop-blur-md min-h-[260px] justify-center">
+            {/* Dynamic Glass Toolkit Info Panel */}
+            <div className="flex-grow bg-[#121212]/30 border border-white/5 rounded-3xl p-6 flex flex-col gap-5 backdrop-blur-md min-h-[280px] justify-center">
               <AnimatePresence mode="wait">
-                {currentHoveredNodeData ? (
+                {activeHoveredNodeData ? (
                   <motion.div
-                    key={currentHoveredNodeData.id}
+                    key={activeHoveredNodeData.id}
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -15 }}
@@ -706,31 +1045,31 @@ export const ArchitectureSection: React.FC = () => {
                   >
                     <div className="flex items-center gap-3.5">
                       <div 
-                        className="p-3 rounded-2xl bg-[#161616] border border-white/5 shadow-md"
-                        style={{ color: currentHoveredNodeData.color }}
+                        className="p-3 rounded-2xl bg-[#161616] border border-white/5 shadow-md flex items-center justify-center w-12 h-12 text-lg font-black font-mono"
+                        style={{ color: activeHoveredNodeData.color, borderColor: activeHoveredNodeData.color }}
                       >
-                        {currentHoveredNodeData.icon}
+                        {activeHoveredNodeData.symbol}
                       </div>
                       <div className="flex flex-col">
                         <span className="font-mono text-[9px] uppercase tracking-widest text-[#D7E2EA]/50">
-                          {currentHoveredNodeData.category}
+                          {activeHoveredNodeData.category}
                         </span>
                         <h4 className="text-white font-black uppercase text-base tracking-wider mt-0.5">
-                          {currentHoveredNodeData.name}
+                          {activeHoveredNodeData.name}
                         </h4>
                       </div>
                     </div>
 
                     <p className="text-[#D7E2EA]/75 text-xs font-light leading-relaxed">
-                      {currentHoveredNodeData.description}
+                      {activeHoveredNodeData.description}
                     </p>
 
                     <div className="flex flex-col gap-2 pt-3 border-t border-white/5">
                       <span className="font-mono text-[9px] uppercase tracking-wider text-[#D7E2EA]/40">
-                        Common Integrations
+                        Constellation Partners
                       </span>
                       <div className="flex flex-wrap gap-1.5">
-                        {currentHoveredNodeData.pairedWith.map((pair) => (
+                        {activeHoveredNodeData.pairedWith.map((pair) => (
                           <span
                             key={pair}
                             className="bg-[#181818] border border-white/5 text-[#D7E2EA]/80 text-[9px] font-semibold uppercase tracking-wider px-2 py-1 rounded-md"
@@ -756,10 +1095,10 @@ export const ArchitectureSection: React.FC = () => {
                     </div>
                     <div>
                       <h4 className="text-[#D7E2EA]/70 font-bold text-xs uppercase tracking-wider">
-                        Inspector Node Panel
+                        Telemetry HUD Inspector
                       </h4>
-                      <p className="text-[#D7E2EA]/40 text-[10px] font-light leading-normal max-w-[200px] mx-auto mt-1">
-                        Hover over any grid node to view deep integrations and architectural features.
+                      <p className="text-[#D7E2EA]/40 text-[10px] font-light leading-normal max-w-[220px] mx-auto mt-1">
+                        Hover over any glowing synapse to read telemetry. Click nodes to release microparticle sub-libraries!
                       </p>
                     </div>
                   </motion.div>
