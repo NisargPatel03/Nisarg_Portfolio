@@ -1,360 +1,420 @@
-import React, { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { FadeIn } from '../components/FadeIn';
-import { LiveProjectButton } from '../components/LiveProjectButton';
-import { CheckCircle2 } from 'lucide-react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  PROJECTS_TERMINAL,
+  ACCENT_COLORS,
+  type TerminalLog,
+  type TerminalProject,
+} from '../data/projectsTerminal';
+import './projects-terminal.css';
 
-interface ProjectData {
-  id: string;
-  name: string;
-  category: string;
-  vercel?: string;
-  github: string;
-  description: string;
-  points: string[];
-  techs: string[];
-  image: string;
-}
+const CMD_SPEED = 20;
+const LOG_SPEED = 8;
+const GLITCH_MS = 300;
+
+const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+
+const logGap = () => sleep(60 + Math.random() * 80);
 
 export const ProjectsSection: React.FC = () => {
-  const projects: ProjectData[] = [
-    {
-      id: '01',
-      name: 'Survey Health Care Form App',
-      category: 'Healthcare Assessment Tool',
-      vercel: 'https://survey-form-health-care-app.vercel.app/',
-      github: 'https://github.com/NisargPatel03/Survey_Form_HealthCare_App',
-      description: 'An advanced clinical diagnostic evaluation application designed for institutional patient review boards and real-time medical reviews.',
-      points: [
-        'Dynamic clinical assessment forms with validation schemas.',
-        'Real-time response dashboard and patient analytics logs.',
-        'Seamless automatic PDF report and raw CSV data exporters.'
-      ],
-      techs: ['React', 'Context API', 'Chart.js', 'Tailwind CSS'],
-      image: '/survey_healthcare_mockup.png',
+  const sectionRef = useRef<HTMLElement>(null);
+  const bodyRef = useRef<HTMLDivElement>(null);
+  const curRef = useRef(0);
+  const runningRef = useRef(false);
+  const signalRef = useRef({ cancelled: false });
+  const touchStartX = useRef(0);
+  const initializedRef = useRef(false);
+  const inViewRef = useRef(false);
+  const hasDeployedRef = useRef(false);
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [cmdText, setCmdText] = useState('');
+  const [progress, setProgress] = useState(0);
+  const [progressVisible, setProgressVisible] = useState(false);
+  const [logs, setLogs] = useState<{ text: string; type: TerminalLog['t'] }[]>([]);
+  const [cardVisible, setCardVisible] = useState(false);
+  const [glitching, setGlitching] = useState(false);
+  const [scanline, setScanline] = useState(false);
+
+  const project = PROJECTS_TERMINAL[currentIndex];
+  const accentColor = ACCENT_COLORS[project.accent];
+  const total = PROJECTS_TERMINAL.length;
+
+  const wipe = useCallback(() => {
+    signalRef.current.cancelled = true;
+    setCmdText('');
+    setProgress(0);
+    setProgressVisible(false);
+    setLogs([]);
+    setCardVisible(false);
+    signalRef.current = { cancelled: false };
+  }, []);
+
+  const typeString = useCallback(
+    async (setter: (v: string) => void, text: string, speed: number) => {
+      for (let i = 0; i <= text.length; i++) {
+        if (signalRef.current.cancelled) return;
+        setter(text.slice(0, i));
+        if (i < text.length) await sleep(speed);
+      }
     },
-    {
-      id: '02',
-      name: 'BharatBudget',
-      category: 'Public Finance Command Center',
-      vercel: 'https://bharat-budget-beta.vercel.app/',
-      github: 'https://github.com/NisargPatel03/BharatBudget',
-      description: 'A premium public finance command center, simulation sandbox, and interactive visualization portal decoding Indian Union Budget data.',
-      points: [
-        'Interactive 16th Finance Commission Devolution Sandbox and State Tax Devolution SVG map.',
-        'Macroeconomic Stress-Testing Simulator mapping oil surges, monsoon failures, and global recessions in real-time.',
-        'Rich UI with global multi-year timelines, dynamic Recharts visualizations, and a Ctrl+K command palette.'
-      ],
-      techs: ['React', 'TypeScript', 'Zustand', 'Recharts', 'Tailwind CSS'],
-      image: '/bharatbudget_mockup.png',
+    []
+  );
+
+  const fillProgress = useCallback(async () => {
+    setProgressVisible(true);
+    let pct = 0;
+    setProgress(0);
+    while (pct < 100) {
+      if (signalRef.current.cancelled) return;
+      pct = Math.min(100, pct + Math.floor(Math.random() * 8) + 3);
+      setProgress(pct);
+      await sleep(18 + Math.random() * 22);
+    }
+    setProgress(100);
+  }, []);
+
+  const typeLogs = useCallback(
+    async (logLines: TerminalLog[]) => {
+      const built: { text: string; type: TerminalLog['t'] }[] = [];
+      for (const line of logLines) {
+        if (signalRef.current.cancelled) return;
+        built.push({ text: '', type: line.t });
+        setLogs([...built]);
+        for (let i = 0; i <= line.txt.length; i++) {
+          if (signalRef.current.cancelled) return;
+          built[built.length - 1] = { text: line.txt.slice(0, i), type: line.t };
+          setLogs([...built]);
+          if (i < line.txt.length) await sleep(LOG_SPEED);
+        }
+        await logGap();
+      }
     },
-    {
-      id: '03',
-      name: 'DRHV Cricket Tournament',
-      category: 'Sports Management Platform',
-      vercel: 'https://drhv-cricket-tournament.vercel.app/',
-      github: 'https://github.com/NisargPatel03/DRHV_Cricket_Tournament',
-      description: 'An interactive tournament manager enabling team score sheet registers, roster schedulers, and live scoreboard boards.',
-      points: [
-        'Live scoreboard updates with sub-second polling mechanics.',
-        'Automated guest/team registration validation engines.',
-        'Visual standings brackets mapping out matches dynamically.'
-      ],
-      techs: ['React', 'Node.js', 'Express', 'Tailwind CSS'],
-      image: '/drhv_cricket_mockup.png',
+    []
+  );
+
+  const runDeploy = useCallback(
+    async (p: TerminalProject) => {
+      runningRef.current = true;
+      await typeString(setCmdText, p.cmd, CMD_SPEED);
+      if (signalRef.current.cancelled) {
+        runningRef.current = false;
+        return;
+      }
+      await fillProgress();
+      if (signalRef.current.cancelled) {
+        runningRef.current = false;
+        return;
+      }
+      await typeLogs(p.logs);
+      if (signalRef.current.cancelled) {
+        runningRef.current = false;
+        return;
+      }
+      setCardVisible(true);
+      hasDeployedRef.current = true;
+      runningRef.current = false;
+      bodyRef.current?.scrollTo({ top: bodyRef.current.scrollHeight, behavior: 'smooth' });
     },
-    {
-      id: '04',
-      name: 'Blaze Overseas LLP Portal',
-      category: 'Commercial Business Platform',
-      vercel: 'https://blaze-overseas-llp.vercel.app/',
-      github: 'https://github.com/NisargPatel03/Blaze_Overseas_LLP',
-      description: 'A premium, responsive corporate trade directory engineered to represent international cargo lists and consultation pipelines.',
-      points: [
-        'Global commodities cargo search index with filters.',
-        'Automated lead-funnel capture and consultation forms.',
-        '₹30,000 INR commercial contract value acquisition.'
-      ],
-      techs: ['React', 'TypeScript', 'Tailwind CSS', 'Framer Motion'],
-      image: '/blaze_overseas_mockup.png',
+    [typeString, fillProgress, typeLogs]
+  );
+
+  const goTo = useCallback(
+    async (index: number, withGlitch: boolean) => {
+      if (runningRef.current) return;
+      const clamped = Math.max(0, Math.min(index, total - 1));
+      if (clamped === curRef.current && !withGlitch && hasDeployedRef.current) return;
+
+      runningRef.current = true;
+
+      if (withGlitch && curRef.current !== clamped) {
+        setGlitching(true);
+        setScanline(true);
+        await sleep(GLITCH_MS);
+        setGlitching(false);
+        setScanline(false);
+      }
+
+      wipe();
+      curRef.current = clamped;
+      setCurrentIndex(clamped);
+      await runDeploy(PROJECTS_TERMINAL[clamped]);
     },
-    {
-      id: '05',
-      name: 'EcoLearn Environmental Portal',
-      category: 'Ecology Learning Platform',
-      vercel: 'https://ecolearn-frontend-delta.vercel.app/',
-      github: 'https://github.com/cs-cspit/SEM6-SGP-70-75',
-      description: 'An interactive ecology platform teaching environmental sciences, featuring quiz modules and carbon calculators.',
-      points: [
-        'Interactive ecosystem visualizers mapping biodiversity.',
-        'Carbon footprint calculation formulas for users.',
-        'Detailed student progress panels showing performance.'
-      ],
-      techs: ['Vite', 'React', 'Tailwind CSS', 'Framer Motion'],
-      image: '/ecolearn_mockup.png',
-    },
-    {
-      id: '06',
-      name: 'Savaliya Scoops POS System',
-      category: 'Client Point of Sale (POS)',
-      vercel: 'https://savaliya-scoops-system.vercel.app/',
-      github: 'https://github.com/NisargPatel03/savaliya-scoops-system',
-      description: 'A custom Point of Sale (POS) system tailored specifically for ice-cream parlors under Mr. Manish Shah of Savaliya Nadiad.',
-      points: [
-        'Smooth button-driven menu and catalog selectors.',
-        'Hold & recall order buffers for checkout lines.',
-        'Thermal physical ticket generation and GST invoicing.'
-      ],
-      techs: ['React', 'Supabase', 'Excel API', 'Tailwind CSS'],
-      image: '/savaliya_scoops_mockup.png',
-    },
-    {
-      id: '07',
-      name: 'NextGenSociety Portal',
-      category: 'Smart Society POS Portal',
-      vercel: 'https://next-gen-society.vercel.app/',
-      github: 'https://github.com/NisargPatel03/NextGenSociety',
-      description: 'A smart residential society management system handling maintenance bills, notices, resident feedback, and booking records.',
-      points: [
-        'Automated society maintenance invoice generators.',
-        'Interactive community announcements boards.',
-        'Resident complaint ticket logs and meeting schedulers.'
-      ],
-      techs: ['React', 'Node.js', 'MongoDB', 'Tailwind CSS'],
-      image: '/nextgensociety_mockup.png',
-    },
-    {
-      id: '08',
-      name: 'QuickStay Hotel Booking',
-      category: 'Client Project (MERN Full-stack)',
-      vercel: 'https://quickstay-phi.vercel.app/',
-      github: 'https://github.com/NisargPatel03/MERN_Hotel_Booking',
-      description: 'A comprehensive hotel reservation platform with user verification, responsive rooms, reviews, and a robust admin dashboard.',
-      points: [
-        'Secure authorization pipelines with session integration.',
-        'Administrator inventory control room and bookings.',
-        'Responsive filters and pricing range search engines.'
-      ],
-      techs: ['MongoDB', 'Express', 'React', 'Node.js', 'Redux'],
-      image: '/quickstay_hotel_mockup.png',
-    },
-    {
-      id: '09',
-      name: 'Car Rental System',
-      category: 'Personal Project (MERN Full-stack)',
-      vercel: 'https://car-rental-ivory-five.vercel.app/',
-      github: 'https://github.com/NisargPatel03/CarRental_FullStack',
-      description: 'A modern MERN application for exploring car fleets, reserving slots, and managing checkout invoices.',
-      points: [
-        'Dynamic vehicle catalog inventory management.',
-        'Real-time daily rate invoicing calculations.',
-        'Clean admin control for vehicle returns and logs.'
-      ],
-      techs: ['React', 'Node.js', 'Express', 'MongoDB', 'Tailwind CSS'],
-      image: '/car_rental_mockup.png',
-    },
-    {
-      id: '10',
-      name: 'Blood Testing Management',
-      category: 'Backend Dashboard System',
-      github: 'https://github.com/cs-cspit/23CS-SEM4-CS210_70_75_106/tree/main',
-      description: 'A secure clinical patient laboratory system deployed on XAMPP, handling blood appointments, patients, and PDF diagnostics.',
-      points: [
-        'Clinical patient slot reservation schedulers.',
-        'Dynamic electronic database records indexer.',
-        'Automatic lab analysis report PDF generation.'
-      ],
-      techs: ['PHP', 'MySQL', 'XAMPP', 'Bootstrap', 'JavaScript'],
-      image: '/blood_testing_mockup.png',
-    },
-    {
-      id: '11',
-      name: 'Sports Venue Booking System',
-      category: 'Management & Reservation Suite',
-      github: 'https://github.com/Meghpatel2810/Sports_Venue_Booking_System',
-      description: 'A stadium and arena scheduling system managing court availability calendars, bookings, and logs.',
-      points: [
-        'Interactive court booking calendar timelines.',
-        'Dynamic reservation availability controllers.',
-        'Robust administrative access audit reports.'
-      ],
-      techs: ['React', 'Node.js', 'Express', 'MongoDB', 'Tailwind CSS'],
-      image: '/sports_venue_mockup.png',
-    },
-    {
-      id: '12',
-      name: 'Skill Swap Platform',
-      category: 'MERN Stack Web App',
-      vercel: 'https://skill-swap-web-app.vercel.app/',
-      github: 'https://github.com/NisargPatel03',
-      description: 'A peer-to-peer web application that facilitates users exchanging professional skills. Includes responsive profiles and scheduling systems.',
-      points: [
-        'Peer-to-peer matching algorithm for professional skills.',
-        'Dynamic user profile reviews and endorsement matrices.',
-        'Integrated live scheduling calendars and room logs.'
-      ],
-      techs: ['MongoDB', 'Express', 'React', 'Node.js', 'Redux'],
-      image: '/skill_swap_mockup.png',
-    },
-  ];
+    [wipe, runDeploy, total]
+  );
+
+  const nextProject = useCallback(() => {
+    if (curRef.current < total - 1) goTo(curRef.current + 1, true);
+  }, [goTo, total]);
+
+  const prevProject = useCallback(() => {
+    if (curRef.current > 0) goTo(curRef.current - 1, true);
+  }, [goTo]);
+
+  useEffect(() => {
+    if (initializedRef.current) return;
+    initializedRef.current = true;
+    goTo(0, false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        inViewRef.current = entry.isIntersecting;
+      },
+      { threshold: 0 }
+    );
+    observer.observe(el);
+
+    const syncScrollIndex = () => {
+      if (!inViewRef.current || runningRef.current) return;
+      const { top, height } = el.getBoundingClientRect();
+      const scrollable = height - window.innerHeight;
+      if (scrollable <= 0) return;
+      const progressScroll = Math.min(Math.max(-top, 0), scrollable) / scrollable;
+      const newIdx = Math.min(Math.floor(progressScroll * total), total - 1);
+      if (newIdx !== curRef.current) goTo(newIdx, true);
+    };
+
+    const onScroll = () => syncScrollIndex();
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    let frame = 0;
+    const tick = () => {
+      syncScrollIndex();
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', onScroll);
+      cancelAnimationFrame(frame);
+    };
+  }, [goTo, total]);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    if (Math.abs(dx) < 50) return;
+    if (dx < 0) nextProject();
+    else prevProject();
+  };
 
   return (
     <section
-      id="projects"
-      className="bg-[#0C0C0C] text-[#D7E2EA] rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] -mt-10 sm:-mt-12 md:-mt-14 pt-24 pb-20 w-full z-15 relative select-none"
+      id="projects-section"
+      ref={sectionRef}
+      className="projects-terminal-section"
+      style={{ height: `${total * 100}vh` }}
     >
-      <div className="max-w-5xl mx-auto px-5 sm:px-8 md:px-10">
-        {/* 1. HEADING */}
-        <FadeIn y={30} delay={0} duration={0.8} className="text-center mb-16 md:mb-24">
-          <span className="text-[#B600A8] uppercase font-bold tracking-widest text-xs sm:text-sm">
-            Featured Repositories
-          </span>
-          <h2
-            className="hero-heading font-black uppercase tracking-tight text-center leading-none mt-2"
-            style={{ fontSize: 'clamp(2.5rem, 9vw, 110px)' }}
-          >
-            My Projects.
-          </h2>
-        </FadeIn>
+      <div className="projects-terminal-heading">
+        <span>Featured Repositories</span>
+        <h2>My Projects.</h2>
+      </div>
 
-        {/* 2. STICKY STACKING CARDS CONTAINER */}
-        <div className="flex flex-col gap-24 md:gap-32">
-          {projects.map((project, index) => (
-            <Card
-              key={project.id}
-              project={project}
-              index={index}
-              total={projects.length}
-            />
-          ))}
-        </div>
+      <div id="terminal-wrap" className="projects-terminal-sticky">
+        <TerminalPanel
+          project={project}
+          accentColor={accentColor}
+          currentIndex={currentIndex}
+          total={total}
+          cmdText={cmdText}
+          progress={progress}
+          progressVisible={progressVisible}
+          logs={logs}
+          cardVisible={cardVisible}
+          glitching={glitching}
+          scanline={scanline}
+          bodyRef={bodyRef}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+          onNext={nextProject}
+          onPrev={prevProject}
+          onDotClick={(i) => goTo(i, true)}
+        />
       </div>
     </section>
   );
 };
 
-interface CardProps {
-  project: ProjectData;
-  index: number;
+interface TerminalPanelProps {
+  project: TerminalProject;
+  accentColor: string;
+  currentIndex: number;
   total: number;
+  cmdText: string;
+  progress: number;
+  progressVisible: boolean;
+  logs: { text: string; type: TerminalLog['t'] }[];
+  cardVisible: boolean;
+  glitching: boolean;
+  scanline: boolean;
+  bodyRef: React.RefObject<HTMLDivElement | null>;
+  onTouchStart: (e: React.TouchEvent) => void;
+  onTouchEnd: (e: React.TouchEvent) => void;
+  onNext: () => void;
+  onPrev: () => void;
+  onDotClick: (i: number) => void;
 }
 
-const Card: React.FC<CardProps> = ({ project, index, total }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  // Track the scroll of this specific card container to scale it down slightly
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start start', 'end start'],
-  });
-
-  // Calculate targetScale: targetScale = 1 - (totalCards - 1 - index) * 0.015
-  const targetScale = 1 - (total - 1 - index) * 0.015;
-  const scale = useTransform(scrollYProgress, [0, 1], [1, targetScale]);
+const TerminalPanel: React.FC<TerminalPanelProps> = ({
+  project,
+  accentColor,
+  currentIndex,
+  total,
+  cmdText,
+  progress,
+  progressVisible,
+  logs,
+  cardVisible,
+  glitching,
+  scanline,
+  bodyRef,
+  onTouchStart,
+  onTouchEnd,
+  onNext,
+  onPrev,
+  onDotClick,
+}) => {
+  const style = { ['--accent' as string]: accentColor };
 
   return (
-    <div
-      ref={containerRef}
-      style={{
-        top: `calc(90px + ${index * 50}px)`, // Exactly 50px offset creates the gorgeous stack showing the rounded headers visible!
-      }}
-      className="sticky w-full h-[75vh] sm:h-[80vh] md:h-[85vh] flex flex-col justify-start items-center"
-    >
-      {/* Sticky card framing */}
-      <motion.div
-        style={{
-          scale,
-        }}
-        className="w-full h-full rounded-[35px] sm:rounded-[45px] md:rounded-[55px] border-2 border-white bg-[#0C0C0C] p-6 sm:p-8 flex flex-col gap-6 shadow-[0_25px_60px_rgba(0,0,0,0.85)]"
+    <div className="terminal-window" style={style}>
+      <div className={`terminal-scanline ${scanline ? 'is-active' : ''}`} aria-hidden />
+
+      <div className="terminal-titlebar">
+        <div className="terminal-dots">
+          <span />
+          <span />
+          <span />
+        </div>
+        <span className="terminal-titlebar-text">nisarg@portfolio ~ projects</span>
+      </div>
+
+      <div
+        ref={bodyRef}
+        className="terminal-body select-text"
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
       >
-        {/* Card Header Row */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center w-full gap-4 pb-2 border-b border-[#D7E2EA]/10">
-          <div className="flex items-center gap-4 sm:gap-6">
-            {/* Massive Number Tag */}
-            <div 
-              className="font-black leading-none text-[#D7E2EA]/95 tracking-tighter"
-              style={{ fontSize: 'clamp(2rem, 5vw, 65px)' }}
-            >
-              {project.id}
-            </div>
-
-            {/* Labels and Project Title */}
-            <div className="flex flex-col">
-              <span className="font-mono text-[#D7E2EA]/50 uppercase tracking-widest text-[10px] sm:text-xs">
-                {project.category}
-              </span>
-              <h3 className="text-white font-extrabold uppercase text-sm sm:text-lg md:text-xl tracking-wider mt-0.5">
-                {project.name}
-              </h3>
-            </div>
-          </div>
-
-          {/* Action Links */}
-          <div className="flex items-center gap-3 w-full sm:w-auto justify-end sm:justify-start">
-            {/* GitHub Code link */}
-            <a
-              href={project.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
-              className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border-2 border-white hover:border-[#B600A8] transition-colors flex justify-center items-center text-[#D7E2EA]/60 hover:text-white"
-              title="View Repository"
-            >
-              <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
-              </svg>
-            </a>
-            
-            {/* Live Link Button */}
-            {project.vercel && <LiveProjectButton link={project.vercel} />}
-          </div>
+        <div className="terminal-cmd-line">
+          <span className="prompt">❯</span>
+          <span className="cmd-text cmd-text-full">{cmdText}</span>
+          <span className="cmd-text cmd-text-mobile">
+            {cmdText.length > 0 ? ` deploying ${project.slug}...` : ''}
+          </span>
+          {cmdText.length > 0 && cmdText.length < project.cmd.length && (
+            <span className="terminal-cursor-blink" style={{ marginLeft: 2 }} />
+          )}
         </div>
 
-        {/* Card Body: Double-column visual grids */}
-        <div className="flex-grow grid grid-cols-1 lg:grid-cols-12 gap-6 overflow-hidden items-stretch">
-          {/* Left Details Column (45% width) */}
-          <div className="lg:col-span-5 flex flex-col justify-between h-full gap-4">
-            <div className="flex flex-col gap-4">
-              <p className="text-[#D7E2EA]/75 text-xs sm:text-sm font-light leading-relaxed">
-                {project.description}
-              </p>
-              
-              <ul className="flex flex-col gap-2 mt-1">
-                {project.points.map((pt, pIdx) => (
-                  <li key={pIdx} className="flex gap-2 items-start text-xs sm:text-sm text-[#D7E2EA]/90 font-light leading-snug">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
-                    <span>{pt}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="flex flex-col gap-4 mt-auto">
-              {/* Tech Chips */}
-              <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                {project.techs.map((tech) => (
-                  <span
-                    key={tech}
-                    className="bg-[#1c1c1c] text-[#D7E2EA]/90 text-[10px] sm:text-xs font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full border border-white/5"
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Right Image Mockup Column (55% width) */}
-          <div className="lg:col-span-7 h-full overflow-hidden rounded-[20px] sm:rounded-[30px] border border-[#D7E2EA]/15 bg-[#121212] relative group">
-            <img
-              src={project.image}
-              alt={`${project.name} Dashboard Mockup`}
-              className="w-full h-full object-cover filter brightness-[0.8] group-hover:brightness-100 group-hover:scale-[1.03] transition-all duration-500"
+        <div className={`terminal-progress-wrap ${progressVisible ? 'is-visible' : ''}`}>
+          <span className="terminal-progress-label">{progress}%</span>
+          <div className="terminal-progress-track">
+            <div
+              className="terminal-progress-fill"
+              style={{ width: `${progress}%`, background: accentColor }}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
           </div>
         </div>
-      </motion.div>
+
+        <div className="terminal-logs">
+          {logs.map((log, i) => (
+            <div key={i} className={`terminal-log-line log-${log.type}`}>
+              {log.text}
+            </div>
+          ))}
+        </div>
+
+        <div className={`terminal-project-card ${cardVisible ? 'is-visible' : ''}`}>
+          <div className="terminal-card-meta">
+            <span className="terminal-card-num">{project.num}</span>
+            <span className="terminal-card-category">// {project.category}</span>
+          </div>
+          <h3 className={`terminal-card-title ${glitching ? 'is-glitching' : ''}`}>
+            {project.title}
+          </h3>
+          <p className="terminal-card-sub">{project.sub}</p>
+          <p className="terminal-card-desc">{project.desc}</p>
+          <div className="terminal-card-tags">
+            {project.tags.map((tag) => (
+              <span key={tag} className="terminal-tag-pill">
+                {tag}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="terminal-cursor-line">
+          <span className="prompt">❯</span>
+          <span className="terminal-cursor-blink" />
+        </div>
+      </div>
+
+      <nav className="terminal-nav" style={style}>
+        <span className="terminal-status-badge">{project.status}</span>
+        <a
+          href={project.gh}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="terminal-nav-btn"
+        >
+          GitHub repo
+        </a>
+        {project.live ? (
+          <a
+            href={project.live}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="terminal-nav-btn"
+          >
+            Live
+          </a>
+        ) : (
+          <button type="button" className="terminal-nav-btn" disabled>
+            Live
+          </button>
+        )}
+        <span className="terminal-counter">
+          {String(currentIndex + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
+        </span>
+        <div className="terminal-dots-nav" aria-label="Project navigation">
+          {PROJECTS_TERMINAL.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              className={`terminal-dot ${i === currentIndex ? 'is-active' : ''}`}
+              style={i === currentIndex ? style : undefined}
+              onClick={() => onDotClick(i)}
+              aria-label={`Project ${i + 1}`}
+            />
+          ))}
+        </div>
+        <button
+          type="button"
+          className="terminal-nav-btn is-accent"
+          onClick={onPrev}
+          disabled={currentIndex === 0}
+          aria-label="Previous project"
+        >
+          prev()
+        </button>
+        <button
+          type="button"
+          className="terminal-nav-btn is-accent"
+          onClick={onNext}
+          disabled={currentIndex >= total - 1}
+        >
+          next_project() →
+        </button>
+      </nav>
     </div>
   );
 };

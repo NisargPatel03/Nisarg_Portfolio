@@ -52,7 +52,7 @@ function App() {
       {/* 5. SERVICES SECTION */}
       <ServicesSection />
 
-      {/* 6. PROJECTS SECTION (Sticky scaling cards) */}
+      {/* 6. PROJECTS SECTION (Terminal CLI deploy) */}
       <ProjectsSection />
 
       {/* 7. CERTIFICATIONS FILTER BROWSER */}
