@@ -707,7 +707,7 @@ export const MarqueeSection: React.FC = () => {
   ];
 
   return (
-    <div className={`bg-[#0C0C0C] pt-28 sm:pt-36 md:pt-44 pb-14 w-full overflow-hidden flex flex-col gap-6 sm:gap-8 select-none ${selectedSkill ? 'marquee-paused' : ''}`}>
+    <div id="skills" className={`bg-[#0C0C0C] pt-28 sm:pt-36 md:pt-44 pb-14 w-full overflow-hidden flex flex-col gap-6 sm:gap-8 select-none ${selectedSkill ? 'marquee-paused' : ''}`}>
       <div className="max-w-5xl mx-auto w-full px-6 md:px-10 mb-2">
         <div className="flex items-center gap-3">
           <svg className="w-4 h-4 text-[#FF00C7]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

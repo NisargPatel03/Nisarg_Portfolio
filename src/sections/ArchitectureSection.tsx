@@ -1305,6 +1305,7 @@ export const ArchitectureSection: React.FC = () => {
 
   return (
     <section 
+      id="architecture"
       ref={containerRef}
       className="bg-[#0C0C0C] text-[#D7E2EA] pb-24 md:pb-32 w-full relative select-none overflow-hidden"
     >

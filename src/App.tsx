@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Lenis from 'lenis';
 import { HeroSection } from './sections/HeroSection';
 import { MarqueeSection } from './sections/MarqueeSection';
@@ -9,8 +9,19 @@ import { ServicesSection } from './sections/ServicesSection';
 import { ProjectsSection } from './sections/ProjectsSection';
 import { CertificationsSection } from './sections/CertificationsSection';
 import { ContactSection } from './sections/ContactSection';
+import { CommandPalette } from './components/CommandPalette';
+import { MatrixRain } from './components/MatrixRain';
+import { soundFX } from './utils/terminalAudio';
 
 function App() {
+  const [isMatrixActive, setIsMatrixActive] = useState(false);
+  const [isSoundActive, setIsSoundActive] = useState(false);
+
+  useEffect(() => {
+    // Synchronize global sound preference
+    soundFX.enabled = isSoundActive;
+  }, [isSoundActive]);
+
   useEffect(() => {
     // Initialize Lenis buttery-smooth momentum scroll
     const lenis = new Lenis({
@@ -33,7 +44,18 @@ function App() {
   }, []);
 
   return (
-    <div className="w-full min-h-screen bg-[#0C0C0C] text-[#D7E2EA] overflow-x-clip select-none">
+    <div className="w-full min-h-screen bg-[#0C0C0C] text-[#D7E2EA] overflow-x-clip select-none relative">
+      {/* Easter Egg Matrix digital rain layer */}
+      {isMatrixActive && <MatrixRain />}
+
+      {/* Global command search shell */}
+      <CommandPalette
+        isMatrixActive={isMatrixActive}
+        onToggleMatrix={() => setIsMatrixActive((prev) => !prev)}
+        isSoundActive={isSoundActive}
+        onToggleSound={() => setIsSoundActive((prev) => !prev)}
+      />
+
       {/* 1. HERO SECTION */}
       <HeroSection />
 
