@@ -21,6 +21,9 @@ export interface TerminalProject {
   status: 'DEPLOYED' | 'LIVE' | 'PUBLISHED';
   gh: string;
   live?: string;
+  image: string;
+  dbName: string;
+  dbChecklist: string[];
 }
 
 export const PROJECTS_TERMINAL: TerminalProject[] = [
@@ -53,6 +56,14 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     status: 'LIVE',
     gh: 'https://github.com/NisargPatel03/Survey_Form_HealthCare_App',
     live: 'https://survey-form-health-care-app.vercel.app/',
+    image: '/survey_healthcare_mockup.png',
+    dbName: 'PostgreSQL / SQLite',
+    dbChecklist: [
+      'public.profiles (User authorization)',
+      'clinical_surveys (JSON schemas)',
+      'survey_responses (Submissions)',
+      'sqlite_buffer (Offline queue)'
+    ]
   },
   {
     num: '02',
@@ -83,6 +94,14 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     status: 'LIVE',
     gh: 'https://github.com/NisargPatel03/BharatBudget',
     live: 'https://bharat-budget-beta.vercel.app/',
+    image: '/bharatbudget_mockup.png',
+    dbName: 'IndexedDB Cache',
+    dbChecklist: [
+      'budget_data_years (Annual outlays)',
+      'devolution_weights (Sandbox ratios)',
+      'glossary_terms (RAG chat tokens)',
+      'local_cache (Offline fallback)'
+    ]
   },
   {
     num: '03',
@@ -113,6 +132,14 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     status: 'LIVE',
     gh: 'https://github.com/NisargPatel03/DRHV_Cricket_Tournament',
     live: 'https://drhv-cricket-tournament.vercel.app/',
+    image: '/drhv_cricket_mockup.png',
+    dbName: 'Supabase Database',
+    dbChecklist: [
+      'matches (Live scorer status)',
+      'teams (Roster rosters)',
+      'players (Performance metrics)',
+      'supabase_realtime (Webhooks)'
+    ]
   },
   {
     num: '04',
@@ -143,6 +170,14 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     status: 'LIVE',
     gh: 'https://github.com/NisargPatel03/Blaze_Overseas_LLP',
     live: 'https://blaze-overseas-llp.vercel.app/',
+    image: '/blaze_overseas_mockup.png',
+    dbName: 'Static JSON / SMTP',
+    dbChecklist: [
+      'product_catalog (SSR static props)',
+      'SMTP_transport (Lead notifications)',
+      'inquiries (Sample contact requests)',
+      'local_storage (User preferences)'
+    ]
   },
   {
     num: '05',
@@ -173,6 +208,14 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     status: 'LIVE',
     gh: 'https://github.com/cs-cspit/SEM6-SGP-70-75',
     live: 'https://ecolearn-frontend-delta.vercel.app/',
+    image: '/ecolearn_mockup.png',
+    dbName: 'MongoDB Database',
+    dbChecklist: [
+      'users (Student/Teacher/Admin)',
+      'quizzes (Dynamic quiz objects)',
+      'carbon_footprints (Calculators)',
+      'biodiversity_map (Map coordinates)'
+    ]
   },
   {
     num: '06',
@@ -203,6 +246,14 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     status: 'LIVE',
     gh: 'https://github.com/NisargPatel03/savaliya-scoops-system',
     live: 'https://savaliya-scoops-system.vercel.app/',
+    image: '/savaliya_scoops_mockup.png',
+    dbName: 'Supabase Database',
+    dbChecklist: [
+      'menu_inventory (Real-time stocks)',
+      'hold_orders (Recall queue)',
+      'invoices (GST-compliant records)',
+      'excel_catalog (Catalog uploads)'
+    ]
   },
   {
     num: '07',
@@ -233,6 +284,14 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     status: 'LIVE',
     gh: 'https://github.com/NisargPatel03/NextGenSociety',
     live: 'https://next-gen-society.vercel.app/',
+    image: '/nextgensociety_mockup.png',
+    dbName: 'MongoDB Database',
+    dbChecklist: [
+      'residents (Member user profiles)',
+      'maintenance_invoices (Cron list)',
+      'complaints (Ticket tracking)',
+      'notices (Official bulletin board)'
+    ]
   },
   {
     num: '08',
@@ -263,6 +322,14 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     status: 'LIVE',
     gh: 'https://github.com/NisargPatel03/MERN_Hotel_Booking',
     live: 'https://quickstay-phi.vercel.app/',
+    image: '/quickstay_hotel_mockup.png',
+    dbName: 'MongoDB Database',
+    dbChecklist: [
+      'users (JWT tokens & sessions)',
+      'rooms (Room availability maps)',
+      'bookings (Room reservations)',
+      'reviews (Guest rating schema)'
+    ]
   },
   {
     num: '09',
@@ -293,6 +360,14 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     status: 'LIVE',
     gh: 'https://github.com/NisargPatel03/CarRental_FullStack',
     live: 'https://car-rental-ivory-five.vercel.app/',
+    image: '/car_rental_mockup.png',
+    dbName: 'MongoDB Database',
+    dbChecklist: [
+      'vehicles (Active fleet metadata)',
+      'reservations (Slot calendar mappings)',
+      'invoices (GST-inclusive bills)',
+      'users (Driver/Customer profiles)'
+    ]
   },
   {
     num: '10',
@@ -322,6 +397,14 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     ],
     status: 'DEPLOYED',
     gh: 'https://github.com/cs-cspit/23CS-SEM4-CS210_70_75_106/tree/main',
+    image: '/blood_testing_mockup.png',
+    dbName: 'MySQL / XAMPP',
+    dbChecklist: [
+      'patients (Diagnostics profiles)',
+      'appointments (Lab schedules)',
+      'diagnostic_reports (Blood stats)',
+      'mysql_triggers (Live logs)'
+    ]
   },
   {
     num: '11',
@@ -351,6 +434,14 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     ],
     status: 'DEPLOYED',
     gh: 'https://github.com/Meghpatel2810/Sports_Venue_Booking_System',
+    image: '/sports_venue_mockup.png',
+    dbName: 'MongoDB Database',
+    dbChecklist: [
+      'court_availability (Arena timelines)',
+      'reservations (Timeslot slots)',
+      'audit_logs (Transactional logs)',
+      'members (Booking accounts)'
+    ]
   },
   {
     num: '12',
@@ -381,6 +472,14 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     status: 'LIVE',
     gh: 'https://github.com/NisargPatel03',
     live: 'https://skill-swap-web-app.vercel.app/',
+    image: '/skill_swap_mockup.png',
+    dbName: 'MongoDB Database',
+    dbChecklist: [
+      'users (Skills & bios)',
+      'swap_sessions (Peer meetings)',
+      'endorsements (Ratings matrices)',
+      'sessions_history (P2P transaction logs)'
+    ]
   },
 ];
 

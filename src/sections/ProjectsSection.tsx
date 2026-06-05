@@ -300,7 +300,7 @@ interface TerminalPanelProps {
   cmdText: string;
   progress: number;
   progressVisible: boolean;
-  logs: { text: string; type: TerminalLog['t'] }[];
+  logs: { text: string; type: TerminalLog['t']; isBanner?: boolean }[];
   cardVisible: boolean;
   glitching: boolean;
   scanline: boolean;
@@ -337,6 +337,7 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
 }) => {
   const [activeTheme, setActiveTheme] = useState<'project' | 'classic' | 'dracula' | 'amber' | 'cyber' | 'nord'>('project');
   const [activeTab, setActiveTab] = useState<'overview' | 'features' | 'tech' | 'sysinfo'>('overview');
+  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
 
   const formatThemeName = (theme: string) => {
     if (theme === 'project') return 'Auto (Project)';
@@ -345,6 +346,7 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
 
   useEffect(() => {
     setActiveTab('overview');
+    setMobileDrawerOpen(false);
   }, [project.slug]);
 
   const getThemeColor = () => {
@@ -436,6 +438,20 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
           <div className="terminal-toggles">
             <button
               type="button"
+              className={`terminal-toggle-btn is-preview ${mobileDrawerOpen ? 'is-active' : ''}`}
+              onClick={() => {
+                if (!cardVisible) return;
+                soundFX.playClick();
+                setMobileDrawerOpen(!mobileDrawerOpen);
+              }}
+              style={{ opacity: cardVisible ? 1 : 0.4, cursor: cardVisible ? 'pointer' : 'not-allowed' }}
+              title="Toggle Project Preview Mockup"
+              disabled={!cardVisible}
+            >
+              Mockup
+            </button>
+            <button
+              type="button"
               className={`terminal-toggle-btn is-crt ${crtEnabled ? 'is-active' : ''}`}
               onClick={() => {
                 soundFX.playClick();
@@ -464,10 +480,11 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
         </div>
       </div>
 
-      <div
-        ref={bodyRef}
-        className="terminal-body select-text"
-      >
+      <div className="terminal-layout-wrapper">
+        <div
+          ref={bodyRef}
+          className="terminal-body select-text"
+        >
         <div className="terminal-cmd-line">
           <span className="prompt">❯</span>
           <span className="cmd-text cmd-text-full">{cmdText}</span>
@@ -620,7 +637,60 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
         </div>
       </div>
 
-      <nav className="terminal-nav" style={style}>
+      <div className={`terminal-preview-drawer ${cardVisible ? 'is-visible' : ''} ${mobileDrawerOpen ? 'mobile-open' : ''}`}>
+        <div className="preview-drawer-header">
+          <span className="preview-drawer-title">// VISUAL MOCKUP</span>
+          <button
+            type="button"
+            className="preview-drawer-close"
+            onClick={() => {
+              soundFX.playClick();
+              setMobileDrawerOpen(false);
+            }}
+          >
+            ×
+          </button>
+        </div>
+        <div className="preview-drawer-content">
+          <div className="preview-mockup-frame">
+            {project.image && (
+              <img
+                src={project.image}
+                alt={`${project.title} Interface Mockup`}
+                className="preview-mockup-img"
+                loading="lazy"
+              />
+            )}
+            <div className="preview-mockup-scanlines" />
+          </div>
+
+          <div className="preview-db-section">
+            <div className="preview-db-badge-wrap">
+              <span className="preview-db-label">Database Layer:</span>
+              <span className="preview-db-badge">{project.dbName}</span>
+            </div>
+            <ul className="preview-db-checklist">
+              {project.dbChecklist.map((item, idx) => {
+                const parts = item.split(' (');
+                const modelName = parts[0];
+                const details = parts[1] ? ` (${parts[1]}` : '';
+                return (
+                  <li key={idx} className="preview-db-item">
+                    <span className="preview-db-checkbox">[x]</span>
+                    <div className="preview-db-text">
+                      <span className="preview-db-model">{modelName}</span>
+                      {details && <span className="preview-db-details">{details}</span>}
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <nav className="terminal-nav" style={style}>
         <span className="terminal-status-badge">{project.status}</span>
         <a
           href={project.gh}
