@@ -165,12 +165,92 @@ export const ProjectsSection: React.FC = () => {
     if (curRef.current > 0) goTo(curRef.current - 1, true);
   }, [goTo]);
 
+  const runBootSequence = useCallback(async () => {
+    runningRef.current = true;
+    wipe();
+    await sleep(200);
+
+    await typeString(setCmdText, 'boot-system --fast', CMD_SPEED * 1.2);
+    if (signalRef.current.cancelled) {
+      runningRef.current = false;
+      return;
+    }
+    await sleep(250);
+
+    const bootLines: { text: string; type: TerminalLog['t'] }[] = [
+      { text: '[  0.000000] Bios version: NisargBIOS v1.0', type: 'output' },
+      { text: '[  0.032194] CPU: 4+ Years of Professional Development', type: 'output' },
+      { text: '[  0.076120] RAM check: 16384 MB OK', type: 'output' },
+      { text: '[  0.110294] Initializing Portfolio Core...', type: 'output' },
+      { text: '[  0.187319] Loading Project Registries [12 / 12]...', type: 'output' },
+      { text: '[  0.254109] Mounting Virtual Filesystem...', type: 'output' },
+      { text: '[  0.310294] Launching Interactive Terminal...', type: 'success' },
+    ];
+
+    for (const line of bootLines) {
+      if (signalRef.current.cancelled) {
+        runningRef.current = false;
+        return;
+      }
+      soundFX.playClick();
+      setLogs((prev) => [...prev, line]);
+      await sleep(120 + Math.random() * 80);
+    }
+
+    const bannerLines = [
+      '  _   _  _  ___   _   ___   ___ ',
+      ' | \\ | || |/ __| / \\ |  _ \\ / __|',
+      ' |  \\| || |\\__ \\/ _ \\|  _ <| (_ |',
+      ' |_|\\_||_||___/_/   \\_\\_| \\_\\\\___|'
+    ];
+
+    await sleep(200);
+    for (const line of bannerLines) {
+      if (signalRef.current.cancelled) {
+        runningRef.current = false;
+        return;
+      }
+      soundFX.playClick();
+      setLogs((prev) => [...prev, { text: line, type: 'success' }]);
+      await sleep(100);
+    }
+
+    await sleep(1200);
+    if (signalRef.current.cancelled) {
+      runningRef.current = false;
+      return;
+    }
+
+    wipe();
+    runningRef.current = false;
+    await goTo(0, false);
+  }, [typeString, goTo, wipe]);
+
   useEffect(() => {
     if (initializedRef.current) return;
-    initializedRef.current = true;
-    goTo(0, false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !initializedRef.current) {
+            initializedRef.current = true;
+            runBootSequence();
+            observer.disconnect();
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    const currentEl = sectionRef.current;
+    if (currentEl) {
+      observer.observe(currentEl);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [runBootSequence]);
 
   return (
     <section
