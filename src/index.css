@@ -131,4 +131,42 @@
     right: 0;
     background: linear-gradient(to left, #0c0c0c 0%, transparent 100%);
   }
+
+  /* 3D Card Tilt & Holographic Shimmer */
+  .marquee-card-3d {
+    transform-style: preserve-3d;
+    transform: perspective(1000px) rotateX(calc(var(--y, 0) * 16deg)) rotateY(calc(var(--x, 0) * -16deg)) scale(calc(1 + var(--hover-scale, 0) * 0.04)) translateY(calc(var(--hover-scale, 0) * -4px));
+    transition: transform 0.1s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+
+  .marquee-card-3d::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      circle at calc(50% + var(--x, 0) * 100%) calc(50% + var(--y, 0) * 100%),
+      rgba(255, 255, 255, 0.12) 0%,
+      transparent 60%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .marquee-card-3d:hover::after {
+    opacity: 1;
+  }
+
+  /* Paused marquee state */
+  .marquee-paused [class*='animate-marquee'] {
+    animation-play-state: paused !important;
+  }
+
+  /* Background scanline for telemetry modal */
+  .bg-scanlines {
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+    background-size: 100% 4px, 6px 100%;
+  }
 }
