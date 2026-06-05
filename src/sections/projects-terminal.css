@@ -59,6 +59,40 @@
 .terminal-dots span:nth-child(2) { background: #febc2e; }
 .terminal-dots span:nth-child(3) { background: #28c840; }
 
+.terminal-theme-selector {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.terminal-theme-selector .theme-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  cursor: pointer;
+  padding: 0;
+  background: transparent;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.terminal-theme-selector .theme-dot:hover {
+  transform: scale(1.2);
+}
+
+.terminal-theme-selector .theme-dot.is-active {
+  border-color: #ffffff;
+  box-shadow: 0 0 4px currentColor;
+}
+
+.terminal-theme-selector .theme-dot.is-project { background: linear-gradient(135deg, #00ff41 50%, #ff2d78 50%); color: #00ff41; }
+.terminal-theme-selector .theme-dot.is-classic { background: #00ff41; color: #00ff41; }
+.terminal-theme-selector .theme-dot.is-dracula { background: #ff2d78; color: #ff2d78; }
+.terminal-theme-selector .theme-dot.is-amber { background: #ffb000; color: #ffb000; }
+.terminal-theme-selector .theme-dot.is-cyber { background: #f5a623; color: #f5a623; }
+.terminal-theme-selector .theme-dot.is-nord { background: #88c0d0; color: #88c0d0; }
+
 .terminal-titlebar-text {
   color: #444;
   font-size: clamp(9px, 1.8vw, 11px);
@@ -241,17 +275,92 @@
   }
 }
 
+.terminal-card-tabs-nav {
+  display: flex;
+  gap: 12px;
+  border-bottom: 0.5px solid #1e1e1e;
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.terminal-tab-btn {
+  font-family: inherit;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #777;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 2px 4px;
+  position: relative;
+  transition: color 0.15s ease, font-weight 0.15s ease;
+  font-weight: 600;
+}
+
+.terminal-tab-btn:hover {
+  color: #bbb;
+}
+
+.terminal-tab-btn.is-active {
+  color: var(--accent, #00ff41);
+  font-weight: 800;
+}
+
+.terminal-tab-btn.is-active::after {
+  content: '';
+  position: absolute;
+  bottom: -9.5px;
+  left: 0;
+  right: 0;
+  height: 1.5px;
+  background: var(--accent, #00ff41);
+  box-shadow: 0 0 6px var(--accent, #00ff41);
+}
+
+.terminal-features-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.terminal-feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  line-height: 1.5;
+}
+
+.terminal-feature-bullet {
+  color: var(--accent, #00ff41);
+  font-size: 10px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  font-weight: bold;
+}
+
+.terminal-feature-text {
+  color: #c0c0c0;
+  font-size: 11px;
+  font-weight: 500;
+}
+
 .terminal-card-sub {
-  color: #444;
+  color: #999;
   font-size: 10px;
   margin-bottom: 10px;
+  font-weight: 700;
 }
 
 .terminal-card-desc {
-  color: #666;
+  color: #c0c0c0;
   font-size: 11px;
   line-height: 1.55;
   margin-bottom: 12px;
+  font-weight: 500;
 }
 
 .terminal-card-tags {
@@ -261,12 +370,13 @@
 }
 
 .terminal-tag-pill {
-  border: 0.5px solid #1e1e1e;
-  color: #444;
+  border: 0.5px solid var(--accent, #00ff41);
+  color: var(--accent, #00ff41);
   font-size: 9px;
   text-transform: uppercase;
   padding: 3px 8px;
   letter-spacing: 0.06em;
+  font-weight: 700;
 }
 
 .terminal-cursor-line {

@@ -16,6 +16,7 @@ export interface TerminalProject {
   sub: string;
   desc: string;
   tags: string[];
+  features: string[];
   logs: TerminalLog[];
   status: 'DEPLOYED' | 'LIVE' | 'PUBLISHED';
   gh: string;
@@ -33,6 +34,12 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     sub: 'React · Context API · Chart.js · Tailwind CSS',
     desc: 'An advanced clinical diagnostic evaluation application developed for CHARUSAT Nursing Institute. Digitizes paper surveys with an offline-first Flutter client, dynamic schema-driven form builder, gestural vector sketch canvas, and real-time React dashboards for faculty grading and PostgreSQL admin reports.',
     tags: ['React', 'Context API', 'Chart.js', 'Tailwind CSS'],
+    features: [
+      'Offline-First caching using SharedPreferences & local SQLite buffers',
+      'Dynamic form builder rendering 57+ distinct clinical templates via JSON schemas',
+      'Gestural vector painting canvas capturing layout maps as high-res images',
+      'Evaluation workflow preventing incomplete grading with custom toast warnings'
+    ],
     logs: [
       { t: 'output', txt: '  Initializing clinical form schema...' },
       { t: 'output', txt: '  Mounting validation rules engine...' },
@@ -57,6 +64,12 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     sub: 'React · TypeScript · Zustand · Recharts',
     desc: 'A premium public finance command center decoding Union Budget data. Features a 16th Finance Commission Devolution Sandbox, interactive SVG maps, decadal ministry allocations with CAGR computation, macroeconomic shock simulators, and Budget Mitra AI (local RAG chatbot with Gujarati/Hindi TTS support).',
     tags: ['React', 'TypeScript', 'Zustand', 'Recharts', 'Tailwind CSS'],
+    features: [
+      '16th Finance Commission devolution simulator with weight-performance calculations',
+      'Macroeconomic simulator testing GDP & CPI variables against global oil shock events',
+      'Offline-first RAG chat assistant equipped with voice synthesizers & term glossaries',
+      'Speech cloud analyzer parsing and highlighting context keywords from live transcripts'
+    ],
     logs: [
       { t: 'output', txt: '  Fetching budget datasets 2024-25 BE/RE...' },
       { t: 'output', txt: '  Building Recharts visualization pipeline...' },
@@ -81,6 +94,12 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     sub: 'React · Node.js · Express · Tailwind CSS',
     desc: 'Real-time cricket tournament manager with Supabase database replication. Integrates Google Gemini 1.5 Flash for live text-to-speech AI commentary, automated sports news editorial writers, and player performance coaching. Includes live fan soundboards, points tables, and team roster schedules.',
     tags: ['React', 'Node.js', 'Express', 'Tailwind CSS'],
+    features: [
+      'Live AI commentary synthesizing ball outcomes into speech narration',
+      'AI match news flash composing editorial columns dynamically',
+      'Real-time scorer console updating league tables & NRR metrics instantly',
+      'Interactive fan chatroom alongside soundboard cheer triggers'
+    ],
     logs: [
       { t: 'output', txt: '  Starting Express API on :5000...' },
       { t: 'output', txt: '  Initializing match polling service...' },
@@ -105,6 +124,12 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     sub: 'React · TypeScript · Tailwind CSS · Framer Motion',
     desc: 'High-fidelity export commodity directory for spices, grains, and pulses. Built using Next.js (App Router), GSAP scroll triggers, and React Three Fiber 3D particle scenes. Provides static PDP generation, WhatsApp deep-linking, sample request modals, and Nodemailer SMTP business inbox integrations.',
     tags: ['React', 'TypeScript', 'Tailwind CSS', 'Framer Motion'],
+    features: [
+      'Gold-themed responsive UI with Lenis smooth scrolling integrations',
+      'Three.js vector particle systems rendering interactive globes & meshes',
+      'Static page generation for 24+ product detail pages with custom SSR headers',
+      'SMTP Nodemailer API routing sample requests directly to business inboxes'
+    ],
     logs: [
       { t: 'output', txt: '  Building commodities search index...' },
       { t: 'output', txt: '  Mounting lead-funnel capture forms...' },
@@ -129,6 +154,12 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     sub: 'Vite · React · Tailwind CSS · Framer Motion',
     desc: 'Gamified environmental education platform built with React and Express. Features student learning portals, teacher circulars, interactive carbon footprint calculators, biodiversity maps, Socket.io real-time chat, and Gemini AI-driven dynamic quiz creation.',
     tags: ['Vite', 'React', 'Tailwind CSS', 'Framer Motion'],
+    features: [
+      'Interactive carbon footprint calculator providing personalized offsets',
+      'Gamified learning tracks with custom quizzes & progress achievements',
+      'Multi-tenant portals supporting distinct workflows for Students, Teachers & Admins',
+      'Google Gemini AI integration generating customized ecosystem quizzes dynamically'
+    ],
     logs: [
       { t: 'output', txt: '  Bundling Vite production build...' },
       { t: 'output', txt: '  Mounting ecosystem visualizers...' },
@@ -153,6 +184,12 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     sub: 'React · Supabase · Excel API · Tailwind CSS',
     desc: 'Custom retail point-of-sale checkout system for franchise ice-cream locations. Connected to Supabase real-time databases for menu inventory tracking, featuring client order hold/recall buffers, GST-compliant invoice generation, and custom Excel API catalog reporting.',
     tags: ['React', 'Supabase', 'Excel API', 'Tailwind CSS'],
+    features: [
+      'Supabase realtime websocket listeners keeping inventory stocks synchronized',
+      'GST tax invoice template compilers computing checkouts on-the-fly',
+      'Queue management buffers backing up orders to prevent data loss',
+      'Excel sheet import/export API scripts managing catalog modifications'
+    ],
     logs: [
       { t: 'output', txt: '  Connecting Supabase realtime channel...' },
       { t: 'output', txt: '  Loading menu catalog selectors...' },
@@ -177,6 +214,12 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     sub: 'React · Node.js · MongoDB · Tailwind CSS',
     desc: 'Multi-tenant residential community management system. Automates monthly maintenance billing invoices, circular announcements on a digital 24/7 noticeboard, resident discussion channels, emergency contacts directory, and Stripe-powered checkout transactions.',
     tags: ['React', 'Node.js', 'MongoDB', 'Tailwind CSS'],
+    features: [
+      'Stripe checkout integrations processing digital maintenance payments securely',
+      'Digital circular notice boards enabling 24/7 access to official news updates',
+      'Support desk letting residents log tickets, tracking workflow statuses',
+      'Centralized community directories indexing emergency details and residents'
+    ],
     logs: [
       { t: 'output', txt: '  Connecting MongoDB Atlas cluster...' },
       { t: 'output', txt: '  Generating maintenance invoice cron...' },
@@ -201,6 +244,12 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     sub: 'MongoDB · Express · React · Node.js · Redux',
     desc: 'MERN hotel booking portal with secure authentication, multi-role user dashboards, and Redux state management. Enables room inventory searching, dynamic pricing calculation, booking reservations, review submissions, and automated JWT token rotation.',
     tags: ['MongoDB', 'Express', 'React', 'Node.js', 'Redux'],
+    features: [
+      'Redux toolkit session managers keeping profiles & cart state updated',
+      'Automated JSON Web Token (JWT) rotation securing administrative controllers',
+      'Dynamic calendar search validating room inventory schedules in real-time',
+      'Rating & review moderation boards displaying customer feedback publicly'
+    ],
     logs: [
       { t: 'output', txt: '  Starting MERN API gateway...' },
       { t: 'output', txt: '  Mounting Redux session store...' },
@@ -225,6 +274,12 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     sub: 'React · Node.js · Express · MongoDB',
     desc: 'Full-stack car rental reservation manager. Features vehicle inventory listings (CRUD models for admin rooms), slot checking calendars, daily billing rate invoice computation, and client reservation histories.',
     tags: ['React', 'Node.js', 'Express', 'MongoDB', 'Tailwind CSS'],
+    features: [
+      'Comprehensive fleet catalog dashboard supporting active admin CRUD routes',
+      'Dynamic reservation slot checks preventing double-booking schedules',
+      'Daily billing rate compilers printing PDF invoice records upon return',
+      'Customer history dashboards logging rental profiles & pending payments'
+    ],
     logs: [
       { t: 'output', txt: '  Seeding vehicle catalog inventory...' },
       { t: 'output', txt: '  Compiling daily rate invoice engine...' },
@@ -249,6 +304,12 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     sub: 'PHP · MySQL · XAMPP · Bootstrap',
     desc: 'PHP-based clinical laboratory management portal deployed on local XAMPP Apache servers. Operates relational MySQL database schemas storing diagnostic history, patient appointments, and generates clinical diagnostic reports.',
     tags: ['PHP', 'MySQL', 'XAMPP', 'Bootstrap', 'JavaScript'],
+    features: [
+      'Apache server routing configurations deployed on local XAMPP environments',
+      'Relational MySQL schema tables organizing patient records & appointments',
+      'Clinical diagnostic report printers generating dynamic PDF downloads',
+      'Interactive dashboard tracking diagnostic queue counts in real-time'
+    ],
     logs: [
       { t: 'output', txt: '  Starting Apache on XAMPP :80...' },
       { t: 'output', txt: '  Connecting MySQL patient records DB...' },
@@ -272,6 +333,12 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     sub: 'React · Node.js · Express · MongoDB',
     desc: 'Court availability and arena scheduler for sports complexes. Prevents double-booking conflicts through real-time calendar validation checks, tracks user accounts, and outputs administrative audit logs.',
     tags: ['React', 'Node.js', 'Express', 'MongoDB', 'Tailwind CSS'],
+    features: [
+      'Complex court availability schedulers preventing concurrent booking overlaps',
+      'Real-time reservation timelines mapping open slots dynamically',
+      'Administrative audit logs tracking checkout histories & user transactions',
+      'Verification security checks validating member registration states'
+    ],
     logs: [
       { t: 'output', txt: '  Building court availability calendar...' },
       { t: 'output', txt: '  Wiring reservation controllers...' },
@@ -295,6 +362,12 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     sub: 'MongoDB · Express · React · Node.js · Redux',
     desc: 'Peer-to-peer skill-sharing marketplace matching users based on professional skills. Includes responsive profiles, booking calendars for swap sessions, endorsement ratings, and MERN stack authentication.',
     tags: ['MongoDB', 'Express', 'React', 'Node.js', 'Redux'],
+    features: [
+      'Professional skill-matching algorithm connecting students & coaches',
+      'Tactile calendar planners organizing peer-to-peer review slots',
+      'Endorsement matrices rating exchange quality across profiles',
+      'JWT security protocols guarding MERN stack route endpoints'
+    ],
     logs: [
       { t: 'output', txt: '  Initializing peer matching algorithm...' },
       { t: 'output', txt: '  Mounting profile endorsement matrix...' },

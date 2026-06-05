@@ -224,7 +224,28 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
   onPrev,
   onDotClick,
 }) => {
-  const style = { ['--accent' as string]: accentColor };
+  const [activeTheme, setActiveTheme] = useState<'project' | 'classic' | 'dracula' | 'amber' | 'cyber' | 'nord'>('project');
+  const [activeTab, setActiveTab] = useState<'overview' | 'features' | 'tech'>('overview');
+
+  useEffect(() => {
+    setActiveTab('overview');
+  }, [project.slug]);
+
+  const getThemeColor = () => {
+    switch (activeTheme) {
+      case 'classic': return '#00ff41';
+      case 'dracula': return '#ff2d78';
+      case 'amber': return '#ffb000';
+      case 'cyber': return '#f5a623';
+      case 'nord': return '#88c0d0';
+      case 'project':
+      default:
+        return accentColor;
+    }
+  };
+
+  const themeColor = getThemeColor();
+  const style = { ['--accent' as string]: themeColor };
 
   return (
     <div className="terminal-window" style={style}>
@@ -237,6 +258,45 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
           <span />
         </div>
         <span className="terminal-titlebar-text">nisarg@portfolio ~ projects</span>
+
+        <div className="terminal-theme-selector" aria-label="Terminal themes">
+          <button
+            type="button"
+            className={`theme-dot is-project ${activeTheme === 'project' ? 'is-active' : ''}`}
+            onClick={() => setActiveTheme('project')}
+            title="Auto Dynamic Theme"
+          />
+          <button
+            type="button"
+            className={`theme-dot is-classic ${activeTheme === 'classic' ? 'is-active' : ''}`}
+            onClick={() => setActiveTheme('classic')}
+            title="Classic Green"
+          />
+          <button
+            type="button"
+            className={`theme-dot is-dracula ${activeTheme === 'dracula' ? 'is-active' : ''}`}
+            onClick={() => setActiveTheme('dracula')}
+            title="Dracula Pink"
+          />
+          <button
+            type="button"
+            className={`theme-dot is-amber ${activeTheme === 'amber' ? 'is-active' : ''}`}
+            onClick={() => setActiveTheme('amber')}
+            title="Amber CRT"
+          />
+          <button
+            type="button"
+            className={`theme-dot is-cyber ${activeTheme === 'cyber' ? 'is-active' : ''}`}
+            onClick={() => setActiveTheme('cyber')}
+            title="Cyber Gold"
+          />
+          <button
+            type="button"
+            className={`theme-dot is-nord ${activeTheme === 'nord' ? 'is-active' : ''}`}
+            onClick={() => setActiveTheme('nord')}
+            title="Nord Blue"
+          />
+        </div>
       </div>
 
       <div
@@ -259,7 +319,7 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
           <div className="terminal-progress-track">
             <div
               className="terminal-progress-fill"
-              style={{ width: `${progress}%`, background: accentColor }}
+              style={{ width: `${progress}%`, background: themeColor }}
             />
           </div>
         </div>
@@ -280,14 +340,57 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
           <h3 className={`terminal-card-title ${glitching ? 'is-glitching' : ''}`}>
             {project.title}
           </h3>
-          <p className="terminal-card-sub">{project.sub}</p>
-          <p className="terminal-card-desc">{project.desc}</p>
-          <div className="terminal-card-tags">
-            {project.tags.map((tag) => (
-              <span key={tag} className="terminal-tag-pill">
-                {tag}
-              </span>
-            ))}
+
+          <div className="terminal-card-tabs-nav">
+            <button
+              type="button"
+              className={`terminal-tab-btn ${activeTab === 'overview' ? 'is-active' : ''}`}
+              onClick={() => setActiveTab('overview')}
+            >
+              Overview
+            </button>
+            <button
+              type="button"
+              className={`terminal-tab-btn ${activeTab === 'features' ? 'is-active' : ''}`}
+              onClick={() => setActiveTab('features')}
+            >
+              Features
+            </button>
+            <button
+              type="button"
+              className={`terminal-tab-btn ${activeTab === 'tech' ? 'is-active' : ''}`}
+              onClick={() => setActiveTab('tech')}
+            >
+              Tech Stack
+            </button>
+          </div>
+
+          <div className="terminal-card-tab-content">
+            {activeTab === 'overview' && (
+              <>
+                <p className="terminal-card-sub">{project.sub}</p>
+                <p className="terminal-card-desc">{project.desc}</p>
+              </>
+            )}
+            {activeTab === 'features' && (
+              <ul className="terminal-features-list">
+                {project.features.map((feature, i) => (
+                  <li key={i} className="terminal-feature-item">
+                    <span className="terminal-feature-bullet">❯</span>
+                    <span className="terminal-feature-text">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {activeTab === 'tech' && (
+              <div className="terminal-card-tags">
+                {project.tags.map((tag) => (
+                  <span key={tag} className="terminal-tag-pill">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
