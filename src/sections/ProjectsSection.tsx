@@ -254,7 +254,12 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
   setSoundEnabled,
 }) => {
   const [activeTheme, setActiveTheme] = useState<'project' | 'classic' | 'dracula' | 'amber' | 'cyber' | 'nord'>('project');
-  const [activeTab, setActiveTab] = useState<'overview' | 'features' | 'tech'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'features' | 'tech' | 'sysinfo'>('overview');
+
+  const formatThemeName = (theme: string) => {
+    if (theme === 'project') return 'Auto (Project)';
+    return theme.charAt(0).toUpperCase() + theme.slice(1);
+  };
 
   useEffect(() => {
     setActiveTab('overview');
@@ -450,6 +455,16 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
             >
               Tech Stack
             </button>
+            <button
+              type="button"
+              className={`terminal-tab-btn ${activeTab === 'sysinfo' ? 'is-active' : ''}`}
+              onClick={() => {
+                soundFX.playClick();
+                setActiveTab('sysinfo');
+              }}
+            >
+              Sys Info
+            </button>
           </div>
 
           <div className="terminal-card-tab-content">
@@ -476,6 +491,42 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
                     {tag}
                   </span>
                 ))}
+              </div>
+            )}
+            {activeTab === 'sysinfo' && (
+              <div className="terminal-sysinfo-wrap">
+                <pre className="terminal-sysinfo-ascii">
+{` _  _   ___ 
+| \\| | |  _\\
+| |\\ | |  _/
+|_|\\_| |_|  `}
+                </pre>
+                <div className="terminal-sysinfo-details">
+                  <div className="sysinfo-line">
+                    <span className="sysinfo-key">OS</span>: <span className="sysinfo-val">NisargOS v1.0</span>
+                  </div>
+                  <div className="sysinfo-line">
+                    <span className="sysinfo-key">Host</span>: <span className="sysinfo-val">Portfolio Terminal</span>
+                  </div>
+                  <div className="sysinfo-line">
+                    <span className="sysinfo-key">Kernel</span>: <span className="sysinfo-val">React 19 / Vite 8</span>
+                  </div>
+                  <div className="sysinfo-line">
+                    <span className="sysinfo-key">Uptime</span>: <span className="sysinfo-val">4+ Years of Code</span>
+                  </div>
+                  <div className="sysinfo-line">
+                    <span className="sysinfo-key">Shell</span>: <span className="sysinfo-val">zsh (Interactive Panel)</span>
+                  </div>
+                  <div className="sysinfo-line">
+                    <span className="sysinfo-key">CPU</span>: <span className="sysinfo-val">Full-Stack (MERN/Next)</span>
+                  </div>
+                  <div className="sysinfo-line">
+                    <span className="sysinfo-key">Theme</span>: <span className="sysinfo-val">{formatThemeName(activeTheme)}</span>
+                  </div>
+                  <div className="sysinfo-line">
+                    <span className="sysinfo-key">Repos</span>: <span className="sysinfo-val">12 Deployed Repos</span>
+                  </div>
+                </div>
               </div>
             )}
           </div>

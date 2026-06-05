@@ -418,6 +418,52 @@
   font-weight: 700;
 }
 
+.terminal-sysinfo-wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  padding: 4px 0;
+}
+
+.terminal-sysinfo-ascii {
+  font-family: monospace;
+  font-size: 11px;
+  line-height: 1.25;
+  color: var(--accent, #00ff41);
+  text-shadow: 0 0 4px var(--accent, #00ff41);
+  margin: 0;
+  white-space: pre;
+  flex-shrink: 0;
+}
+
+.terminal-sysinfo-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sysinfo-line {
+  font-size: 11px;
+  line-height: 1.4;
+  font-family: monospace;
+}
+
+.sysinfo-key {
+  color: var(--accent, #00ff41);
+  font-weight: bold;
+}
+
+.sysinfo-val {
+  color: #c0c0c0;
+}
+
+@media (max-width: 480px) {
+  .terminal-sysinfo-wrap {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
 .terminal-cursor-line {
   margin-top: 16px;
   padding-top: 8px;
