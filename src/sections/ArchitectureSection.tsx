@@ -66,6 +66,22 @@ export const ArchitectureSection: React.FC = () => {
   const [simStepIndex, setSimStepIndex] = useState<number>(-1);
   const [simLogs, setSimLogs] = useState<string[]>([]);
 
+  const hoveredNodeIdRef = useRef<string | null>(null);
+  const activeSimRef = useRef<string | null>(null);
+  const simStepIndexRef = useRef<number>(-1);
+
+  useEffect(() => {
+    hoveredNodeIdRef.current = hoveredNodeId;
+  }, [hoveredNodeId]);
+
+  useEffect(() => {
+    activeSimRef.current = activeSim;
+  }, [activeSim]);
+
+  useEffect(() => {
+    simStepIndexRef.current = simStepIndex;
+  }, [simStepIndex]);
+
   // List of all 27 technical skills mapped from Nisarg's portfolio
   const staticNodesData = [
     // --- 1. CLIENT CORE ---
@@ -554,8 +570,8 @@ export const ArchitectureSection: React.FC = () => {
       rotationRef.current += 0.015;
 
       // --- PHYSICS CALCULATION ---
-      const activeStepNodeId = (activeSim && simStepIndex !== -1)
-        ? workflows[activeSim].steps[simStepIndex].nodeId
+      const activeStepNodeId = (activeSimRef.current && simStepIndexRef.current !== -1)
+        ? workflows[activeSimRef.current].steps[simStepIndexRef.current].nodeId
         : null;
 
       nodesRef.current.forEach((node) => {
@@ -634,7 +650,7 @@ export const ArchitectureSection: React.FC = () => {
       // Filter out microparticles that decayed fully
       microParticlesRef.current = microParticlesRef.current.filter((p) => p.life > 0.02);
 
-      // --- RENDERING CONNECTIONS ---
+      // --- RENDERING STATIC CONNECTIONS ---
       connections.forEach((conn) => {
         const fromNode = nodesRef.current.find((n) => n.id === conn.from);
         const toNode = nodesRef.current.find((n) => n.id === conn.to);
@@ -643,54 +659,60 @@ export const ArchitectureSection: React.FC = () => {
         const dist = Math.hypot(fromNode.x - toNode.x, fromNode.y - toNode.y);
         const maxDist = 280;
 
-        if (dist < maxDist) {
-          // Highlight connection if nodes are hovered or running in active simulation path
-          let isActive = false;
-          if (hoveredNodeId === fromNode.id || hoveredNodeId === toNode.id) {
-            isActive = true;
-          }
-          if (activeSim && simStepIndex !== -1) {
-            const steps = workflows[activeSim].steps.slice(0, simStepIndex + 1).map((s) => s.nodeId);
-            const fromIdx = steps.indexOf(fromNode.id);
-            const toIdx = steps.indexOf(toNode.id);
-            if (fromIdx !== -1 && toIdx !== -1 && Math.abs(fromIdx - toIdx) <= 1) {
-              isActive = true;
-            }
-          }
+        const isHovered = hoveredNodeIdRef.current === fromNode.id || hoveredNodeIdRef.current === toNode.id;
 
-          ctx.strokeStyle = isActive ? fromNode.color : 'rgba(255, 255, 255, 0.03)';
-          ctx.lineWidth = isActive ? 1.6 : 0.6;
+        if (isHovered || dist < maxDist) {
+          ctx.strokeStyle = isHovered ? fromNode.color : 'rgba(255, 255, 255, 0.03)';
+          ctx.lineWidth = isHovered ? 1.6 : 0.6;
           ctx.beginPath();
           ctx.moveTo(fromNode.x, fromNode.y);
           ctx.lineTo(toNode.x, toNode.y);
           ctx.stroke();
-
-          // Spark particle tracking along connection line during simulation flow
-          if (activeSim && simStepIndex > 0) {
-            const steps = workflows[activeSim].steps;
-            const prevId = steps[simStepIndex - 1].nodeId;
-            const currId = steps[simStepIndex].nodeId;
-            if ((prevId === fromNode.id && currId === toNode.id) || (prevId === toNode.id && currId === fromNode.id)) {
-              const progress = (Date.now() % 1200) / 1200;
-              const spx = fromNode.x + (toNode.x - fromNode.x) * progress;
-              const spy = fromNode.y + (toNode.y - fromNode.y) * progress;
-              ctx.fillStyle = fromNode.color;
-              ctx.shadowColor = fromNode.color;
-              ctx.shadowBlur = 8;
-              ctx.beginPath();
-              ctx.arc(spx, spy, 4.5, 0, Math.PI * 2);
-              ctx.fill();
-              ctx.shadowBlur = 0;
-            }
-          }
         }
       });
 
+      // --- RENDERING ACTIVE SIMULATION PATH ---
+      if (activeSimRef.current && simStepIndexRef.current > 0) {
+        const steps = workflows[activeSimRef.current].steps;
+        for (let i = 1; i <= simStepIndexRef.current; i++) {
+          const prevId = steps[i - 1].nodeId;
+          const currId = steps[i].nodeId;
+          const prevNode = nodesRef.current.find((n) => n.id === prevId);
+          const currNode = nodesRef.current.find((n) => n.id === currId);
+          if (prevNode && currNode) {
+            // Draw active connection line
+            ctx.strokeStyle = prevNode.color;
+            ctx.lineWidth = 2.2; // Thicker, glowing line for the simulation trace
+            ctx.shadowColor = prevNode.color;
+            ctx.shadowBlur = 4;
+            ctx.beginPath();
+            ctx.moveTo(prevNode.x, prevNode.y);
+            ctx.lineTo(currNode.x, currNode.y);
+            ctx.stroke();
+            ctx.shadowBlur = 0; // Reset shadow
+
+            // Draw spark for the current step
+            if (i === simStepIndexRef.current) {
+              const progress = (Date.now() % 1200) / 1200;
+              const spx = prevNode.x + (currNode.x - prevNode.x) * progress;
+              const spy = prevNode.y + (currNode.y - prevNode.y) * progress;
+              ctx.fillStyle = prevNode.color;
+              ctx.shadowColor = prevNode.color;
+              ctx.shadowBlur = 12;
+              ctx.beginPath();
+              ctx.arc(spx, spy, 6, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.shadowBlur = 0; // Reset shadow
+            }
+          }
+        }
+      }
+
       // --- RENDERING TECH NODES ---
       nodesRef.current.forEach((node) => {
-        const isHovered = hoveredNodeId === node.id;
+        const isHovered = hoveredNodeIdRef.current === node.id;
         const isSimFocused = node.id === activeStepNodeId;
-        const isSimPassed = activeSim && workflows[activeSim].steps.slice(0, simStepIndex).some((s) => s.nodeId === node.id);
+        const isSimPassed = activeSimRef.current && workflows[activeSimRef.current].steps.slice(0, simStepIndexRef.current).some((s) => s.nodeId === node.id);
 
         ctx.save();
 
