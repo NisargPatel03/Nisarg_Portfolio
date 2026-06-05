@@ -21,9 +21,7 @@ export const ProjectsSection: React.FC = () => {
   const curRef = useRef(0);
   const runningRef = useRef(false);
   const signalRef = useRef({ cancelled: false });
-  const touchStartX = useRef(0);
   const initializedRef = useRef(false);
-  const inViewRef = useRef(false);
   const hasDeployedRef = useRef(false);
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -157,62 +155,11 @@ export const ProjectsSection: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        inViewRef.current = entry.isIntersecting;
-      },
-      { threshold: 0 }
-    );
-    observer.observe(el);
-
-    const syncScrollIndex = () => {
-      if (!inViewRef.current || runningRef.current) return;
-      const { top, height } = el.getBoundingClientRect();
-      const scrollable = height - window.innerHeight;
-      if (scrollable <= 0) return;
-      const progressScroll = Math.min(Math.max(-top, 0), scrollable) / scrollable;
-      const newIdx = Math.min(Math.floor(progressScroll * total), total - 1);
-      if (newIdx !== curRef.current) goTo(newIdx, true);
-    };
-
-    const onScroll = () => syncScrollIndex();
-    window.addEventListener('scroll', onScroll, { passive: true });
-
-    let frame = 0;
-    const tick = () => {
-      syncScrollIndex();
-      frame = requestAnimationFrame(tick);
-    };
-    frame = requestAnimationFrame(tick);
-
-    return () => {
-      observer.disconnect();
-      window.removeEventListener('scroll', onScroll);
-      cancelAnimationFrame(frame);
-    };
-  }, [goTo, total]);
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    const dx = e.changedTouches[0].clientX - touchStartX.current;
-    if (Math.abs(dx) < 50) return;
-    if (dx < 0) nextProject();
-    else prevProject();
-  };
-
   return (
     <section
       id="projects-section"
       ref={sectionRef}
       className="projects-terminal-section"
-      style={{ height: `${total * 100}vh` }}
     >
       <div className="projects-terminal-heading">
         <span>Featured Repositories</span>
@@ -233,8 +180,6 @@ export const ProjectsSection: React.FC = () => {
           glitching={glitching}
           scanline={scanline}
           bodyRef={bodyRef}
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
           onNext={nextProject}
           onPrev={prevProject}
           onDotClick={(i) => goTo(i, true)}
@@ -257,8 +202,6 @@ interface TerminalPanelProps {
   glitching: boolean;
   scanline: boolean;
   bodyRef: React.RefObject<HTMLDivElement | null>;
-  onTouchStart: (e: React.TouchEvent) => void;
-  onTouchEnd: (e: React.TouchEvent) => void;
   onNext: () => void;
   onPrev: () => void;
   onDotClick: (i: number) => void;
@@ -277,8 +220,6 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
   glitching,
   scanline,
   bodyRef,
-  onTouchStart,
-  onTouchEnd,
   onNext,
   onPrev,
   onDotClick,
@@ -301,8 +242,6 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
       <div
         ref={bodyRef}
         className="terminal-body select-text"
-        onTouchStart={onTouchStart}
-        onTouchEnd={onTouchEnd}
       >
         <div className="terminal-cmd-line">
           <span className="prompt">❯</span>
