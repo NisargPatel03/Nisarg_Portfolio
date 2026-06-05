@@ -5,6 +5,7 @@ import {
   type TerminalLog,
   type TerminalProject,
 } from '../data/projectsTerminal';
+import { soundFX } from '../utils/terminalAudio';
 import './projects-terminal.css';
 
 const CMD_SPEED = 20;
@@ -33,6 +34,13 @@ export const ProjectsSection: React.FC = () => {
   const [glitching, setGlitching] = useState(false);
   const [scanline, setScanline] = useState(false);
 
+  const [crtEnabled, setCrtEnabled] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState(false);
+
+  useEffect(() => {
+    soundFX.enabled = soundEnabled;
+  }, [soundEnabled]);
+
   const project = PROJECTS_TERMINAL[currentIndex];
   const accentColor = ACCENT_COLORS[project.accent];
   const total = PROJECTS_TERMINAL.length;
@@ -52,7 +60,10 @@ export const ProjectsSection: React.FC = () => {
       for (let i = 0; i <= text.length; i++) {
         if (signalRef.current.cancelled) return;
         setter(text.slice(0, i));
-        if (i < text.length) await sleep(speed);
+        if (i < text.length) {
+          soundFX.playClick();
+          await sleep(speed);
+        }
       }
     },
     []
@@ -82,7 +93,10 @@ export const ProjectsSection: React.FC = () => {
           if (signalRef.current.cancelled) return;
           built[built.length - 1] = { text: line.txt.slice(0, i), type: line.t };
           setLogs([...built]);
-          if (i < line.txt.length) await sleep(LOG_SPEED);
+          if (i < line.txt.length) {
+            soundFX.playClick();
+            await sleep(LOG_SPEED);
+          }
         }
         await logGap();
       }
@@ -103,6 +117,7 @@ export const ProjectsSection: React.FC = () => {
         runningRef.current = false;
         return;
       }
+      soundFX.playSuccess();
       await typeLogs(p.logs);
       if (signalRef.current.cancelled) {
         runningRef.current = false;
@@ -141,10 +156,12 @@ export const ProjectsSection: React.FC = () => {
   );
 
   const nextProject = useCallback(() => {
+    soundFX.playClick();
     if (curRef.current < total - 1) goTo(curRef.current + 1, true);
   }, [goTo, total]);
 
   const prevProject = useCallback(() => {
+    soundFX.playClick();
     if (curRef.current > 0) goTo(curRef.current - 1, true);
   }, [goTo]);
 
@@ -183,6 +200,10 @@ export const ProjectsSection: React.FC = () => {
           onNext={nextProject}
           onPrev={prevProject}
           onDotClick={(i) => goTo(i, true)}
+          crtEnabled={crtEnabled}
+          setCrtEnabled={setCrtEnabled}
+          soundEnabled={soundEnabled}
+          setSoundEnabled={setSoundEnabled}
         />
       </div>
     </section>
@@ -205,6 +226,10 @@ interface TerminalPanelProps {
   onNext: () => void;
   onPrev: () => void;
   onDotClick: (i: number) => void;
+  crtEnabled: boolean;
+  setCrtEnabled: React.Dispatch<React.SetStateAction<boolean>>;
+  soundEnabled: boolean;
+  setSoundEnabled: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const TerminalPanel: React.FC<TerminalPanelProps> = ({
@@ -223,6 +248,10 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
   onNext,
   onPrev,
   onDotClick,
+  crtEnabled,
+  setCrtEnabled,
+  soundEnabled,
+  setSoundEnabled,
 }) => {
   const [activeTheme, setActiveTheme] = useState<'project' | 'classic' | 'dracula' | 'amber' | 'cyber' | 'nord'>('project');
   const [activeTab, setActiveTab] = useState<'overview' | 'features' | 'tech'>('overview');
@@ -248,7 +277,7 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
   const style = { ['--accent' as string]: themeColor };
 
   return (
-    <div className="terminal-window" style={style}>
+    <div className={`terminal-window ${crtEnabled ? 'crt-active' : ''}`} style={style}>
       <div className={`terminal-scanline ${scanline ? 'is-active' : ''}`} aria-hidden />
 
       <div className="terminal-titlebar">
@@ -259,43 +288,92 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
         </div>
         <span className="terminal-titlebar-text">nisarg@portfolio ~ projects</span>
 
-        <div className="terminal-theme-selector" aria-label="Terminal themes">
-          <button
-            type="button"
-            className={`theme-dot is-project ${activeTheme === 'project' ? 'is-active' : ''}`}
-            onClick={() => setActiveTheme('project')}
-            title="Auto Dynamic Theme"
-          />
-          <button
-            type="button"
-            className={`theme-dot is-classic ${activeTheme === 'classic' ? 'is-active' : ''}`}
-            onClick={() => setActiveTheme('classic')}
-            title="Classic Green"
-          />
-          <button
-            type="button"
-            className={`theme-dot is-dracula ${activeTheme === 'dracula' ? 'is-active' : ''}`}
-            onClick={() => setActiveTheme('dracula')}
-            title="Dracula Pink"
-          />
-          <button
-            type="button"
-            className={`theme-dot is-amber ${activeTheme === 'amber' ? 'is-active' : ''}`}
-            onClick={() => setActiveTheme('amber')}
-            title="Amber CRT"
-          />
-          <button
-            type="button"
-            className={`theme-dot is-cyber ${activeTheme === 'cyber' ? 'is-active' : ''}`}
-            onClick={() => setActiveTheme('cyber')}
-            title="Cyber Gold"
-          />
-          <button
-            type="button"
-            className={`theme-dot is-nord ${activeTheme === 'nord' ? 'is-active' : ''}`}
-            onClick={() => setActiveTheme('nord')}
-            title="Nord Blue"
-          />
+        <div className="terminal-controls">
+          <div className="terminal-theme-selector" aria-label="Terminal themes">
+            <button
+              type="button"
+              className={`theme-dot is-project ${activeTheme === 'project' ? 'is-active' : ''}`}
+              onClick={() => {
+                soundFX.playClick();
+                setActiveTheme('project');
+              }}
+              title="Auto Dynamic Theme"
+            />
+            <button
+              type="button"
+              className={`theme-dot is-classic ${activeTheme === 'classic' ? 'is-active' : ''}`}
+              onClick={() => {
+                soundFX.playClick();
+                setActiveTheme('classic');
+              }}
+              title="Classic Green"
+            />
+            <button
+              type="button"
+              className={`theme-dot is-dracula ${activeTheme === 'dracula' ? 'is-active' : ''}`}
+              onClick={() => {
+                soundFX.playClick();
+                setActiveTheme('dracula');
+              }}
+              title="Dracula Pink"
+            />
+            <button
+              type="button"
+              className={`theme-dot is-amber ${activeTheme === 'amber' ? 'is-active' : ''}`}
+              onClick={() => {
+                soundFX.playClick();
+                setActiveTheme('amber');
+              }}
+              title="Amber CRT"
+            />
+            <button
+              type="button"
+              className={`theme-dot is-cyber ${activeTheme === 'cyber' ? 'is-active' : ''}`}
+              onClick={() => {
+                soundFX.playClick();
+                setActiveTheme('cyber');
+              }}
+              title="Cyber Gold"
+            />
+            <button
+              type="button"
+              className={`theme-dot is-nord ${activeTheme === 'nord' ? 'is-active' : ''}`}
+              onClick={() => {
+                soundFX.playClick();
+                setActiveTheme('nord');
+              }}
+              title="Nord Blue"
+            />
+          </div>
+
+          <div className="terminal-toggles">
+            <button
+              type="button"
+              className={`terminal-toggle-btn is-crt ${crtEnabled ? 'is-active' : ''}`}
+              onClick={() => {
+                soundFX.playClick();
+                setCrtEnabled(!crtEnabled);
+              }}
+              title="Toggle CRT Screen Shader"
+            >
+              CRT
+            </button>
+            <button
+              type="button"
+              className={`terminal-toggle-btn is-sound ${soundEnabled ? 'is-active' : ''}`}
+              onClick={() => {
+                const nextSound = !soundEnabled;
+                setSoundEnabled(nextSound);
+                soundFX.enabled = nextSound;
+                if (nextSound) {
+                  soundFX.playClick();
+                }
+              }}
+              title={soundEnabled ? "Mute Typewriter Sounds" : "Unmute Typewriter Sounds"}
+            >
+              {soundEnabled ? '🔊' : '🔇'}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -345,21 +423,30 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
             <button
               type="button"
               className={`terminal-tab-btn ${activeTab === 'overview' ? 'is-active' : ''}`}
-              onClick={() => setActiveTab('overview')}
+              onClick={() => {
+                soundFX.playClick();
+                setActiveTab('overview');
+              }}
             >
               Overview
             </button>
             <button
               type="button"
               className={`terminal-tab-btn ${activeTab === 'features' ? 'is-active' : ''}`}
-              onClick={() => setActiveTab('features')}
+              onClick={() => {
+                soundFX.playClick();
+                setActiveTab('features');
+              }}
             >
               Features
             </button>
             <button
               type="button"
               className={`terminal-tab-btn ${activeTab === 'tech' ? 'is-active' : ''}`}
-              onClick={() => setActiveTab('tech')}
+              onClick={() => {
+                soundFX.playClick();
+                setActiveTab('tech');
+              }}
             >
               Tech Stack
             </button>
@@ -434,7 +521,10 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
               type="button"
               className={`terminal-dot ${i === currentIndex ? 'is-active' : ''}`}
               style={i === currentIndex ? style : undefined}
-              onClick={() => onDotClick(i)}
+              onClick={() => {
+                soundFX.playClick();
+                onDotClick(i);
+              }}
               aria-label={`Project ${i + 1}`}
             />
           ))}

@@ -59,11 +59,50 @@
 .terminal-dots span:nth-child(2) { background: #febc2e; }
 .terminal-dots span:nth-child(3) { background: #28c840; }
 
+.terminal-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;
+}
+
+.terminal-toggles {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.terminal-toggle-btn {
+  font-family: inherit;
+  font-size: 9px;
+  color: #555;
+  background: transparent;
+  border: 0.5px solid #222;
+  cursor: pointer;
+  padding: 1px 6px;
+  border-radius: 2px;
+  letter-spacing: 0.04em;
+  transition: all 0.15s ease;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.terminal-toggle-btn:hover {
+  color: #aaa;
+  border-color: #444;
+}
+
+.terminal-toggle-btn.is-active {
+  color: var(--accent, #00ff41);
+  border-color: var(--accent, #00ff41);
+  box-shadow: 0 0 4px var(--accent, #00ff41);
+  text-shadow: 0 0 2px var(--accent, #00ff41);
+}
+
 .terminal-theme-selector {
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-left: auto;
 }
 
 .terminal-theme-selector .theme-dot {
@@ -527,4 +566,44 @@
   margin-top: 0.5rem;
   font-size: clamp(2rem, 8vw, 4.5rem);
   letter-spacing: -0.03em;
+}
+
+/* CRT Screen simulation */
+.terminal-window.crt-active {
+  position: relative;
+  overflow: hidden;
+  animation: crt-flicker 0.15s infinite;
+}
+
+/* Phosphor Glow Vignette Overlay */
+.terminal-window.crt-active::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: radial-gradient(circle, rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 100%),
+              linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+              linear-gradient(90deg, rgba(255, 0, 0, 0.04), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.04));
+  background-size: 100% 100%, 100% 4px, 6px 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* CRT Screen Flicker animation */
+@keyframes crt-flicker {
+  0% { opacity: 0.985; }
+  50% { opacity: 0.995; }
+  100% { opacity: 0.985; }
+}
+
+/* CRT horizontal scanlines overlaying the entire body when CRT is active */
+.terminal-window.crt-active .terminal-body::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%);
+  background-size: 100% 4px;
+  z-index: 9;
+  pointer-events: none;
 }
