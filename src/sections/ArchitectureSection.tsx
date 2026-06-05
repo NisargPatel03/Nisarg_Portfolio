@@ -52,6 +52,148 @@ interface SimulationFlow {
   steps: SimStep[];
 }
 
+class WebAudioSynth {
+  private ctx: AudioContext | null = null;
+  private humOsc: OscillatorNode | null = null;
+  private humGain: GainNode | null = null;
+
+  private init() {
+    if (this.ctx) return;
+    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+    if (!AudioContextClass) return;
+    this.ctx = new AudioContextClass();
+  }
+
+  public playSparkSweep(duration = 0.5) {
+    this.init();
+    if (!this.ctx) return;
+    
+    if (this.ctx.state === 'suspended') {
+      this.ctx.resume();
+    }
+
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+    
+    osc.type = 'sine';
+    
+    const now = this.ctx.currentTime;
+    osc.frequency.setValueAtTime(300, now);
+    osc.frequency.exponentialRampToValueAtTime(1200, now + duration);
+    
+    gain.gain.setValueAtTime(0.08, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+    
+    osc.start(now);
+    osc.stop(now + duration);
+  }
+
+  public playDetonationBurst() {
+    this.init();
+    if (!this.ctx) return;
+    if (this.ctx.state === 'suspended') {
+      this.ctx.resume();
+    }
+
+    const now = this.ctx.currentTime;
+    const duration = 0.4;
+    
+    const bufferSize = this.ctx.sampleRate * duration;
+    const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = Math.random() * 2 - 1;
+    }
+
+    const noise = this.ctx.createBufferSource();
+    noise.buffer = buffer;
+
+    const filter = this.ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(800, now);
+    filter.frequency.exponentialRampToValueAtTime(50, now + duration);
+
+    const gain = this.ctx.createGain();
+    gain.gain.setValueAtTime(0.12, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+    noise.connect(filter);
+    filter.connect(gain);
+    gain.connect(this.ctx.destination);
+
+    noise.start(now);
+    noise.stop(now + duration);
+    
+    const osc = this.ctx.createOscillator();
+    const oscGain = this.ctx.createGain();
+    osc.connect(oscGain);
+    oscGain.connect(this.ctx.destination);
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(90, now);
+    osc.frequency.linearRampToValueAtTime(20, now + 0.2);
+    
+    oscGain.gain.setValueAtTime(0.1, now);
+    oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+    osc.start(now);
+    osc.stop(now + 0.25);
+  }
+
+  public startHoverHum() {
+    this.init();
+    if (!this.ctx) return;
+    if (this.ctx.state === 'suspended') {
+      this.ctx.resume();
+    }
+    if (this.humOsc) return;
+
+    const now = this.ctx.currentTime;
+    this.humOsc = this.ctx.createOscillator();
+    this.humGain = this.ctx.createGain();
+
+    this.humOsc.connect(this.humGain);
+    this.humGain.connect(this.ctx.destination);
+
+    this.humOsc.type = 'triangle';
+    this.humOsc.frequency.setValueAtTime(55, now);
+
+    this.humGain.gain.setValueAtTime(0, now);
+    this.humGain.gain.linearRampToValueAtTime(0.04, now + 0.1);
+
+    this.humOsc.start(now);
+  }
+
+  public updateHoverHumPitch(frequency: number) {
+    if (!this.ctx || !this.humOsc) return;
+    this.humOsc.frequency.setTargetAtTime(frequency, this.ctx.currentTime, 0.05);
+  }
+
+  public stopHoverHum() {
+    if (!this.ctx || !this.humOsc || !this.humGain) return;
+    const now = this.ctx.currentTime;
+    try {
+      this.humGain.gain.cancelScheduledValues(now);
+      this.humGain.gain.setValueAtTime(this.humGain.gain.value, now);
+      this.humGain.gain.linearRampToValueAtTime(0, now + 0.15);
+    } catch(e) {}
+    
+    const tempOsc = this.humOsc;
+    const tempGain = this.humGain;
+    this.humOsc = null;
+    this.humGain = null;
+    
+    setTimeout(() => {
+      try {
+        tempOsc.disconnect();
+        tempGain.disconnect();
+        tempOsc.stop();
+      } catch(e) {}
+    }, 200);
+  }
+}
+
 export const ArchitectureSection: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -66,9 +208,41 @@ export const ArchitectureSection: React.FC = () => {
   const [simStepIndex, setSimStepIndex] = useState<number>(-1);
   const [simLogs, setSimLogs] = useState<string[]>([]);
 
+  // BFS Pathfinding states
+  const [routerStartId, setRouterStartId] = useState<string | null>(null);
+  const [routerEndId, setRouterEndId] = useState<string | null>(null);
+  const [resolvedPath, setResolvedPath] = useState<string[]>([]);
+
+  // Physics customization parameters
+  const [gravity, setGravity] = useState<number>(0.015);
+  const [friction, setFriction] = useState<number>(0.85);
+  const [repulsion, setRepulsion] = useState<number>(0.018);
+  const [attraction, setAttraction] = useState<number>(0.008);
+
   const hoveredNodeIdRef = useRef<string | null>(null);
   const activeSimRef = useRef<string | null>(null);
   const simStepIndexRef = useRef<number>(-1);
+
+  // Pathfinding Refs
+  const routerStartIdRef = useRef<string | null>(null);
+  const routerEndIdRef = useRef<string | null>(null);
+  const resolvedPathRef = useRef<string[]>([]);
+
+  // Physics Refs
+  const gravityRef = useRef<number>(0.015);
+  const frictionRef = useRef<number>(0.85);
+  const repulsionRef = useRef<number>(0.018);
+  const attractionRef = useRef<number>(0.008);
+
+  // Audio Synthesizer
+  const synthRef = useRef<WebAudioSynth | null>(null);
+
+  useEffect(() => {
+    synthRef.current = new WebAudioSynth();
+    return () => {
+      synthRef.current?.stopHoverHum();
+    };
+  }, []);
 
   useEffect(() => {
     hoveredNodeIdRef.current = hoveredNodeId;
@@ -81,6 +255,23 @@ export const ArchitectureSection: React.FC = () => {
   useEffect(() => {
     simStepIndexRef.current = simStepIndex;
   }, [simStepIndex]);
+
+  useEffect(() => {
+    routerStartIdRef.current = routerStartId;
+  }, [routerStartId]);
+
+  useEffect(() => {
+    routerEndIdRef.current = routerEndId;
+  }, [routerEndId]);
+
+  useEffect(() => {
+    resolvedPathRef.current = resolvedPath;
+  }, [resolvedPath]);
+
+  useEffect(() => { gravityRef.current = gravity; }, [gravity]);
+  useEffect(() => { frictionRef.current = friction; }, [friction]);
+  useEffect(() => { repulsionRef.current = repulsion; }, [repulsion]);
+  useEffect(() => { attractionRef.current = attraction; }, [attraction]);
 
   // List of all 27 technical skills mapped from Nisarg's portfolio
   const staticNodesData = [
@@ -433,7 +624,16 @@ export const ArchitectureSection: React.FC = () => {
     { from: 'java', to: 'c' },
     
     { from: 'git', to: 'vercel' },
-    { from: 'vercel', to: 'react' }
+    { from: 'vercel', to: 'react' },
+
+    // Bridge connections to fully connect all 27 nodes into one unified mesh:
+    { from: 'python', to: 'nodejs' },
+    { from: 'python', to: 'supabase' },
+    { from: 'tensorflow', to: 'react' },
+    { from: 'java', to: 'mysql' },
+    { from: 'cpp', to: 'python' },
+    { from: 'react', to: 'python' },
+    { from: 'nodejs', to: 'java' }
   ];
 
   // Live simulation workflows
@@ -576,7 +776,7 @@ export const ArchitectureSection: React.FC = () => {
 
       nodesRef.current.forEach((node) => {
         // 1. Attraction to cluster center
-        let attractionStrength = 0.008;
+        let attractionStrength = attractionRef.current;
         if (node.id === activeStepNodeId) attractionStrength = 0.02; // Pull focused node quickly to front
         
         const dx = node.baseX - node.x;
@@ -590,7 +790,7 @@ export const ArchitectureSection: React.FC = () => {
           const mdy = my - node.y;
           const mdist = Math.hypot(mdx, mdy);
           if (mdist < 200) {
-            const pull = (200 - mdist) * 0.015;
+            const pull = (200 - mdist) * gravityRef.current;
             node.vx += (mdx / mdist) * pull;
             node.vy += (mdy / mdist) * pull;
           }
@@ -604,7 +804,7 @@ export const ArchitectureSection: React.FC = () => {
           const odist = Math.hypot(odx, ody);
           const minDist = node.radius + other.radius + 38;
           if (odist < minDist) {
-            const push = (minDist - odist) * 0.018;
+            const push = (minDist - odist) * repulsionRef.current;
             const angle = Math.atan2(ody, odx);
             node.vx -= Math.cos(angle) * push;
             node.vy -= Math.sin(angle) * push;
@@ -614,8 +814,8 @@ export const ArchitectureSection: React.FC = () => {
         });
 
         // 4. Update coordinates & apply damping friction
-        node.vx *= 0.85;
-        node.vy *= 0.85;
+        node.vx *= frictionRef.current;
+        node.vy *= frictionRef.current;
         node.x += node.vx;
         node.y += node.vy;
 
@@ -682,14 +882,14 @@ export const ArchitectureSection: React.FC = () => {
           if (prevNode && currNode) {
             // Draw active connection line
             ctx.strokeStyle = prevNode.color;
-            ctx.lineWidth = 2.2; // Thicker, glowing line for the simulation trace
+            ctx.lineWidth = 2.2;
             ctx.shadowColor = prevNode.color;
             ctx.shadowBlur = 4;
             ctx.beginPath();
             ctx.moveTo(prevNode.x, prevNode.y);
             ctx.lineTo(currNode.x, currNode.y);
             ctx.stroke();
-            ctx.shadowBlur = 0; // Reset shadow
+            ctx.shadowBlur = 0;
 
             // Draw spark for the current step
             if (i === simStepIndexRef.current) {
@@ -702,8 +902,41 @@ export const ArchitectureSection: React.FC = () => {
               ctx.beginPath();
               ctx.arc(spx, spy, 6, 0, Math.PI * 2);
               ctx.fill();
-              ctx.shadowBlur = 0; // Reset shadow
+              ctx.shadowBlur = 0;
             }
+          }
+        }
+      }
+
+      // --- RENDERING RESOLVED ROUTER PATH ---
+      if (resolvedPathRef.current && resolvedPathRef.current.length > 1) {
+        const path = resolvedPathRef.current;
+        for (let i = 1; i < path.length; i++) {
+          const prevId = path[i - 1];
+          const currId = path[i];
+          const prevNode = nodesRef.current.find((n) => n.id === prevId);
+          const currNode = nodesRef.current.find((n) => n.id === currId);
+          if (prevNode && currNode) {
+            ctx.strokeStyle = '#00D8FF';
+            ctx.lineWidth = 2.8;
+            ctx.shadowColor = '#00D8FF';
+            ctx.shadowBlur = 8;
+            ctx.beginPath();
+            ctx.moveTo(prevNode.x, prevNode.y);
+            ctx.lineTo(currNode.x, currNode.y);
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            const progress = (Date.now() % 1000) / 1000;
+            const spx = prevNode.x + (currNode.x - prevNode.x) * progress;
+            const spy = prevNode.y + (currNode.y - prevNode.y) * progress;
+            ctx.fillStyle = '#00D8FF';
+            ctx.shadowColor = '#00D8FF';
+            ctx.shadowBlur = 12;
+            ctx.beginPath();
+            ctx.arc(spx, spy, 7, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
           }
         }
       }
@@ -712,13 +945,20 @@ export const ArchitectureSection: React.FC = () => {
       nodesRef.current.forEach((node) => {
         const isHovered = hoveredNodeIdRef.current === node.id;
         const isSimFocused = node.id === activeStepNodeId;
+        const isRouterStart = node.id === routerStartIdRef.current;
+        const isRouterEnd = node.id === routerEndIdRef.current;
+        const isRouterPathNode = resolvedPathRef.current.includes(node.id);
+
         const isSimPassed = activeSimRef.current && workflows[activeSimRef.current].steps.slice(0, simStepIndexRef.current).some((s) => s.nodeId === node.id);
+
+        const isFocused = isHovered || isSimFocused || isRouterStart || isRouterEnd || isRouterPathNode;
+        const nodeStrokeColor = isRouterStart ? '#00D8FF' : isRouterEnd ? '#FF00C7' : isFocused ? node.color : 'rgba(255, 255, 255, 0.08)';
 
         ctx.save();
 
         // Node Glow Backdrop
         const grad = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, node.radius + 18);
-        grad.addColorStop(0, isHovered || isSimFocused ? `${node.color}35` : isSimPassed ? `${node.color}15` : `${node.color}05`);
+        grad.addColorStop(0, isFocused ? `${node.color}35` : isSimPassed ? `${node.color}15` : `${node.color}05`);
         grad.addColorStop(1, 'transparent');
         ctx.fillStyle = grad;
         ctx.beginPath();
@@ -726,8 +966,8 @@ export const ArchitectureSection: React.FC = () => {
         ctx.fill();
 
         // Dotted Spinning Halo Outer Border
-        if (isHovered || isSimFocused) {
-          ctx.strokeStyle = node.color;
+        if (isFocused) {
+          ctx.strokeStyle = nodeStrokeColor;
           ctx.lineWidth = 1.2;
           ctx.setLineDash([4, 4]);
           ctx.beginPath();
@@ -738,10 +978,10 @@ export const ArchitectureSection: React.FC = () => {
 
         // Base capsule pill drawing
         ctx.fillStyle = 'rgba(10, 10, 10, 0.95)';
-        ctx.strokeStyle = isHovered || isSimFocused ? node.color : 'rgba(255, 255, 255, 0.08)';
-        ctx.lineWidth = isHovered || isSimFocused ? 2.5 : 1;
-        ctx.shadowColor = node.color;
-        ctx.shadowBlur = isHovered || isSimFocused ? 14 : 0;
+        ctx.strokeStyle = nodeStrokeColor;
+        ctx.lineWidth = isFocused ? 2.5 : 1;
+        ctx.shadowColor = nodeStrokeColor;
+        ctx.shadowBlur = isFocused ? 14 : 0;
         ctx.beginPath();
         ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
         ctx.fill();
@@ -749,7 +989,7 @@ export const ArchitectureSection: React.FC = () => {
         ctx.shadowBlur = 0; // reset
 
         // Abbreviated Symbol Label in Center
-        ctx.fillStyle = isHovered || isSimFocused || isSimPassed ? node.color : '#FFFFFF';
+        ctx.fillStyle = isFocused || isSimPassed ? nodeStrokeColor : '#FFFFFF';
         ctx.font = `bold ${node.radius * 0.5}px monospace`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
@@ -805,6 +1045,54 @@ export const ArchitectureSection: React.FC = () => {
         ctx.fillText('LANGUAGES', centers.languages.x, centers.languages.y + 100);
       }
 
+      // --- RENDER DYNAMIC OSCILLOSCOPE ---
+      const oscCanvas = document.getElementById('telemetry-oscilloscope') as HTMLCanvasElement | null;
+      if (oscCanvas) {
+        const octx = oscCanvas.getContext('2d');
+        if (octx) {
+          octx.clearRect(0, 0, oscCanvas.width, oscCanvas.height);
+          
+          octx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+          octx.lineWidth = 0.5;
+          for (let x = 0; x < oscCanvas.width; x += 30) {
+            octx.beginPath();
+            octx.moveTo(x, 0);
+            octx.lineTo(x, oscCanvas.height);
+            octx.stroke();
+          }
+          for (let y = 0; y < oscCanvas.height; y += 15) {
+            octx.beginPath();
+            octx.moveTo(0, y);
+            octx.lineTo(oscCanvas.width, y);
+            octx.stroke();
+          }
+
+          const isWaveActive = activeSimRef.current !== null || resolvedPathRef.current.length > 0;
+          octx.strokeStyle = isWaveActive ? '#FF00C7' : '#00D8FF';
+          octx.lineWidth = 1.4;
+          octx.shadowColor = octx.strokeStyle;
+          octx.shadowBlur = 4;
+          octx.beginPath();
+
+          const amp = isWaveActive ? 16 : 5;
+          const freq = isWaveActive ? 0.05 : 0.02;
+          const speed = isWaveActive ? 0.22 : 0.08;
+          const noiseAmp = isWaveActive ? 3.0 : 0.4;
+          
+          const time = Date.now() * speed;
+
+          for (let i = 0; i < oscCanvas.width; i++) {
+            const sineVal = Math.sin(i * freq - time * 0.05) * amp;
+            const noiseVal = (Math.random() - 0.5) * noiseAmp;
+            const y = oscCanvas.height / 2 + sineVal + noiseVal;
+            if (i === 0) octx.moveTo(i, y);
+            else octx.lineTo(i, y);
+          }
+          octx.stroke();
+          octx.shadowBlur = 0;
+        }
+      }
+
       animationFrameId.current = requestAnimationFrame(render);
     };
 
@@ -815,6 +1103,38 @@ export const ArchitectureSection: React.FC = () => {
       if (animationFrameId.current) cancelAnimationFrame(animationFrameId.current);
     };
   }, []);
+
+  const findShortestPathBFS = (start: string, end: string): string[] => {
+    if (start === end) return [start];
+    
+    const adj: Record<string, string[]> = {};
+    connections.forEach((conn) => {
+      if (!adj[conn.from]) adj[conn.from] = [];
+      if (!adj[conn.to]) adj[conn.to] = [];
+      adj[conn.from].push(conn.to);
+      adj[conn.to].push(conn.from);
+    });
+
+    const queue: string[][] = [[start]];
+    const visited = new Set<string>([start]);
+
+    while (queue.length > 0) {
+      const path = queue.shift()!;
+      const node = path[path.length - 1];
+
+      if (node === end) return path;
+
+      const neighbors = adj[node] || [];
+      for (const neighbor of neighbors) {
+        if (!visited.has(neighbor)) {
+          visited.add(neighbor);
+          queue.push([...path, neighbor]);
+        }
+      }
+    }
+
+    return [];
+  };
 
   // Track Mouse movement relative to canvas element
   const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -836,12 +1156,23 @@ export const ArchitectureSection: React.FC = () => {
 
     if (foundNodeId !== hoveredNodeId) {
       setHoveredNodeId(foundNodeId);
+      if (foundNodeId) {
+        synthRef.current?.startHoverHum();
+        const nodeObj = nodesRef.current.find(n => n.id === foundNodeId);
+        if (nodeObj) {
+          const pitch = 55 + (nodeObj.name.charCodeAt(0) % 12) * 5;
+          synthRef.current?.updateHoverHumPitch(pitch);
+        }
+      } else {
+        synthRef.current?.stopHoverHum();
+      }
     }
   };
 
   const handleMouseLeave = () => {
     mouseRef.current = { x: null, y: null };
     setHoveredNodeId(null);
+    synthRef.current?.stopHoverHum();
   };
 
   // Triggers click detonations on selected tech nodes
@@ -852,12 +1183,60 @@ export const ArchitectureSection: React.FC = () => {
     const mx = e.clientX - rect.left;
     const my = e.clientY - rect.top;
 
+    let clickedNode: TechNode | null = null;
     nodesRef.current.forEach((node) => {
       const dist = Math.hypot(node.x - mx, node.y - my);
       if (dist < node.radius + 8) {
-        spawnMicroParticles(node);
+        clickedNode = node;
       }
     });
+
+    if (clickedNode) {
+      const node = clickedNode as TechNode;
+      spawnMicroParticles(node);
+      synthRef.current?.playDetonationBurst();
+
+      if (activeSim) {
+        setActiveSim(null);
+      }
+
+      if (routerStartId === null) {
+        setRouterStartId(node.id);
+        setSimLogs([`[0.00s] ➜ ROUTER: Source Node set to [${node.name}]. Select Destination Node.`]);
+      } else if (routerEndId === null && node.id !== routerStartId) {
+        setRouterEndId(node.id);
+        const path = findShortestPathBFS(routerStartId, node.id);
+        if (path.length > 0) {
+          setResolvedPath(path);
+          const pathNames = path.map(id => nodesRef.current.find(n => n.id === id)?.name || id).join(' ➜ ');
+          setSimLogs([
+            `[0.00s] ➜ ROUTER: Source Node: [${nodesRef.current.find(n => n.id === routerStartId)?.name}]`,
+            `[0.10s] ➜ ROUTER: Destination Node: [${node.name}]`,
+            `[0.20s] ➜ ROUTER: Path found! Running Dijkstra/BFS...`,
+            `[0.30s] ➜ ROUTER: Pipeline resolved: ${pathNames}`
+          ]);
+          synthRef.current?.playSparkSweep(0.8);
+        } else {
+          setSimLogs([
+            `[0.00s] ➜ ROUTER: Source Node: [${nodesRef.current.find(n => n.id === routerStartId)?.name}]`,
+            `[0.10s] ➜ ROUTER: Destination Node: [${node.name}]`,
+            `[0.20s] ➜ ROUTER: No active connections found between these nodes.`
+          ]);
+        }
+      } else {
+        setRouterStartId(node.id);
+        setRouterEndId(null);
+        setResolvedPath([]);
+        setSimLogs([`[0.00s] ➜ ROUTER: Source Node reset to [${node.name}]. Select Destination Node.`]);
+      }
+    } else {
+      if (routerStartId !== null || routerEndId !== null) {
+        setRouterStartId(null);
+        setRouterEndId(null);
+        setResolvedPath([]);
+        setSimLogs([`[0.00s] ➜ ROUTER: Selection cleared. Click any node to start route mapping.`]);
+      }
+    }
   };
 
   const spawnMicroParticles = (node: TechNode) => {
@@ -960,7 +1339,12 @@ export const ArchitectureSection: React.FC = () => {
               <button
                 key={key}
                 disabled={activeSim !== null && !isRunning}
-                onClick={() => setActiveSim(isRunning ? null : key)}
+                onClick={() => {
+                  setRouterStartId(null);
+                  setRouterEndId(null);
+                  setResolvedPath([]);
+                  setActiveSim(isRunning ? null : key);
+                }}
                 className={`flex flex-col gap-1.5 p-4 rounded-2xl border text-left transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed ${
                   isRunning 
                     ? 'bg-[#FF00C7]/15 border-[#FF00C7] shadow-[0_0_15px_rgba(255,0,199,0.15)]' 
@@ -1053,6 +1437,17 @@ export const ArchitectureSection: React.FC = () => {
               )}
             </div>
 
+            {/* Oscilloscope Card */}
+            <div className="bg-[#121212]/30 border border-white/5 rounded-3xl p-4 flex flex-col gap-2 backdrop-blur-md">
+              <div className="flex items-center justify-between text-[9px] font-mono text-[#D7E2EA]/40 uppercase tracking-widest">
+                <span>Signal Waveform Inspector</span>
+                <span className={activeSim || resolvedPath.length > 0 ? 'text-[#FF00C7]' : 'text-[#00D8FF]'}>
+                  {activeSim || resolvedPath.length > 0 ? 'PULSE_ACTIVE' : 'STANDBY'}
+                </span>
+              </div>
+              <canvas id="telemetry-oscilloscope" width={280} height={52} className="w-full h-[52px] bg-black/40 rounded-2xl border border-white/[0.02]" />
+            </div>
+
             {/* Dynamic Glass Toolkit Info Panel */}
             <div className="flex-grow bg-[#121212]/30 border border-white/5 rounded-3xl p-6 flex flex-col gap-5 backdrop-blur-md min-h-[280px] justify-center">
               <AnimatePresence mode="wait">
@@ -1126,6 +1521,74 @@ export const ArchitectureSection: React.FC = () => {
                   </motion.div>
                 )}
               </AnimatePresence>
+            </div>
+
+            {/* Physics Control Panel */}
+            <div className="bg-[#121212]/30 border border-white/5 rounded-3xl p-5 flex flex-col gap-3.5 backdrop-blur-md">
+              <div className="flex items-center justify-between border-b border-white/5 pb-2">
+                <span className="text-[10px] font-mono text-[#D7E2EA]/40 uppercase tracking-widest">Physics Sandbox</span>
+                <button 
+                  onClick={() => {
+                    setGravity(0.015);
+                    setFriction(0.85);
+                    setRepulsion(0.018);
+                    setAttraction(0.008);
+                  }}
+                  className="text-[9px] font-mono text-[#00D8FF] hover:underline uppercase"
+                >
+                  Reset
+                </button>
+              </div>
+              <div className="flex flex-col gap-2.5 text-xs font-mono">
+                {/* Gravity */}
+                <div className="flex flex-col gap-1">
+                  <div className="flex justify-between text-[9px] text-[#D7E2EA]/60">
+                    <span>CURSOR_GRAVITY</span>
+                    <span>{gravity.toFixed(3)}</span>
+                  </div>
+                  <input 
+                    type="range" min="0.002" max="0.04" step="0.001" 
+                    value={gravity} onChange={(e) => setGravity(parseFloat(e.target.value))}
+                    className="w-full accent-[#FF00C7] bg-white/5 h-1 rounded-lg cursor-pointer animate-none"
+                  />
+                </div>
+                {/* Friction */}
+                <div className="flex flex-col gap-1">
+                  <div className="flex justify-between text-[9px] text-[#D7E2EA]/60">
+                    <span>DAMPING_FRICTION</span>
+                    <span>{friction.toFixed(2)}</span>
+                  </div>
+                  <input 
+                    type="range" min="0.70" max="0.95" step="0.01" 
+                    value={friction} onChange={(e) => setFriction(parseFloat(e.target.value))}
+                    className="w-full accent-[#00D8FF] bg-white/5 h-1 rounded-lg cursor-pointer animate-none"
+                  />
+                </div>
+                {/* Repulsion */}
+                <div className="flex flex-col gap-1">
+                  <div className="flex justify-between text-[9px] text-[#D7E2EA]/60">
+                    <span>NODE_REPULSION</span>
+                    <span>{repulsion.toFixed(3)}</span>
+                  </div>
+                  <input 
+                    type="range" min="0.005" max="0.04" step="0.001" 
+                    value={repulsion} onChange={(e) => setRepulsion(parseFloat(e.target.value))}
+                    className="w-full accent-[#00D8FF] bg-white/5 h-1 rounded-lg cursor-pointer animate-none"
+                  />
+                </div>
+                {/* Center Attraction */}
+                <div className="flex flex-col gap-1">
+                  <div className="flex justify-between text-[9px] text-[#D7E2EA]/60">
+                    <span>CENTER_ATTRACTION</span>
+                    <span>{attraction.toFixed(4)}</span>
+                  </div>
+                  <input 
+                    type="range" min="0.002" max="0.02" step="0.0005" 
+                    value={attraction} onChange={(e) => setAttraction(parseFloat(e.target.value))}
+                    className="w-full accent-[#FF00C7] bg-white/5 h-1 rounded-lg cursor-pointer animate-none"
+                  />
+                </div>
+              </div>
             </div>
 
           </div>
