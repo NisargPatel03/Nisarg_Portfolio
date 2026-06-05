@@ -21,7 +21,8 @@
 .terminal-window {
   width: 100%;
   max-width: 960px;
-  height: min(88vh, 720px);
+  height: auto;
+  max-height: min(88vh, 720px);
   background: #050505;
   border: 0.5px solid #1a1a1a;
   border-radius: 10px;
@@ -269,7 +270,7 @@
 }
 
 .terminal-cursor-line {
-  margin-top: auto;
+  margin-top: 16px;
   padding-top: 8px;
   color: #00ff41;
   font-size: 11px;
