@@ -245,7 +245,9 @@
   text-align: center;
   white-space: pre;
   color: var(--accent, #00ff41);
-  text-shadow: 0 0 4px var(--accent, #00ff41);
+  text-shadow: 0 0 6px var(--accent, #00ff41);
+  font-size: clamp(14px, 3.5vw, 24px);
+  line-height: 1.2;
 }
 
 .terminal-project-card {
