@@ -29,7 +29,7 @@ export const ProjectsSection: React.FC = () => {
   const [cmdText, setCmdText] = useState('');
   const [progress, setProgress] = useState(0);
   const [progressVisible, setProgressVisible] = useState(false);
-  const [logs, setLogs] = useState<{ text: string; type: TerminalLog['t'] }[]>([]);
+  const [logs, setLogs] = useState<{ text: string; type: TerminalLog['t']; isBanner?: boolean }[]>([]);
   const [cardVisible, setCardVisible] = useState(false);
   const [glitching, setGlitching] = useState(false);
   const [scanline, setScanline] = useState(false);
@@ -170,12 +170,12 @@ export const ProjectsSection: React.FC = () => {
     wipe();
     await sleep(200);
 
-    await typeString(setCmdText, 'boot-system --fast', CMD_SPEED * 1.2);
+    await typeString(setCmdText, 'boot-system --verbose', CMD_SPEED * 2.5);
     if (signalRef.current.cancelled) {
       runningRef.current = false;
       return;
     }
-    await sleep(250);
+    await sleep(400);
 
     const bootLines: { text: string; type: TerminalLog['t'] }[] = [
       { text: '[  0.000000] Bios version: NisargBIOS v1.0', type: 'output' },
@@ -194,7 +194,7 @@ export const ProjectsSection: React.FC = () => {
       }
       soundFX.playClick();
       setLogs((prev) => [...prev, line]);
-      await sleep(120 + Math.random() * 80);
+      await sleep(350 + Math.random() * 200);
     }
 
     const bannerLines = [
@@ -204,18 +204,18 @@ export const ProjectsSection: React.FC = () => {
       ' |_|\\_||_||___/_/   \\_\\_| \\_\\\\___|'
     ];
 
-    await sleep(200);
+    await sleep(300);
     for (const line of bannerLines) {
       if (signalRef.current.cancelled) {
         runningRef.current = false;
         return;
       }
       soundFX.playClick();
-      setLogs((prev) => [...prev, { text: line, type: 'success' }]);
-      await sleep(100);
+      setLogs((prev) => [...prev, { text: line, type: 'success', isBanner: true }]);
+      await sleep(250);
     }
 
-    await sleep(1200);
+    await sleep(1800);
     if (signalRef.current.cancelled) {
       runningRef.current = false;
       return;
@@ -489,7 +489,7 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
 
         <div className="terminal-logs">
           {logs.map((log, i) => (
-            <div key={i} className={`terminal-log-line log-${log.type}`}>
+            <div key={i} className={`terminal-log-line log-${log.type} ${log.isBanner ? 'log-banner' : ''}`}>
               {log.text}
             </div>
           ))}

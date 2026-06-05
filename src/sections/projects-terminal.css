@@ -241,6 +241,13 @@
 .terminal-log-line.log-warn { color: #ffaa00; }
 .terminal-log-line.log-error { color: #ff2d78; }
 
+.terminal-log-line.log-banner {
+  text-align: center;
+  white-space: pre;
+  color: var(--accent, #00ff41);
+  text-shadow: 0 0 4px var(--accent, #00ff41);
+}
+
 .terminal-project-card {
   background: #0a0a0a;
   border-left: 2px solid var(--accent, #00ff41);
