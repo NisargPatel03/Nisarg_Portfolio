@@ -189,15 +189,21 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
 
   return (
     <>
-      {/* Help label shown on top-right of screen */}
-      <div className="fixed top-6 right-6 md:right-10 z-40 hidden sm:flex items-center gap-1.5 bg-[#121212]/50 border border-white/5 px-3 py-1.5 rounded-xl backdrop-blur-md text-[10px] font-mono text-[#D7E2EA]/40 uppercase tracking-widest pointer-events-none select-none">
-        <span>Press</span>
-        <kbd className="bg-white/10 px-1 py-0.5 rounded text-white text-[9px]">Ctrl</kbd>
-        <span>+</span>
-        <kbd className="bg-white/10 px-1 py-0.5 rounded text-white text-[9px]">K</kbd>
-        <span>or</span>
-        <kbd className="bg-white/10 px-1.5 py-0.5 rounded text-white text-[9px]">/</kbd>
-        <span>to search</span>
+      {/* Floating terminal trigger pill */}
+      <div 
+        onClick={() => {
+          setIsOpen(true);
+          soundFX.playSuccess();
+        }}
+        className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-40 flex items-center gap-2 bg-[#121212]/90 border border-white/10 px-4 py-2.5 rounded-full backdrop-blur-md text-[11px] font-mono text-[#D7E2EA] hover:text-white hover:border-emerald-500/40 hover:shadow-[0_0_15px_rgba(16,185,129,0.25)] active:scale-95 transition-all cursor-pointer select-none group shadow-lg"
+      >
+        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+        <span className="font-bold tracking-wider uppercase group-hover:text-emerald-400 transition-colors">CMD Palette</span>
+        <span className="hidden md:inline-flex items-center gap-1 text-[#D7E2EA]/40">
+          <kbd className="bg-white/5 border border-white/10 px-1 py-0.5 rounded text-[9px]">Ctrl</kbd>
+          <span>+</span>
+          <kbd className="bg-white/5 border border-white/10 px-1 py-0.5 rounded text-[9px]">K</kbd>
+        </span>
       </div>
 
       <AnimatePresence>
