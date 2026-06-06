@@ -21,6 +21,8 @@ interface CommandPaletteProps {
   isCursorTrailActive: boolean;
   isHudActive: boolean;
   onToggleHud: () => void;
+  isCrtTransitionEnabled: boolean;
+  onToggleCrtTransition: () => void;
 }
 
 export const CommandPalette: React.FC<CommandPaletteProps> = ({
@@ -34,6 +36,8 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   isCursorTrailActive,
   isHudActive,
   onToggleHud,
+  isCrtTransitionEnabled,
+  onToggleCrtTransition,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
@@ -178,6 +182,16 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       shortcut: 'S H', 
       action: () => {
         onToggleHud();
+        setIsOpen(false);
+      }
+    },
+    { 
+      id: 'toggle-crt', 
+      name: isCrtTransitionEnabled ? 'Preferences: Disable CRT Section Transitions' : 'Preferences: Enable CRT Section Transitions', 
+      category: 'Preferences', 
+      shortcut: 'S T', 
+      action: () => {
+        onToggleCrtTransition();
         setIsOpen(false);
       }
     },

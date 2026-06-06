@@ -6,31 +6,20 @@ interface DiagnosticsHUDProps {
   isAmbientActive: boolean;
   isCursorTrailActive: boolean;
   isMatrixActive: boolean;
+  activeSection: string;
 }
-
-const SECTIONS = [
-  { id: 'hero', label: 'SYS_BOOT' },
-  { id: 'skills', label: 'BIO_NET' },
-  { id: 'architecture', label: 'SYS_ARCH' },
-  { id: 'about', label: 'BIO_NET' },
-  { id: 'work-experience', label: 'GIT_TREE' },
-  { id: 'services', label: 'SANDBOX' },
-  { id: 'projects-section', label: '3D_DECK' },
-  { id: 'certifications', label: 'CERT_VER' },
-  { id: 'contact', label: 'COM_UPLINK' }
-];
 
 export const DiagnosticsHUD: React.FC<DiagnosticsHUDProps> = ({
   enabled,
   isSoundActive,
   isAmbientActive,
   isCursorTrailActive,
-  isMatrixActive
+  isMatrixActive,
+  activeSection
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [scrollPos, setScrollPos] = useState(0);
   const [scrollPercent, setScrollPercent] = useState(0);
-  const [activeSection, setActiveSection] = useState('SYS_BOOT');
   const [velocityDisplay, setVelocityDisplay] = useState(0);
   const [cpuLoad, setCpuLoad] = useState(12);
   const [memStatus, setMemStatus] = useState('OK');
@@ -67,22 +56,6 @@ export const DiagnosticsHUD: React.FC<DiagnosticsHUDProps> = ({
       const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
       const percent = scrollHeight > 0 ? (currentScrollY / scrollHeight) * 100 : 0;
       setScrollPercent(percent);
-
-      // Detect current section
-      let active = 'SYS_BOOT';
-      let minDistance = Infinity;
-      SECTIONS.forEach((sect) => {
-        const el = document.getElementById(sect.id);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          const distance = Math.abs(rect.top);
-          if (distance < minDistance) {
-            minDistance = distance;
-            active = sect.label;
-          }
-        }
-      });
-      setActiveSection(active);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
