@@ -19,6 +19,8 @@ interface CommandPaletteProps {
   isAmbientActive: boolean;
   onToggleCursorTrail: () => void;
   isCursorTrailActive: boolean;
+  isHudActive: boolean;
+  onToggleHud: () => void;
 }
 
 export const CommandPalette: React.FC<CommandPaletteProps> = ({
@@ -30,6 +32,8 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   isAmbientActive,
   onToggleCursorTrail,
   isCursorTrailActive,
+  isHudActive,
+  onToggleHud,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
@@ -164,6 +168,16 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       shortcut: 'M R', 
       action: () => {
         onToggleMatrix();
+        setIsOpen(false);
+      }
+    },
+    { 
+      id: 'toggle-hud', 
+      name: isHudActive ? 'Preferences: Disable Diagnostics HUD' : 'Preferences: Enable Diagnostics HUD', 
+      category: 'Preferences', 
+      shortcut: 'S H', 
+      action: () => {
+        onToggleHud();
         setIsOpen(false);
       }
     },

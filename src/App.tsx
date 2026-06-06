@@ -13,12 +13,14 @@ import { CommandPalette } from './components/CommandPalette';
 import { MatrixRain } from './components/MatrixRain';
 import { CursorTrail } from './components/CursorTrail';
 import { soundFX } from './utils/terminalAudio';
+import { DiagnosticsHUD } from './components/DiagnosticsHUD';
 
 function App() {
   const [isMatrixActive, setIsMatrixActive] = useState(false);
   const [isSoundActive, setIsSoundActive] = useState(false);
   const [isAmbientActive, setIsAmbientActive] = useState(false);
   const [isCursorTrailActive, setIsCursorTrailActive] = useState(true);
+  const [isHudActive, setIsHudActive] = useState(true);
 
   useEffect(() => {
     // Synchronize global sound preference
@@ -65,6 +67,15 @@ function App() {
       {/* Cybernetic pointer coordinate trail */}
       <CursorTrail enabled={isCursorTrailActive} />
 
+      {/* Real-time Diagnostics HUD sidebar */}
+      <DiagnosticsHUD 
+        enabled={isHudActive}
+        isSoundActive={isSoundActive}
+        isAmbientActive={isAmbientActive}
+        isCursorTrailActive={isCursorTrailActive}
+        isMatrixActive={isMatrixActive}
+      />
+
       {/* Global command search shell */}
       <CommandPalette
         isMatrixActive={isMatrixActive}
@@ -75,6 +86,8 @@ function App() {
         onToggleAmbient={() => setIsAmbientActive((prev) => !prev)}
         isCursorTrailActive={isCursorTrailActive}
         onToggleCursorTrail={() => setIsCursorTrailActive((prev) => !prev)}
+        isHudActive={isHudActive}
+        onToggleHud={() => setIsHudActive((prev) => !prev)}
       />
 
       {/* 1. HERO SECTION */}
