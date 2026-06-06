@@ -37,6 +37,53 @@ export const ProjectsSection: React.FC = () => {
   const [crtEnabled, setCrtEnabled] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(false);
 
+  const [dragStartX, setDragStartX] = useState<number | null>(null);
+  const [dragOffset, setDragOffset] = useState(0);
+  const [exitDirection, setExitDirection] = useState<'left' | 'right' | null>(null);
+  const [flickerActive, setFlickerActive] = useState(false);
+
+  useEffect(() => {
+    setFlickerActive(true);
+    const timer = setTimeout(() => setFlickerActive(false), 500);
+    return () => clearTimeout(timer);
+  }, [currentIndex]);
+
+  const handleDragStart = (clientX: number) => {
+    if (runningRef.current) return;
+    setDragStartX(clientX);
+    setDragOffset(0);
+  };
+
+  const handleDragMove = (clientX: number) => {
+    if (dragStartX === null) return;
+    const offset = clientX - dragStartX;
+    if (offset > 0 && currentIndex === 0) {
+      setDragOffset(offset * 0.3);
+    } else if (offset < 0 && currentIndex === total - 1) {
+      setDragOffset(offset * 0.3);
+    } else {
+      setDragOffset(offset);
+    }
+  };
+
+  const handleDragEnd = async () => {
+    if (dragStartX === null) return;
+    const threshold = 120;
+    if (dragOffset < -threshold && currentIndex < total - 1) {
+      setExitDirection('left');
+      await sleep(150);
+      nextProject();
+      setExitDirection(null);
+    } else if (dragOffset > threshold && currentIndex > 0) {
+      setExitDirection('right');
+      await sleep(150);
+      prevProject();
+      setExitDirection(null);
+    }
+    setDragStartX(null);
+    setDragOffset(0);
+  };
+
   useEffect(() => {
     soundFX.enabled = soundEnabled;
   }, [soundEnabled]);
@@ -254,6 +301,11 @@ export const ProjectsSection: React.FC = () => {
     };
   }, [runBootSequence]);
 
+  const dragStyle = dragStartX !== null ? {
+    transform: `translate3d(${dragOffset}px, ${Math.abs(dragOffset) * 0.04}px, 0) rotate(${dragOffset * 0.02}deg)`,
+    transition: 'none'
+  } : {};
+
   return (
     <section
       id="projects-section"
@@ -266,27 +318,73 @@ export const ProjectsSection: React.FC = () => {
       </div>
 
       <div id="terminal-wrap" className="projects-terminal-sticky">
-        <TerminalPanel
-          project={project}
-          accentColor={accentColor}
-          currentIndex={currentIndex}
-          total={total}
-          cmdText={cmdText}
-          progress={progress}
-          progressVisible={progressVisible}
-          logs={logs}
-          cardVisible={cardVisible}
-          glitching={glitching}
-          scanline={scanline}
-          bodyRef={bodyRef}
-          onNext={nextProject}
-          onPrev={prevProject}
-          onDotClick={(i) => goTo(i, true)}
-          crtEnabled={crtEnabled}
-          setCrtEnabled={setCrtEnabled}
-          soundEnabled={soundEnabled}
-          setSoundEnabled={setSoundEnabled}
-        />
+        <div className="project-deck-container">
+          {PROJECTS_TERMINAL.map((proj, idx) => {
+            const diff = idx - currentIndex;
+            const isVisible = diff >= -1 && diff <= 3;
+            if (!isVisible) return null;
+
+            const isActive = diff === 0;
+            const isExitLeft = diff === -1 && exitDirection === 'left';
+            const isExitRight = diff === -1 && exitDirection === 'right';
+
+            let cardClass = '';
+            if (isActive) {
+              cardClass = 'is-active';
+            } else if (diff === -1) {
+              cardClass = isExitLeft ? 'is-exit-left' : isExitRight ? 'is-exit-right' : 'diff-hidden';
+            } else {
+              cardClass = `is-background diff-${diff}`;
+            }
+
+            const cardAccentColor = ACCENT_COLORS[proj.accent];
+
+            return (
+              <div
+                key={proj.slug}
+                className={`project-deck-card ${cardClass}`}
+                style={isActive ? dragStyle : undefined}
+                onClick={() => {
+                  if (!isActive && diff > 0) {
+                    goTo(idx, true);
+                  }
+                }}
+                onTouchStart={isActive ? (e) => handleDragStart(e.touches[0].clientX) : undefined}
+                onTouchMove={isActive ? (e) => handleDragMove(e.touches[0].clientX) : undefined}
+                onTouchEnd={isActive ? handleDragEnd : undefined}
+                onMouseDown={isActive ? (e) => handleDragStart(e.clientX) : undefined}
+                onMouseMove={isActive ? (e) => handleDragMove(e.clientX) : undefined}
+                onMouseUp={isActive ? handleDragEnd : undefined}
+                onMouseLeave={isActive ? handleDragEnd : undefined}
+              >
+                {isActive && <div className="laser-scanline" />}
+                <TerminalPanel
+                  project={proj}
+                  accentColor={cardAccentColor}
+                  currentIndex={idx}
+                  total={total}
+                  cmdText={isActive ? cmdText : proj.cmd}
+                  progress={isActive ? progress : 100}
+                  progressVisible={isActive ? progressVisible : false}
+                  logs={isActive ? logs : []}
+                  cardVisible={isActive ? cardVisible : true}
+                  glitching={isActive ? glitching : false}
+                  scanline={isActive ? scanline : false}
+                  bodyRef={isActive ? bodyRef : { current: null }}
+                  onNext={nextProject}
+                  onPrev={prevProject}
+                  onDotClick={(i) => goTo(i, true)}
+                  crtEnabled={crtEnabled}
+                  setCrtEnabled={setCrtEnabled}
+                  soundEnabled={soundEnabled}
+                  setSoundEnabled={setSoundEnabled}
+                  isActive={isActive}
+                  flickerActive={isActive && flickerActive}
+                />
+              </div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
@@ -312,6 +410,8 @@ interface TerminalPanelProps {
   setCrtEnabled: React.Dispatch<React.SetStateAction<boolean>>;
   soundEnabled: boolean;
   setSoundEnabled: React.Dispatch<React.SetStateAction<boolean>>;
+  isActive: boolean;
+  flickerActive: boolean;
 }
 
 const TerminalPanel: React.FC<TerminalPanelProps> = ({
@@ -334,6 +434,8 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
   setCrtEnabled,
   soundEnabled,
   setSoundEnabled,
+  isActive,
+  flickerActive,
 }) => {
   const [activeTheme, setActiveTheme] = useState<'project' | 'classic' | 'dracula' | 'amber' | 'cyber' | 'nord'>('project');
   const [activeTab, setActiveTab] = useState<'overview' | 'features' | 'tech' | 'sysinfo'>('overview');
@@ -377,107 +479,109 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
         </div>
         <span className="terminal-titlebar-text">nisarg@portfolio ~ projects</span>
 
-        <div className="terminal-controls">
-          <div className="terminal-theme-selector" aria-label="Terminal themes">
-            <button
-              type="button"
-              className={`theme-dot is-project ${activeTheme === 'project' ? 'is-active' : ''}`}
-              onClick={() => {
-                soundFX.playClick();
-                setActiveTheme('project');
-              }}
-              title="Auto Dynamic Theme"
-            />
-            <button
-              type="button"
-              className={`theme-dot is-classic ${activeTheme === 'classic' ? 'is-active' : ''}`}
-              onClick={() => {
-                soundFX.playClick();
-                setActiveTheme('classic');
-              }}
-              title="Classic Green"
-            />
-            <button
-              type="button"
-              className={`theme-dot is-dracula ${activeTheme === 'dracula' ? 'is-active' : ''}`}
-              onClick={() => {
-                soundFX.playClick();
-                setActiveTheme('dracula');
-              }}
-              title="Dracula Pink"
-            />
-            <button
-              type="button"
-              className={`theme-dot is-amber ${activeTheme === 'amber' ? 'is-active' : ''}`}
-              onClick={() => {
-                soundFX.playClick();
-                setActiveTheme('amber');
-              }}
-              title="Amber CRT"
-            />
-            <button
-              type="button"
-              className={`theme-dot is-cyber ${activeTheme === 'cyber' ? 'is-active' : ''}`}
-              onClick={() => {
-                soundFX.playClick();
-                setActiveTheme('cyber');
-              }}
-              title="Cyber Gold"
-            />
-            <button
-              type="button"
-              className={`theme-dot is-nord ${activeTheme === 'nord' ? 'is-active' : ''}`}
-              onClick={() => {
-                soundFX.playClick();
-                setActiveTheme('nord');
-              }}
-              title="Nord Blue"
-            />
-          </div>
-
-          <div className="terminal-toggles">
-            <button
-              type="button"
-              className={`terminal-toggle-btn is-preview ${mobileDrawerOpen ? 'is-active' : ''}`}
-              onClick={() => {
-                if (!cardVisible) return;
-                soundFX.playClick();
-                setMobileDrawerOpen(!mobileDrawerOpen);
-              }}
-              style={{ opacity: cardVisible ? 1 : 0.4, cursor: cardVisible ? 'pointer' : 'not-allowed' }}
-              title="Toggle Project Preview Mockup"
-              disabled={!cardVisible}
-            >
-              Mockup
-            </button>
-            <button
-              type="button"
-              className={`terminal-toggle-btn is-crt ${crtEnabled ? 'is-active' : ''}`}
-              onClick={() => {
-                soundFX.playClick();
-                setCrtEnabled(!crtEnabled);
-              }}
-              title="Toggle CRT Screen Shader"
-            >
-              CRT
-            </button>
-            <button
-              type="button"
-              className={`terminal-toggle-btn is-sound ${soundEnabled ? 'is-active' : ''}`}
-              onClick={() => {
-                const nextSound = !soundEnabled;
-                setSoundEnabled(nextSound);
-                soundFX.enabled = nextSound;
-                if (nextSound) {
+        {isActive && (
+          <div className="terminal-controls">
+            <div className="terminal-theme-selector" aria-label="Terminal themes">
+              <button
+                type="button"
+                className={`theme-dot is-project ${activeTheme === 'project' ? 'is-active' : ''}`}
+                onClick={() => {
                   soundFX.playClick();
-                }
-              }}
-              title={soundEnabled ? "Mute Typewriter Sounds" : "Unmute Typewriter Sounds"}
-            >
-              {soundEnabled ? '🔊' : '🔇'}
-            </button>
+                  setActiveTheme('project');
+                }}
+                title="Auto Dynamic Theme"
+              />
+              <button
+                type="button"
+                className={`theme-dot is-classic ${activeTheme === 'classic' ? 'is-active' : ''}`}
+                onClick={() => {
+                  soundFX.playClick();
+                  setActiveTheme('classic');
+                }}
+                title="Classic Green"
+              />
+              <button
+                type="button"
+                className={`theme-dot is-dracula ${activeTheme === 'dracula' ? 'is-active' : ''}`}
+                onClick={() => {
+                  soundFX.playClick();
+                  setActiveTheme('dracula');
+                }}
+                title="Dracula Pink"
+              />
+              <button
+                type="button"
+                className={`theme-dot is-amber ${activeTheme === 'amber' ? 'is-active' : ''}`}
+                onClick={() => {
+                  soundFX.playClick();
+                  setActiveTheme('amber');
+                }}
+                title="Amber CRT"
+              />
+              <button
+                type="button"
+                className={`theme-dot is-cyber ${activeTheme === 'cyber' ? 'is-active' : ''}`}
+                onClick={() => {
+                  soundFX.playClick();
+                  setActiveTheme('cyber');
+                }}
+                title="Cyber Gold"
+              />
+              <button
+                type="button"
+                className={`theme-dot is-nord ${activeTheme === 'nord' ? 'is-active' : ''}`}
+                onClick={() => {
+                  soundFX.playClick();
+                  setActiveTheme('nord');
+                }}
+                title="Nord Blue"
+              />
+            </div>
+
+            <div className="terminal-toggles">
+              <button
+                type="button"
+                className={`terminal-toggle-btn is-preview ${mobileDrawerOpen ? 'is-active' : ''}`}
+                onClick={() => {
+                  if (!cardVisible) return;
+                  soundFX.playClick();
+                  setMobileDrawerOpen(!mobileDrawerOpen);
+                }}
+                style={{ opacity: cardVisible ? 1 : 0.4, cursor: cardVisible ? 'pointer' : 'not-allowed' }}
+                title="Toggle Project Preview Mockup"
+                disabled={!cardVisible}
+              >
+                Mockup
+              </button>
+              <button
+                type="button"
+                className={`terminal-toggle-btn is-crt ${crtEnabled ? 'is-active' : ''}`}
+                onClick={() => {
+                  soundFX.playClick();
+                  setCrtEnabled(!crtEnabled);
+                }}
+                title="Toggle CRT Screen Shader"
+              >
+                CRT
+              </button>
+              <button
+                type="button"
+                className={`terminal-toggle-btn is-sound ${soundEnabled ? 'is-active' : ''}`}
+                onClick={() => {
+                  const nextSound = !soundEnabled;
+                  setSoundEnabled(nextSound);
+                  soundFX.enabled = nextSound;
+                  if (nextSound) {
+                    soundFX.playClick();
+                  }
+                }}
+                title={soundEnabled ? "Mute Typewriter Sounds" : "Unmute Typewriter Sounds"}
+              >
+                {soundEnabled ? '🔊' : '🔇'}
+              </button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       <div className="terminal-layout-wrapper">
@@ -491,89 +595,95 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
           <span className="cmd-text cmd-text-mobile">
             {cmdText.length > 0 ? ` deploying ${project.slug}...` : ''}
           </span>
-          {cmdText.length > 0 && cmdText.length < project.cmd.length && (
+          {isActive && cmdText.length > 0 && cmdText.length < project.cmd.length && (
             <span className="terminal-cursor-blink" style={{ marginLeft: 2 }} />
           )}
         </div>
 
-        <div className={`terminal-progress-wrap ${progressVisible ? 'is-visible' : ''}`}>
-          <span className="terminal-progress-label">{progress}%</span>
-          <div className="terminal-progress-track">
-            <div
-              className="terminal-progress-fill"
-              style={{ width: `${progress}%`, background: themeColor }}
-            />
-          </div>
-        </div>
-
-        <div className="terminal-logs">
-          {logs.map((log, i) => (
-            <div key={i} className={`terminal-log-line log-${log.type} ${log.isBanner ? 'log-banner' : ''}`}>
-              {log.text}
+        {isActive && (
+          <div className={`terminal-progress-wrap ${progressVisible ? 'is-visible' : ''}`}>
+            <span className="terminal-progress-label">{progress}%</span>
+            <div className="terminal-progress-track">
+              <div
+                className="terminal-progress-fill"
+                style={{ width: `${progress}%`, background: themeColor }}
+              />
             </div>
-          ))}
-        </div>
+          </div>
+        )}
+
+        {isActive && logs.length > 0 && (
+          <div className="terminal-logs">
+            {logs.map((log, i) => (
+              <div key={i} className={`terminal-log-line log-${log.type} ${log.isBanner ? 'log-banner' : ''}`}>
+                {log.text}
+              </div>
+            ))}
+          </div>
+        )}
 
         <div className={`terminal-project-card ${cardVisible ? 'is-visible' : ''}`}>
           <div className="terminal-card-meta">
             <span className="terminal-card-num">{project.num}</span>
             <span className="terminal-card-category">// {project.category}</span>
           </div>
-          <h3 className={`terminal-card-title ${glitching ? 'is-glitching' : ''}`}>
+          <h3 className={`terminal-card-title ${glitching ? 'is-glitching' : ''} ${flickerActive ? 'phosphor-flicker' : ''}`}>
             {project.title}
           </h3>
 
-          <div className="terminal-card-tabs-nav">
-            <button
-              type="button"
-              className={`terminal-tab-btn ${activeTab === 'overview' ? 'is-active' : ''}`}
-              onClick={() => {
-                soundFX.playClick();
-                setActiveTab('overview');
-              }}
-            >
-              Overview
-            </button>
-            <button
-              type="button"
-              className={`terminal-tab-btn ${activeTab === 'features' ? 'is-active' : ''}`}
-              onClick={() => {
-                soundFX.playClick();
-                setActiveTab('features');
-              }}
-            >
-              Features
-            </button>
-            <button
-              type="button"
-              className={`terminal-tab-btn ${activeTab === 'tech' ? 'is-active' : ''}`}
-              onClick={() => {
-                soundFX.playClick();
-                setActiveTab('tech');
-              }}
-            >
-              Tech Stack
-            </button>
-            <button
-              type="button"
-              className={`terminal-tab-btn ${activeTab === 'sysinfo' ? 'is-active' : ''}`}
-              onClick={() => {
-                soundFX.playClick();
-                setActiveTab('sysinfo');
-              }}
-            >
-              Sys Info
-            </button>
-          </div>
+          {isActive && (
+            <div className="terminal-card-tabs-nav">
+              <button
+                type="button"
+                className={`terminal-tab-btn ${activeTab === 'overview' ? 'is-active' : ''}`}
+                onClick={() => {
+                  soundFX.playClick();
+                  setActiveTab('overview');
+                }}
+              >
+                Overview
+              </button>
+              <button
+                type="button"
+                className={`terminal-tab-btn ${activeTab === 'features' ? 'is-active' : ''}`}
+                onClick={() => {
+                  soundFX.playClick();
+                  setActiveTab('features');
+                }}
+              >
+                Features
+              </button>
+              <button
+                type="button"
+                className={`terminal-tab-btn ${activeTab === 'tech' ? 'is-active' : ''}`}
+                onClick={() => {
+                  soundFX.playClick();
+                  setActiveTab('tech');
+                }}
+              >
+                Tech Stack
+              </button>
+              <button
+                type="button"
+                className={`terminal-tab-btn ${activeTab === 'sysinfo' ? 'is-active' : ''}`}
+                onClick={() => {
+                  soundFX.playClick();
+                  setActiveTab('sysinfo');
+                }}
+              >
+                Sys Info
+              </button>
+            </div>
+          )}
 
           <div className="terminal-card-tab-content">
-            {activeTab === 'overview' && (
+            {(!isActive || activeTab === 'overview') && (
               <>
-                <p className="terminal-card-sub">{project.sub}</p>
-                <p className="terminal-card-desc">{project.desc}</p>
+                <p className={`terminal-card-sub ${flickerActive ? 'phosphor-flicker' : ''}`}>{project.sub}</p>
+                <p className={`terminal-card-desc ${flickerActive ? 'phosphor-flicker' : ''}`}>{project.desc}</p>
               </>
             )}
-            {activeTab === 'features' && (
+            {isActive && activeTab === 'features' && (
               <ul className="terminal-features-list">
                 {project.features.map((feature, i) => (
                   <li key={i} className="terminal-feature-item">
@@ -583,7 +693,7 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
                 ))}
               </ul>
             )}
-            {activeTab === 'tech' && (
+            {isActive && activeTab === 'tech' && (
               <div className="terminal-card-tags">
                 {project.tags.map((tag) => (
                   <span key={tag} className="terminal-tag-pill">
@@ -592,7 +702,7 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
                 ))}
               </div>
             )}
-            {activeTab === 'sysinfo' && (
+            {isActive && activeTab === 'sysinfo' && (
               <div className="terminal-sysinfo-wrap">
                 <pre className="terminal-sysinfo-ascii">
 {` _  _   ___ 
@@ -631,66 +741,71 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
           </div>
         </div>
 
-        <div className="terminal-cursor-line">
-          <span className="prompt">❯</span>
-          <span className="terminal-cursor-blink" />
-        </div>
+        {isActive && (
+          <div className="terminal-cursor-line">
+            <span className="prompt">❯</span>
+            <span className="terminal-cursor-blink" />
+          </div>
+        )}
       </div>
 
-      <div className={`terminal-preview-drawer ${cardVisible ? 'is-visible' : ''} ${mobileDrawerOpen ? 'mobile-open' : ''}`}>
-        <div className="preview-drawer-header">
-          <span className="preview-drawer-title">// VISUAL MOCKUP</span>
-          <button
-            type="button"
-            className="preview-drawer-close"
-            onClick={() => {
-              soundFX.playClick();
-              setMobileDrawerOpen(false);
-            }}
-          >
-            ×
-          </button>
-        </div>
-        <div className="preview-drawer-content">
-          <div className="preview-mockup-frame">
-            {project.image && (
-              <img
-                src={project.image}
-                alt={`${project.title} Interface Mockup`}
-                className="preview-mockup-img"
-                loading="lazy"
-              />
-            )}
-            <div className="preview-mockup-scanlines" />
+      {isActive && (
+        <div className={`terminal-preview-drawer ${cardVisible ? 'is-visible' : ''} ${mobileDrawerOpen ? 'mobile-open' : ''}`}>
+          <div className="preview-drawer-header">
+            <span className="preview-drawer-title">// VISUAL MOCKUP</span>
+            <button
+              type="button"
+              className="preview-drawer-close"
+              onClick={() => {
+                soundFX.playClick();
+                setMobileDrawerOpen(false);
+              }}
+            >
+              ×
+            </button>
           </div>
-
-          <div className="preview-db-section">
-            <div className="preview-db-badge-wrap">
-              <span className="preview-db-label">Database Layer:</span>
-              <span className="preview-db-badge">{project.dbName}</span>
+          <div className="preview-drawer-content">
+            <div className="preview-mockup-frame">
+              {project.image && (
+                <img
+                  src={project.image}
+                  alt={`${project.title} Interface Mockup`}
+                  className="preview-mockup-img"
+                  loading="lazy"
+                />
+              )}
+              <div className="preview-mockup-scanlines" />
             </div>
-            <ul className="preview-db-checklist">
-              {project.dbChecklist.map((item, idx) => {
-                const parts = item.split(' (');
-                const modelName = parts[0];
-                const details = parts[1] ? ` (${parts[1]}` : '';
-                return (
-                  <li key={idx} className="preview-db-item">
-                    <span className="preview-db-checkbox">[x]</span>
-                    <div className="preview-db-text">
-                      <span className="preview-db-model">{modelName}</span>
-                      {details && <span className="preview-db-details">{details}</span>}
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
+
+            <div className="preview-db-section">
+              <div className="preview-db-badge-wrap">
+                <span className="preview-db-label">Database Layer:</span>
+                <span className="preview-db-badge">{project.dbName}</span>
+              </div>
+              <ul className="preview-db-checklist">
+                {project.dbChecklist.map((item, idx) => {
+                  const parts = item.split(' (');
+                  const modelName = parts[0];
+                  const details = parts[1] ? ` (${parts[1]}` : '';
+                  return (
+                    <li key={idx} className="preview-db-item">
+                      <span className="preview-db-checkbox">[x]</span>
+                      <div className="preview-db-text">
+                        <span className="preview-db-model">{modelName}</span>
+                        {details && <span className="preview-db-details">{details}</span>}
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
 
-    <nav className="terminal-nav" style={style}>
+    {isActive && (
+      <nav className="terminal-nav" style={style}>
         <span className="terminal-status-badge">{project.status}</span>
         <a
           href={project.gh}
@@ -750,6 +865,7 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
           next_project() →
         </button>
       </nav>
+    )}
     </div>
   );
 };

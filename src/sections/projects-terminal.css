@@ -904,3 +904,173 @@
     opacity: 1 !important;
   }
 }
+
+/* 3D Holographic Card Deck Carousel Layout */
+.project-deck-container {
+  perspective: 1500px;
+  transform-style: preserve-3d;
+  position: relative;
+  width: 100%;
+  max-width: 1150px;
+  margin: 0 auto;
+  min-height: 720px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 40px;
+}
+
+@media (max-width: 767.98px) {
+  .project-deck-container {
+    min-height: 650px;
+    padding-top: 20px;
+  }
+}
+
+.project-deck-card {
+  position: absolute;
+  top: 40px;
+  width: 100%;
+  max-width: 1150px;
+  transform-style: preserve-3d;
+  will-change: transform, opacity, filter;
+  transition: transform 0.75s cubic-bezier(0.19, 1, 0.22, 1), 
+              opacity 0.75s cubic-bezier(0.19, 1, 0.22, 1), 
+              filter 0.75s cubic-bezier(0.19, 1, 0.22, 1);
+  cursor: pointer;
+}
+
+/* Base Card Styling Offsets based on relative index difference */
+.project-deck-card.is-active {
+  z-index: 10;
+  transform: translate3d(0, 0, 0) scale(1);
+  opacity: 1;
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.75)) drop-shadow(0 0 1px rgba(var(--accent-rgb, 0, 255, 65), 0.25));
+  pointer-events: auto;
+  cursor: default;
+}
+
+.project-deck-card.is-background {
+  pointer-events: auto; /* Allow clicking background cards to cycle them */
+}
+
+/* We support showing up to 3 cards behind the active card */
+.project-deck-card.diff-1 {
+  z-index: 9;
+  transform: translate3d(0, -22px, -80px) scale(0.94);
+  opacity: 0.75;
+  filter: blur(1.5px) grayscale(100%);
+}
+
+.project-deck-card.diff-2 {
+  z-index: 8;
+  transform: translate3d(0, -44px, -160px) scale(0.88);
+  opacity: 0.45;
+  filter: blur(3px) grayscale(100%);
+}
+
+.project-deck-card.diff-3 {
+  z-index: 7;
+  transform: translate3d(0, -66px, -240px) scale(0.82);
+  opacity: 0.15;
+  filter: blur(4.5px) grayscale(100%);
+}
+
+/* Any card beyond visible range is hidden */
+.project-deck-card.diff-hidden {
+  z-index: 5;
+  transform: translate3d(0, -88px, -320px) scale(0.76);
+  opacity: 0;
+  pointer-events: none;
+  filter: blur(6px) grayscale(100%);
+}
+
+/* Left/Right Swipe animation off-screen states */
+.project-deck-card.is-exit-left {
+  z-index: 11;
+  transform: translate3d(-120%, 30px, 50px) rotateY(-35deg) scale(0.85) !important;
+  opacity: 0 !important;
+  filter: blur(2px) !important;
+  pointer-events: none;
+}
+
+.project-deck-card.is-exit-right {
+  z-index: 11;
+  transform: translate3d(120%, 30px, 50px) rotateY(35deg) scale(0.85) !important;
+  opacity: 0 !important;
+  filter: blur(2px) !important;
+  pointer-events: none;
+}
+
+/* Laser scanline animation for the active card */
+.laser-scanline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, 
+    transparent 10%, 
+    var(--accent, #00ff41) 35%, 
+    #fff 50%, 
+    var(--accent, #00ff41) 65%, 
+    transparent 90%
+  );
+  box-shadow: 0 0 10px var(--accent, #00ff41), 0 0 20px var(--accent, #00ff41);
+  opacity: 0.75;
+  z-index: 20;
+  pointer-events: none;
+  animation: laser-sweep 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes laser-sweep {
+  0% { top: 0%; opacity: 0; }
+  5% { opacity: 0.8; }
+  95% { opacity: 0.8; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* Phosphor Text CRT Flicker Effect */
+.phosphor-flicker {
+  animation: phosphor-wake 0.45s ease-out forwards;
+}
+
+@keyframes phosphor-wake {
+  0% {
+    opacity: 0.1;
+    filter: brightness(2.5) contrast(1.2);
+    text-shadow: 0 0 8px var(--accent, #00ff41), 0 0 15px var(--accent, #00ff41);
+  }
+  15% {
+    opacity: 0.8;
+    filter: brightness(1.2);
+    text-shadow: 0 0 4px var(--accent, #00ff41);
+  }
+  30% {
+    opacity: 0.25;
+    filter: brightness(2);
+    text-shadow: 0 0 10px var(--accent, #00ff41);
+  }
+  45% {
+    opacity: 0.9;
+    filter: brightness(1.1);
+  }
+  60% {
+    opacity: 0.35;
+    filter: brightness(1.7);
+  }
+  75% {
+    opacity: 0.95;
+    filter: brightness(1);
+  }
+  90% {
+    opacity: 0.7;
+    filter: brightness(1.3);
+  }
+  100% {
+    opacity: 1;
+    filter: none;
+    text-shadow: none;
+  }
+}
+
