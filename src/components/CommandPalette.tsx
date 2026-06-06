@@ -15,6 +15,10 @@ interface CommandPaletteProps {
   isMatrixActive: boolean;
   onToggleSound: () => void;
   isSoundActive: boolean;
+  onToggleAmbient: () => void;
+  isAmbientActive: boolean;
+  onToggleCursorTrail: () => void;
+  isCursorTrailActive: boolean;
 }
 
 export const CommandPalette: React.FC<CommandPaletteProps> = ({
@@ -22,6 +26,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   isMatrixActive,
   onToggleSound,
   isSoundActive,
+  onToggleAmbient,
+  isAmbientActive,
+  onToggleCursorTrail,
+  isCursorTrailActive,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
@@ -123,9 +131,29 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       id: 'toggle-sound', 
       name: isSoundActive ? 'Audio: Mute Keystroke Sound FX' : 'Audio: Unmute Keystroke Sound FX', 
       category: 'Preferences', 
-      shortcut: 'S M', 
+      shortcut: 'S K', 
       action: () => {
         onToggleSound();
+        setIsOpen(false);
+      }
+    },
+    { 
+      id: 'toggle-ambient', 
+      name: isAmbientActive ? 'Audio: Stop Ambient Synthwave Soundtrack' : 'Audio: Start Ambient Synthwave Soundtrack', 
+      category: 'Preferences', 
+      shortcut: 'S A', 
+      action: () => {
+        onToggleAmbient();
+        setIsOpen(false);
+      }
+    },
+    { 
+      id: 'toggle-cursortrail', 
+      name: isCursorTrailActive ? 'Preferences: Disable Cybernetic Cursor Trail' : 'Preferences: Enable Cybernetic Cursor Trail', 
+      category: 'Preferences', 
+      shortcut: 'C T', 
+      action: () => {
+        onToggleCursorTrail();
         setIsOpen(false);
       }
     },

@@ -11,16 +11,30 @@ import { CertificationsSection } from './sections/CertificationsSection';
 import { ContactSection } from './sections/ContactSection';
 import { CommandPalette } from './components/CommandPalette';
 import { MatrixRain } from './components/MatrixRain';
+import { CursorTrail } from './components/CursorTrail';
 import { soundFX } from './utils/terminalAudio';
 
 function App() {
   const [isMatrixActive, setIsMatrixActive] = useState(false);
   const [isSoundActive, setIsSoundActive] = useState(false);
+  const [isAmbientActive, setIsAmbientActive] = useState(false);
+  const [isCursorTrailActive, setIsCursorTrailActive] = useState(true);
 
   useEffect(() => {
     // Synchronize global sound preference
     soundFX.enabled = isSoundActive;
   }, [isSoundActive]);
+
+  useEffect(() => {
+    if (isAmbientActive) {
+      soundFX.startAmbient();
+    } else {
+      soundFX.stopAmbient();
+    }
+    return () => {
+      soundFX.stopAmbient();
+    };
+  }, [isAmbientActive]);
 
   useEffect(() => {
     // Initialize Lenis buttery-smooth momentum scroll
@@ -48,12 +62,19 @@ function App() {
       {/* Easter Egg Matrix digital rain layer */}
       {isMatrixActive && <MatrixRain />}
 
+      {/* Cybernetic pointer coordinate trail */}
+      <CursorTrail enabled={isCursorTrailActive} />
+
       {/* Global command search shell */}
       <CommandPalette
         isMatrixActive={isMatrixActive}
         onToggleMatrix={() => setIsMatrixActive((prev) => !prev)}
         isSoundActive={isSoundActive}
         onToggleSound={() => setIsSoundActive((prev) => !prev)}
+        isAmbientActive={isAmbientActive}
+        onToggleAmbient={() => setIsAmbientActive((prev) => !prev)}
+        isCursorTrailActive={isCursorTrailActive}
+        onToggleCursorTrail={() => setIsCursorTrailActive((prev) => !prev)}
       />
 
       {/* 1. HERO SECTION */}
