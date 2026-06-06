@@ -35,11 +35,8 @@ function App() {
   const [isCursorTrailActive, setIsCursorTrailActive] = useState(false);
   const [isHudActive, setIsHudActive] = useState(false);
 
-  const [isCrtTransitionEnabled, setIsCrtTransitionEnabled] = useState(true);
-  const [isCrtTransitionActive, setIsCrtTransitionActive] = useState(false);
   const [activeSection, setActiveSection] = useState('SYS_BOOT');
 
-  const lastTransitionTimeRef = useRef(0);
   const activeSectionRef = useRef('SYS_BOOT');
 
   useEffect(() => {
@@ -59,23 +56,8 @@ function App() {
       });
 
       if (currentActive !== activeSectionRef.current) {
-        const previousSection = activeSectionRef.current;
         activeSectionRef.current = currentActive;
         setActiveSection(currentActive);
-
-        const now = Date.now();
-        if (
-          isCrtTransitionEnabled && 
-          now - lastTransitionTimeRef.current > 1500 && 
-          previousSection !== ''
-        ) {
-          lastTransitionTimeRef.current = now;
-          setIsCrtTransitionActive(true);
-          soundFX.playCrtTransition();
-          setTimeout(() => {
-            setIsCrtTransitionActive(false);
-          }, 450);
-        }
       }
     };
 
@@ -83,7 +65,7 @@ function App() {
     handleScroll();
 
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [isCrtTransitionEnabled]);
+  }, []);
 
   useEffect(() => {
     // Synchronize global sound preference
@@ -140,9 +122,6 @@ function App() {
         activeSection={activeSection}
       />
 
-      {/* CRT center dot flash overlay */}
-      {isCrtTransitionActive && <div className="crt-dot-flash" />}
-
       {/* Global command search shell */}
       <CommandPalette
         isMatrixActive={isMatrixActive}
@@ -155,38 +134,34 @@ function App() {
         onToggleCursorTrail={() => setIsCursorTrailActive((prev) => !prev)}
         isHudActive={isHudActive}
         onToggleHud={() => setIsHudActive((prev) => !prev)}
-        isCrtTransitionEnabled={isCrtTransitionEnabled}
-        onToggleCrtTransition={() => setIsCrtTransitionEnabled((prev) => !prev)}
       />
 
-      <div className={isCrtTransitionActive ? 'crt-collapse-active' : undefined}>
-        {/* 1. HERO SECTION */}
-        <HeroSection />
+      {/* 1. HERO SECTION */}
+      <HeroSection />
 
-        {/* 2. MARQUEE SECTION */}
-        <MarqueeSection />
+      {/* 2. MARQUEE SECTION */}
+      <MarqueeSection />
 
-        {/* 2b. SYSTEM ARCHITECTURE BLUEPRINT SECTION */}
-        <ArchitectureSection />
+      {/* 2b. SYSTEM ARCHITECTURE BLUEPRINT SECTION */}
+      <ArchitectureSection />
 
-        {/* 3. ABOUT SECTION */}
-        <AboutSection />
+      {/* 3. ABOUT SECTION */}
+      <AboutSection />
 
-        {/* 4. WORK EXPERIENCE TIMELINE */}
-        <WorkExperience />
+      {/* 4. WORK EXPERIENCE TIMELINE */}
+      <WorkExperience />
 
-        {/* 5. SERVICES SECTION */}
-        <ServicesSection />
+      {/* 5. SERVICES SECTION */}
+      <ServicesSection />
 
-        {/* 6. PROJECTS SECTION (Terminal CLI deploy) */}
-        <ProjectsSection />
+      {/* 6. PROJECTS SECTION (Terminal CLI deploy) */}
+      <ProjectsSection />
 
-        {/* 7. CERTIFICATIONS FILTER BROWSER */}
-        <CertificationsSection />
+      {/* 7. CERTIFICATIONS FILTER BROWSER */}
+      <CertificationsSection />
 
-        {/* 9. CONTACT & FOOTER */}
-        <ContactSection />
-      </div>
+      {/* 9. CONTACT & FOOTER */}
+      <ContactSection />
     </div>
   );
 }

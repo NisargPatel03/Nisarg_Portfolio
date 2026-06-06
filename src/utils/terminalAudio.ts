@@ -74,58 +74,6 @@ class TerminalSoundFX {
     }
   }
 
-  playCrtTransition() {
-    if (!this.enabled) return;
-    this.init();
-    if (!this.ctx) return;
-
-    try {
-      const now = this.ctx.currentTime;
-      
-      // High frequency static pop/zap
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-      
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(9000, now);
-      osc.frequency.exponentialRampToValueAtTime(1200, now + 0.12);
-      
-      gain.gain.setValueAtTime(0.06, now);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.15);
-      
-      const filter = this.ctx.createBiquadFilter();
-      filter.type = 'bandpass';
-      filter.frequency.setValueAtTime(4000, now);
-      filter.Q.setValueAtTime(1.5, now);
-      
-      osc.connect(filter);
-      filter.connect(gain);
-      gain.connect(this.ctx.destination);
-      
-      osc.start(now);
-      osc.stop(now + 0.15);
-      
-      // Low frequency electronic click/pop
-      const subOsc = this.ctx.createOscillator();
-      const subGain = this.ctx.createGain();
-      
-      subOsc.type = 'triangle';
-      subOsc.frequency.setValueAtTime(120, now);
-      subOsc.frequency.linearRampToValueAtTime(30, now + 0.15);
-      
-      subGain.gain.setValueAtTime(0.12, now);
-      subGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.15);
-      
-      subOsc.connect(subGain);
-      subGain.connect(this.ctx.destination);
-      
-      subOsc.start(now);
-      subOsc.stop(now + 0.15);
-    } catch (e) {
-      console.warn('Error playing CRT transition sound:', e);
-    }
-  }
-
   startAmbient() {
     if (this.isAmbientPlaying) return;
     this.init();
