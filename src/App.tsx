@@ -19,8 +19,8 @@ function App() {
   const [isMatrixActive, setIsMatrixActive] = useState(false);
   const [isSoundActive, setIsSoundActive] = useState(false);
   const [isAmbientActive, setIsAmbientActive] = useState(false);
-  const [isCursorTrailActive, setIsCursorTrailActive] = useState(true);
-  const [isHudActive, setIsHudActive] = useState(true);
+  const [isCursorTrailActive, setIsCursorTrailActive] = useState(false);
+  const [isHudActive, setIsHudActive] = useState(false);
 
   useEffect(() => {
     // Synchronize global sound preference
