@@ -80,25 +80,43 @@ class TerminalSoundFX {
     if (!this.ctx) return;
 
     this.isAmbientPlaying = true;
+    
+    // Explicitly handle async AudioContext resume state
+    if (this.ctx.state === 'suspended') {
+      this.ctx.resume().then(() => {
+        this.playAmbientNotes();
+      }).catch((err) => {
+        console.warn('Failed to resume AudioContext for ambient loop:', err);
+        this.isAmbientPlaying = false;
+      });
+    } else {
+      this.playAmbientNotes();
+    }
+  }
+
+  private playAmbientNotes() {
+    if (!this.ctx || !this.isAmbientPlaying) return;
+
     try {
       const now = this.ctx.currentTime;
       
-      // Create Ambient Master Gain Node (very soft volume)
+      // Create Ambient Master Gain Node (audible yet background level)
       const masterGain = this.ctx.createGain();
       masterGain.gain.setValueAtTime(0, now);
-      masterGain.gain.linearRampToValueAtTime(0.04, now + 2.0); // Smooth 2s fade-in
+      masterGain.gain.linearRampToValueAtTime(0.12, now + 1.5); // Smooth 1.5s fade-in
       masterGain.connect(this.ctx.destination);
       this.ambientGain = masterGain;
 
-      // Create Low-pass Filter for warmth
+      // Create Low-pass Filter for warm cybernetic tone
       const filter = this.ctx.createBiquadFilter();
       filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(220, now);
-      filter.Q.setValueAtTime(3.0, now);
+      filter.frequency.setValueAtTime(500, now); // Set higher cutoff for mid-range audibility
+      filter.Q.setValueAtTime(2.0, now);
       filter.connect(masterGain);
 
-      // Create deep drone saw/triangle oscillators
-      const freqs = [73.42, 73.82, 110.00, 146.83, 174.61]; // D2, Detuned D2, A2, D3, F3
+      // Shifted frequencies up one octave for laptop/phone speaker audibility:
+      // D3 (146.8Hz), Detuned D3 (147.3Hz), A3 (220Hz), D4 (293.6Hz), F4 (349.2Hz), A4 (440Hz)
+      const freqs = [146.83, 147.33, 220.00, 293.66, 349.23, 440.00];
       const oscillators: OscillatorNode[] = [];
 
       freqs.forEach((freq, idx) => {
@@ -108,7 +126,7 @@ class TerminalSoundFX {
         
         // Soften individual oscillator volumes
         const oscGain = this.ctx!.createGain();
-        oscGain.gain.setValueAtTime(idx < 3 ? 0.25 : 0.35, now);
+        oscGain.gain.setValueAtTime(idx < 3 ? 0.2 : 0.3, now);
         
         osc.connect(oscGain);
         oscGain.connect(filter);
@@ -117,13 +135,13 @@ class TerminalSoundFX {
       });
 
       // Create LFO (Low Frequency Oscillator) to modulate filter frequency
-      // Modulates filter between ~150Hz and ~350Hz every 12 seconds
+      // Modulates filter cutoff between 300Hz and 700Hz every 12 seconds
       const lfo = this.ctx.createOscillator();
       lfo.type = 'sine';
       lfo.frequency.setValueAtTime(0.08, now); // 0.08 Hz
 
       const lfoGain = this.ctx.createGain();
-      lfoGain.gain.setValueAtTime(150, now); // modulation depth of 150 Hz
+      lfoGain.gain.setValueAtTime(200, now); // modulation depth of 200 Hz
 
       lfo.connect(lfoGain);
       lfoGain.connect(filter.frequency); // Modulate cutoff frequency directly!
@@ -132,7 +150,7 @@ class TerminalSoundFX {
       // Store references for cleanup
       this.ambientNodes = [...oscillators, lfo, lfoGain, filter];
     } catch (e) {
-      console.warn('Error starting ambient soundtrack:', e);
+      console.warn('Error playing ambient notes:', e);
       this.isAmbientPlaying = false;
     }
   }
