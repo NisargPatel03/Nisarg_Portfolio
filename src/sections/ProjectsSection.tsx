@@ -89,7 +89,6 @@ export const ProjectsSection: React.FC = () => {
   }, [soundEnabled]);
 
   const project = PROJECTS_TERMINAL[currentIndex];
-  const accentColor = ACCENT_COLORS[project.accent];
   const total = PROJECTS_TERMINAL.length;
 
   const wipe = useCallback(() => {
