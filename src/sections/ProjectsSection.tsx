@@ -88,7 +88,6 @@ export const ProjectsSection: React.FC = () => {
     soundFX.enabled = soundEnabled;
   }, [soundEnabled]);
 
-  const project = PROJECTS_TERMINAL[currentIndex];
   const total = PROJECTS_TERMINAL.length;
 
   const wipe = useCallback(() => {
