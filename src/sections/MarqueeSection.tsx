@@ -246,7 +246,7 @@ export const MarqueeSection: React.FC = () => {
       badge: 'Interactive Web',
       proficiency: 'Expert',
       yearsOfExp: '3+ Years',
-      projects: ['Savaliya Scoops POS', 'Bharat Budget', 'Bioluminescent Canvas'],
+      projects: ['Savaliya Scoops POS', 'Bharat Budget', 'Bioluminescent Canvas', 'CodeGraph'],
       tags: ['Frontend Core', 'ES6 Syntax', 'Dynamic UI', 'DOM Manipulation'],
       icon: (
         <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -318,7 +318,7 @@ export const MarqueeSection: React.FC = () => {
       badge: 'Type-Safe Systems',
       proficiency: 'Expert',
       yearsOfExp: '2+ Years',
-      projects: ['Nisarg Portfolio', 'Bharat Budget Console'],
+      projects: ['Nisarg Portfolio', 'Bharat Budget Console', 'CodeGraph'],
       tags: ['Type Safety', 'Interfaces', 'Generics', 'Code Scalability'],
       icon: (
         <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -539,7 +539,7 @@ export const MarqueeSection: React.FC = () => {
       badge: 'Component UI Layer',
       proficiency: 'Expert',
       yearsOfExp: '3+ Years',
-      projects: ['Nisarg Portfolio', 'Bharat Budget Dashboards'],
+      projects: ['Nisarg Portfolio', 'Bharat Budget Dashboards', 'CodeGraph'],
       tags: ['Component-Driven UI', 'Virtual DOM', 'React Hooks', 'Context State'],
       icon: (
         <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

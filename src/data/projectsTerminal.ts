@@ -481,6 +481,44 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
       'sessions_history (P2P transaction logs)'
     ]
   },
+  {
+    num: '13',
+    slug: 'codegraph',
+    accent: 'green',
+    cmd: 'deploy --project=codegraph --env=production',
+    category: 'AI Code Visualization & Intelligence',
+    title: 'CodeGraph',
+    sub: 'React · TypeScript · D3.js · Gemini AI',
+    desc: 'An AI-powered, interactive codebase visualization and intelligence platform. Parses source files from a GitHub URL or local ZIP archive to construct accurate dependency graphs, call graphs, and DB schema maps, layering AI explanations, test generation, and code smell audits directly in the browser.',
+    tags: ['React', 'TypeScript', 'D3.js', 'Gemini AI', 'Vanilla CSS'],
+    features: [
+      'Interactive 2D D3 and 3D Canvas visualizations with bioluminescent execution flows',
+      'Semantic Codebase Search and AI-driven architecture overview & test suite generation',
+      'REST API endpoint directory with interactive request tester and OpenAPI schema extractor',
+      'Codebase Eco-Climate weather visualizer and topological audio sonification engine'
+    ],
+    logs: [
+      { t: 'output', txt: '  Initializing static analysis engine...' },
+      { t: 'output', txt: '  Constructing dependency tree...' },
+      { t: 'output', txt: '  Warming up D3 force simulation layout...' },
+      { t: 'warn', txt: '  ⚠  Large codebase detected — synchronous warming' },
+      { t: 'output', txt: '  Mapping API endpoints and DB schemas...' },
+      { t: 'success', txt: '  ✔  Semantic code search index built' },
+      { t: 'success', txt: '  ✔  AppSec CVE vulnerability map online' },
+      { t: 'success', txt: '  ✔  Deployed → code-graph-theta.vercel.app' },
+    ],
+    status: 'LIVE',
+    gh: 'https://github.com/NisargPatel03/CodeGraph',
+    live: 'https://code-graph-theta.vercel.app/',
+    image: '/codegraph_mockup.png',
+    dbName: 'Local Storage / IndexedDB',
+    dbChecklist: [
+      'recent_repos_history (Recent workspaces)',
+      'in_memory_cache (Gemini response buffers)',
+      'local_storage (UI themes & settings)',
+      'workspace_memory (Code edits & updates)'
+    ]
+  },
 ];
 
 export const ACCENT_COLORS = {
