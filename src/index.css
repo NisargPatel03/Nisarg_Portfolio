@@ -488,3 +488,36 @@ h1, h2, h3, h4, h5, h6, button, nav a, .nav-link, .card-title {
   -webkit-text-fill-color: transparent !important;
   text-shadow: none !important;
 }
+
+/* keyframes and classes for chromatic aberration hover shifts */
+@keyframes chromatic-aberration {
+  0% {
+    text-shadow: -1.5px -1.5px 0px rgba(255, 0, 80, 0.75), 1.5px 1.5px 0px rgba(0, 240, 255, 0.75);
+  }
+  20% {
+    text-shadow: -2.5px 1.5px 0px rgba(255, 0, 80, 0.75), 2.5px -1.5px 0px rgba(0, 240, 255, 0.75);
+  }
+  40% {
+    text-shadow: 1.5px -2.5px 0px rgba(255, 0, 80, 0.75), -1.5px 2.5px 0px rgba(0, 240, 255, 0.75);
+  }
+  60% {
+    text-shadow: -2px -2px 0px rgba(255, 0, 80, 0.75), 2px 2px 0px rgba(0, 240, 255, 0.75);
+  }
+  80% {
+    text-shadow: 2px 1px 0px rgba(255, 0, 80, 0.75), -2px -1px 0px rgba(0, 240, 255, 0.75);
+  }
+  100% {
+    text-shadow: -1.5px -1.5px 0px rgba(255, 0, 80, 0.75), 1.5px 1.5px 0px rgba(0, 240, 255, 0.75);
+  }
+}
+
+.crt-glitch-hover {
+  position: relative;
+  transition: border-color 0.25s ease-in-out, box-shadow 0.25s ease-in-out;
+}
+
+.crt-glitch-hover:hover h3,
+.crt-glitch-hover:hover h4,
+.crt-glitch-hover:hover .font-bold {
+  animation: chromatic-aberration 0.25s infinite linear !important;
+}

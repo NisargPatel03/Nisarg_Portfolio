@@ -94,10 +94,9 @@ export const ExtraProjects: React.FC = () => {
           {list.map((proj, i) => (
             <FadeIn
               key={proj.title}
-              y={30}
+              crtFlicker={true}
               delay={i * 0.05}
-              duration={0.7}
-              className="bg-[#121212] border border-[#232323] hover:border-[#7621B0]/45 rounded-3xl p-6 flex flex-col justify-between gap-6 transition-all duration-300 group hover:shadow-[0_10px_30px_rgba(118,33,176,0.1)] relative"
+              className="bg-[#121212] border border-[#232323] hover:border-[#7621B0]/45 rounded-3xl p-6 flex flex-col justify-between gap-6 transition-all duration-300 group hover:shadow-[0_10px_30px_rgba(118,33,176,0.1)] relative crt-glitch-hover"
             >
               {/* Header and description */}
               <div className="flex flex-col gap-3">
