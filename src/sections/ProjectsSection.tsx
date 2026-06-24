@@ -480,6 +480,21 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
 
   return (
     <div className={`terminal-window ${crtEnabled ? 'crt-active' : ''}`} style={style}>
+      {/* Decorative Hardware Bezels & Details */}
+      <div className="terminal-bezel-bracket top-left">[+]</div>
+      <div className="terminal-bezel-bracket top-right">[+]</div>
+      <div className="terminal-bezel-bracket bottom-left">[+]</div>
+      <div className="terminal-bezel-bracket bottom-right">[+]</div>
+      
+      <div className="terminal-screw top-left-screw" />
+      <div className="terminal-screw top-right-screw" />
+      <div className="terminal-screw bottom-left-screw" />
+      <div className="terminal-screw bottom-right-screw" />
+      
+      <div className="terminal-serial-number">SYS_DECK: NP-9000-REV3 | S/N: 00{project.num}-NP</div>
+      <div className="terminal-copper-line-left" />
+      <div className="terminal-copper-line-right" />
+
       <div className={`terminal-scanline ${scanline ? 'is-active' : ''}`} aria-hidden />
 
       <div className="terminal-titlebar">

@@ -1073,3 +1073,116 @@
   }
 }
 
+/* Decorative Terminal Hardware Chassis Details */
+.terminal-bezel-bracket {
+  position: absolute;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  color: var(--accent, #00ff41);
+  opacity: 0.7;
+  text-shadow: 0 0 4px var(--accent, #00ff41);
+  pointer-events: none;
+  z-index: 10;
+  user-select: none;
+}
+
+.terminal-bezel-bracket.top-left {
+  top: 6px;
+  left: 6px;
+}
+
+.terminal-bezel-bracket.top-right {
+  top: 6px;
+  right: 6px;
+}
+
+.terminal-bezel-bracket.bottom-left {
+  bottom: 6px;
+  left: 6px;
+}
+
+.terminal-bezel-bracket.bottom-right {
+  bottom: 6px;
+  right: 6px;
+}
+
+/* Simulated hex screws in the chassis faceplate */
+.terminal-screw {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: #1c1c1c;
+  border: 1.5px solid #444444;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9;
+  box-shadow: inset 0 1px 1px rgba(0,0,0,0.8);
+}
+
+.terminal-screw::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #777777;
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.terminal-screw.top-left-screw {
+  top: 25px;
+  left: 10px;
+}
+
+.terminal-screw.top-right-screw {
+  top: 25px;
+  right: 10px;
+}
+
+.terminal-screw.bottom-left-screw {
+  bottom: 25px;
+  left: 10px;
+}
+
+.terminal-screw.bottom-right-screw {
+  bottom: 25px;
+  right: 10px;
+}
+
+/* Serial Number metadata tags */
+.terminal-serial-number {
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px;
+  color: var(--accent, #00ff41);
+  opacity: 0.45;
+  letter-spacing: 0.08em;
+  z-index: 9;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Copper wiring line traces */
+.terminal-copper-line-left,
+.terminal-copper-line-right {
+  position: absolute;
+  top: 45px;
+  bottom: 45px;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, rgba(184, 115, 51, 0.45), rgba(184, 115, 51, 0.45), transparent);
+  pointer-events: none;
+  z-index: 9;
+}
+
+.terminal-copper-line-left {
+  left: 3px;
+}
+
+.terminal-copper-line-right {
+  right: 3px;
+}
+

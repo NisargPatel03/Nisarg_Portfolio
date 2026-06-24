@@ -15,6 +15,7 @@ import { CursorTrail } from './components/CursorTrail';
 import { soundFX } from './utils/terminalAudio';
 import { DiagnosticsHUD } from './components/DiagnosticsHUD';
 import { useRef } from 'react';
+import { CyberGrid } from './components/CyberGrid';
 import { BiometricAuthScreen } from './components/BiometricAuthScreen';
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -165,6 +166,9 @@ function App() {
           animate={{ opacity: 1 }}
           transition={{ duration: 1, ease: 'easeOut' }}
         >
+          {/* Parallax Audio-reactive Grid */}
+          <CyberGrid />
+
           {/* Easter Egg Matrix digital rain layer */}
           {isMatrixActive && <MatrixRain />}
 

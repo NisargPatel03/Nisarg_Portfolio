@@ -331,38 +331,41 @@
 }
 
 /* Theme background overrides with radial gradients and dynamic grid overlays */
-body::before {
-  content: "";
+/* Holographic Grid Backdrop with Parallax & Audio Reactive Scaling */
+.cyber-grid {
   position: fixed;
-  inset: 0;
+  top: -20vh;
+  left: -10vw;
+  right: -10vw;
+  height: 140vh;
   background-image: 
     linear-gradient(rgba(var(--accent-rgb, 0, 255, 65), 0.015) 1px, transparent 1px),
     linear-gradient(90deg, rgba(var(--accent-rgb, 0, 255, 65), 0.015) 1px, transparent 1px);
-  background-size: 40px 40px;
+  background-size: 50px 50px;
   pointer-events: none;
   z-index: 1;
   opacity: 0;
+  transform-origin: center;
   transition: opacity 0.5s ease;
 }
 
-.theme-toxic-radar body::before,
-.theme-vapor-matrix body::before,
-.theme-amber-console body::before,
-.theme-blueprint-arctic body::before {
+.theme-toxic-radar .cyber-grid,
+.theme-vapor-matrix .cyber-grid,
+.theme-amber-console .cyber-grid,
+.theme-blueprint-arctic .cyber-grid {
   opacity: 1;
 }
 
-/* Make grid lines more visible in Toxic Radar and Amber Console */
-.theme-toxic-radar body::before {
+.theme-toxic-radar .cyber-grid {
   background-image: 
-    linear-gradient(rgba(0, 255, 65, 0.032) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 255, 65, 0.032) 1px, transparent 1px);
+    linear-gradient(rgba(0, 255, 65, 0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 65, 0.028) 1px, transparent 1px);
 }
 
-.theme-amber-console body::before {
+.theme-amber-console .cyber-grid {
   background-image: 
-    linear-gradient(rgba(255, 176, 0, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 176, 0, 0.035) 1px, transparent 1px);
+    linear-gradient(rgba(255, 176, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 176, 0, 0.03) 1px, transparent 1px);
 }
 
 .theme-toxic-radar body,
