@@ -67,8 +67,46 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
   },
   {
     num: '02',
-    slug: 'bharatbudget',
+    slug: 'codegraph',
     accent: 'magenta',
+    cmd: 'deploy --project=codegraph --env=production',
+    category: 'AI Code Visualization & Intelligence',
+    title: 'CodeGraph',
+    sub: 'React · TypeScript · D3.js · Gemini AI',
+    desc: 'An AI-powered, interactive codebase visualization and intelligence platform. Parses source files from a GitHub URL or local ZIP archive to construct accurate dependency graphs, call graphs, and DB schema maps, layering AI explanations, test generation, and code smell audits directly in the browser.',
+    tags: ['React', 'TypeScript', 'D3.js', 'Gemini AI', 'Vanilla CSS'],
+    features: [
+      'Interactive 2D D3 and 3D Canvas visualizations with bioluminescent execution flows',
+      'Semantic Codebase Search and AI-driven architecture overview & test suite generation',
+      'REST API endpoint directory with interactive request tester and OpenAPI schema extractor',
+      'Codebase Eco-Climate weather visualizer and topological audio sonification engine'
+    ],
+    logs: [
+      { t: 'output', txt: '  Initializing static analysis engine...' },
+      { t: 'output', txt: '  Constructing dependency tree...' },
+      { t: 'output', txt: '  Warming up D3 force simulation layout...' },
+      { t: 'warn', txt: '  ⚠  Large codebase detected — synchronous warming' },
+      { t: 'output', txt: '  Mapping API endpoints and DB schemas...' },
+      { t: 'success', txt: '  ✔  Semantic code search index built' },
+      { t: 'success', txt: '  ✔  AppSec CVE vulnerability map online' },
+      { t: 'success', txt: '  ✔  Deployed → code-graph-theta.vercel.app' },
+    ],
+    status: 'LIVE',
+    gh: 'https://github.com/NisargPatel03/CodeGraph',
+    live: 'https://code-graph-theta.vercel.app/',
+    image: '/codegraph_mockup.png',
+    dbName: 'Local Storage / IndexedDB',
+    dbChecklist: [
+      'recent_repos_history (Recent workspaces)',
+      'in_memory_cache (Gemini response buffers)',
+      'local_storage (UI themes & settings)',
+      'workspace_memory (Code edits & updates)'
+    ]
+  },
+  {
+    num: '03',
+    slug: 'bharatbudget',
+    accent: 'green',
     cmd: 'deploy --project=bharatbudget --env=production --region=in-south1',
     category: 'Public Finance Command Center',
     title: 'BharatBudget',
@@ -104,9 +142,9 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     ]
   },
   {
-    num: '03',
+    num: '04',
     slug: 'drhv-cricket',
-    accent: 'green',
+    accent: 'magenta',
     cmd: 'deploy --project=drhv-cricket --env=production --realtime=true',
     category: 'Sports Management Platform',
     title: 'DRHV Cricket Tournament',
@@ -142,9 +180,9 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     ]
   },
   {
-    num: '04',
+    num: '05',
     slug: 'blaze-overseas',
-    accent: 'magenta',
+    accent: 'green',
     cmd: 'deploy --project=blaze-overseas-llp --env=production',
     category: 'Commercial Business Platform',
     title: 'Blaze Overseas LLP Portal',
@@ -180,9 +218,9 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     ]
   },
   {
-    num: '05',
+    num: '06',
     slug: 'ecolearn',
-    accent: 'green',
+    accent: 'magenta',
     cmd: 'deploy --project=ecolearn-portal --env=production',
     category: 'Ecology Learning Platform',
     title: 'EcoLearn Environmental Portal',
@@ -218,9 +256,9 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     ]
   },
   {
-    num: '06',
+    num: '07',
     slug: 'savaliya-scoops',
-    accent: 'magenta',
+    accent: 'green',
     cmd: 'deploy --project=savaliya-scoops-pos --env=production',
     category: 'Client Point of Sale (POS)',
     title: 'Savaliya Scoops POS System',
@@ -256,9 +294,9 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     ]
   },
   {
-    num: '07',
+    num: '08',
     slug: 'next-gen-society',
-    accent: 'green',
+    accent: 'magenta',
     cmd: 'deploy --project=next-gen-society --env=production',
     category: 'Smart Society POS Portal',
     title: 'NextGenSociety Portal',
@@ -267,7 +305,7 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     tags: ['React', 'Node.js', 'MongoDB', 'Tailwind CSS'],
     features: [
       'Stripe checkout integrations processing digital maintenance payments securely',
-      'Digital circular notice boards enabling 24/7 access to official news updates',
+      'Digital circular notice boards enabling 24/7 access to official notice updates',
       'Support desk letting residents log tickets, tracking workflow statuses',
       'Centralized community directories indexing emergency details and residents'
     ],
@@ -294,9 +332,9 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     ]
   },
   {
-    num: '08',
+    num: '09',
     slug: 'quickstay-hotel',
-    accent: 'magenta',
+    accent: 'green',
     cmd: 'deploy --project=quickstay-hotel --env=production --stack=mern',
     category: 'Client Project (MERN Full-stack)',
     title: 'QuickStay Hotel Booking',
@@ -332,9 +370,9 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     ]
   },
   {
-    num: '09',
+    num: '10',
     slug: 'car-rental',
-    accent: 'green',
+    accent: 'magenta',
     cmd: 'deploy --project=car-rental-system --env=production',
     category: 'Personal Project (MERN Full-stack)',
     title: 'Car Rental System',
@@ -370,9 +408,9 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     ]
   },
   {
-    num: '10',
+    num: '11',
     slug: 'blood-testing',
-    accent: 'magenta',
+    accent: 'green',
     cmd: 'deploy --project=blood-testing-mgmt --env=xampp --stack=php',
     category: 'Backend Dashboard System',
     title: 'Blood Testing Management',
@@ -407,9 +445,9 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     ]
   },
   {
-    num: '11',
+    num: '12',
     slug: 'sports-venue',
-    accent: 'green',
+    accent: 'magenta',
     cmd: 'deploy --project=sports-venue-booking --env=production',
     category: 'Management & Reservation Suite',
     title: 'Sports Venue Booking System',
@@ -444,9 +482,9 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
     ]
   },
   {
-    num: '12',
+    num: '13',
     slug: 'skill-swap',
-    accent: 'magenta',
+    accent: 'green',
     cmd: 'deploy --project=skill-swap --env=production --stack=mern',
     category: 'MERN Stack Web App',
     title: 'Skill Swap Platform',
@@ -479,44 +517,6 @@ export const PROJECTS_TERMINAL: TerminalProject[] = [
       'swap_sessions (Peer meetings)',
       'endorsements (Ratings matrices)',
       'sessions_history (P2P transaction logs)'
-    ]
-  },
-  {
-    num: '13',
-    slug: 'codegraph',
-    accent: 'green',
-    cmd: 'deploy --project=codegraph --env=production',
-    category: 'AI Code Visualization & Intelligence',
-    title: 'CodeGraph',
-    sub: 'React · TypeScript · D3.js · Gemini AI',
-    desc: 'An AI-powered, interactive codebase visualization and intelligence platform. Parses source files from a GitHub URL or local ZIP archive to construct accurate dependency graphs, call graphs, and DB schema maps, layering AI explanations, test generation, and code smell audits directly in the browser.',
-    tags: ['React', 'TypeScript', 'D3.js', 'Gemini AI', 'Vanilla CSS'],
-    features: [
-      'Interactive 2D D3 and 3D Canvas visualizations with bioluminescent execution flows',
-      'Semantic Codebase Search and AI-driven architecture overview & test suite generation',
-      'REST API endpoint directory with interactive request tester and OpenAPI schema extractor',
-      'Codebase Eco-Climate weather visualizer and topological audio sonification engine'
-    ],
-    logs: [
-      { t: 'output', txt: '  Initializing static analysis engine...' },
-      { t: 'output', txt: '  Constructing dependency tree...' },
-      { t: 'output', txt: '  Warming up D3 force simulation layout...' },
-      { t: 'warn', txt: '  ⚠  Large codebase detected — synchronous warming' },
-      { t: 'output', txt: '  Mapping API endpoints and DB schemas...' },
-      { t: 'success', txt: '  ✔  Semantic code search index built' },
-      { t: 'success', txt: '  ✔  AppSec CVE vulnerability map online' },
-      { t: 'success', txt: '  ✔  Deployed → code-graph-theta.vercel.app' },
-    ],
-    status: 'LIVE',
-    gh: 'https://github.com/NisargPatel03/CodeGraph',
-    live: 'https://code-graph-theta.vercel.app/',
-    image: '/codegraph_mockup.png',
-    dbName: 'Local Storage / IndexedDB',
-    dbChecklist: [
-      'recent_repos_history (Recent workspaces)',
-      'in_memory_cache (Gemini response buffers)',
-      'local_storage (UI themes & settings)',
-      'workspace_memory (Code edits & updates)'
     ]
   },
 ];
