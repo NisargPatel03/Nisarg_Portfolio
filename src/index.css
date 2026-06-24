@@ -330,5 +330,105 @@
   }
 }
 
+/* Theme background overrides with radial gradients and dynamic grid overlays */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(var(--accent-rgb, 0, 255, 65), 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--accent-rgb, 0, 255, 65), 0.015) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
 
+.theme-toxic-radar body::before,
+.theme-vapor-matrix body::before,
+.theme-amber-console body::before,
+.theme-blueprint-arctic body::before {
+  opacity: 1;
+}
 
+/* Make grid lines more visible in Toxic Radar and Amber Console */
+.theme-toxic-radar body::before {
+  background-image: 
+    linear-gradient(rgba(0, 255, 65, 0.032) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 65, 0.032) 1px, transparent 1px);
+}
+
+.theme-amber-console body::before {
+  background-image: 
+    linear-gradient(rgba(255, 176, 0, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 176, 0, 0.035) 1px, transparent 1px);
+}
+
+.theme-toxic-radar body,
+.theme-toxic-radar .bg-\[\#0C0C0C\] {
+  background-color: #030503 !important;
+  background-image: radial-gradient(circle at 50% 45%, #0b1c0b 0%, #010301 100%) !important;
+}
+
+.theme-vapor-matrix body,
+.theme-vapor-matrix .bg-\[\#0C0C0C\] {
+  background-color: #0a0410 !important;
+  background-image: radial-gradient(circle at 50% 50%, #150824 0%, #050208 100%) !important;
+}
+
+.theme-amber-console body,
+.theme-amber-console .bg-\[\#0C0C0C\] {
+  background-color: #050402 !important;
+  background-image: radial-gradient(circle at 50% 45%, #241705 0%, #030201 100%) !important;
+}
+
+.theme-blueprint-arctic body,
+.theme-blueprint-arctic .bg-\[\#0C0C0C\] {
+  background-color: #040812 !important;
+  background-image: radial-gradient(circle at 50% 50%, #081229 0%, #010206 100%) !important;
+}
+
+/* Custom glow text-shadows for high legibility */
+.theme-toxic-radar h1,
+.theme-toxic-radar h2,
+.theme-toxic-radar h3,
+.theme-toxic-radar h4,
+.theme-toxic-radar h5,
+.theme-toxic-radar h6,
+.theme-toxic-radar button,
+.theme-toxic-radar a,
+.theme-toxic-radar .font-bold {
+  text-shadow: 0 0 10px rgba(0, 255, 65, 0.5) !important;
+}
+
+.theme-amber-console h1,
+.theme-amber-console h2,
+.theme-amber-console h3,
+.theme-amber-console h4,
+.theme-amber-console h5,
+.theme-amber-console h6,
+.theme-amber-console button,
+.theme-amber-console a,
+.theme-amber-console .font-bold {
+  text-shadow: 0 0 10px rgba(255, 176, 0, 0.5) !important;
+}
+
+/* Custom Webkit scrollbar overrides mapping theme accent colors */
+.theme-toxic-radar ::-webkit-scrollbar-track { background: #030503; }
+.theme-toxic-radar ::-webkit-scrollbar-thumb { background: #00ff41 !important; border: 2px solid #030503; }
+
+.theme-vapor-matrix ::-webkit-scrollbar-track { background: #0a0410; }
+.theme-vapor-matrix ::-webkit-scrollbar-thumb { background: #ff00c7 !important; border: 2px solid #0a0410; }
+
+.theme-amber-console ::-webkit-scrollbar-track { background: #050402; }
+.theme-amber-console ::-webkit-scrollbar-thumb { background: #ffb000 !important; border: 2px solid #050402; }
+
+.theme-blueprint-arctic ::-webkit-scrollbar-track { background: #040812; }
+.theme-blueprint-arctic ::-webkit-scrollbar-thumb { background: #0088ff !important; border: 2px solid #040812; }
+
+/* Custom selection highlight matching active theme */
+::selection {
+  background-color: var(--accent-color, #00ff41);
+  color: #000000;
+}

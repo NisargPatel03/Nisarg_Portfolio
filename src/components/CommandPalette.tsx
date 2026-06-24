@@ -21,6 +21,8 @@ interface CommandPaletteProps {
   isCursorTrailActive: boolean;
   isHudActive: boolean;
   onToggleHud: () => void;
+  activeTheme: 'project' | 'toxic-radar' | 'vapor-matrix' | 'amber-console' | 'blueprint-arctic';
+  onChangeTheme: (theme: 'project' | 'toxic-radar' | 'vapor-matrix' | 'amber-console' | 'blueprint-arctic') => void;
 }
 
 export const CommandPalette: React.FC<CommandPaletteProps> = ({
@@ -34,6 +36,8 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   isCursorTrailActive,
   isHudActive,
   onToggleHud,
+  activeTheme,
+  onChangeTheme,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
@@ -87,26 +91,8 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     setIsOpen(false);
   };
 
-  const handleSetTheme = (theme: 'project' | 'classic' | 'dracula' | 'amber' | 'cyber' | 'nord') => {
-    const root = document.documentElement;
-    // Set a global CSS class for general overrides
-    root.className = theme === 'project' ? '' : `theme-${theme}`;
-
-    // Update global CSS variables
-    if (theme === 'project') {
-      root.style.removeProperty('--accent-color');
-      root.style.removeProperty('--accent-glow');
-    } else {
-      const colors = {
-        classic: '#00ff41',
-        dracula: '#ff2d78',
-        amber: '#ffb000',
-        cyber: '#f5a623',
-        nord: '#88c0d0',
-      };
-      root.style.setProperty('--accent-color', colors[theme]);
-      root.style.setProperty('--accent-glow', `rgba(${theme === 'classic' ? '0,255,65' : theme === 'dracula' ? '255,45,120' : theme === 'amber' ? '255,176,0' : theme === 'cyber' ? '245,166,35' : '136,192,208'}, 0.4)`);
-    }
+  const handleSetTheme = (theme: 'project' | 'toxic-radar' | 'vapor-matrix' | 'amber-console' | 'blueprint-arctic') => {
+    onChangeTheme(theme);
     setIsOpen(false);
   };
 
@@ -123,12 +109,11 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     { id: 'nav-contact', name: 'Navigate: Scroll to Contact Form', category: 'Navigation', shortcut: 'G M', action: () => handleScrollToSection('contact') },
 
     // --- THEMES ---
-    { id: 'theme-project', name: 'Theme: Reset to Project Defaults', category: 'Theme Configuration', shortcut: 'T D', action: () => handleSetTheme('project') },
-    { id: 'theme-classic', name: 'Theme: Apply Classic Green Accent', category: 'Theme Configuration', shortcut: 'T G', action: () => handleSetTheme('classic') },
-    { id: 'theme-dracula', name: 'Theme: Apply Dracula Pink Accent', category: 'Theme Configuration', shortcut: 'T D', action: () => handleSetTheme('dracula') },
-    { id: 'theme-amber', name: 'Theme: Apply Amber CRT Accent', category: 'Theme Configuration', shortcut: 'T A', action: () => handleSetTheme('amber') },
-    { id: 'theme-cyber', name: 'Theme: Apply Cyber Gold Accent', category: 'Theme Configuration', shortcut: 'T Y', action: () => handleSetTheme('cyber') },
-    { id: 'theme-nord', name: 'Theme: Apply Nord Blue Accent', category: 'Theme Configuration', shortcut: 'T N', action: () => handleSetTheme('nord') },
+    { id: 'theme-project', name: activeTheme === 'project' ? 'Theme: Reset to Project Defaults [ACTIVE]' : 'Theme: Reset to Project Defaults', category: 'Theme Configuration', shortcut: 'T D', action: () => handleSetTheme('project') },
+    { id: 'theme-toxic-radar', name: activeTheme === 'toxic-radar' ? 'Theme: Apply Toxic Radar Green [ACTIVE]' : 'Theme: Apply Toxic Radar Green', category: 'Theme Configuration', shortcut: 'T G', action: () => handleSetTheme('toxic-radar') },
+    { id: 'theme-vapor-matrix', name: activeTheme === 'vapor-matrix' ? 'Theme: Apply Vapor Matrix Pink [ACTIVE]' : 'Theme: Apply Vapor Matrix Pink', category: 'Theme Configuration', shortcut: 'T V', action: () => handleSetTheme('vapor-matrix') },
+    { id: 'theme-amber-console', name: activeTheme === 'amber-console' ? 'Theme: Apply Amber Console Gold [ACTIVE]' : 'Theme: Apply Amber Console Gold', category: 'Theme Configuration', shortcut: 'T A', action: () => handleSetTheme('amber-console') },
+    { id: 'theme-blueprint-arctic', name: activeTheme === 'blueprint-arctic' ? 'Theme: Apply Blueprint Arctic Blue [ACTIVE]' : 'Theme: Apply Blueprint Arctic Blue', category: 'Theme Configuration', shortcut: 'T B', action: () => handleSetTheme('blueprint-arctic') },
 
     // --- AUDIO & EASTER EGGS ---
     { 

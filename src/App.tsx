@@ -34,6 +34,41 @@ function App() {
   const [isAmbientActive, setIsAmbientActive] = useState(false);
   const [isCursorTrailActive, setIsCursorTrailActive] = useState(false);
   const [isHudActive, setIsHudActive] = useState(false);
+  const [activeTheme, setActiveTheme] = useState<'project' | 'toxic-radar' | 'vapor-matrix' | 'amber-console' | 'blueprint-arctic'>('project');
+
+  const handleSetTheme = (theme: 'project' | 'toxic-radar' | 'vapor-matrix' | 'amber-console' | 'blueprint-arctic') => {
+    const root = document.documentElement;
+    root.className = theme === 'project' ? '' : `theme-${theme}`;
+
+    if (theme === 'project') {
+      root.style.removeProperty('--accent-color');
+      root.style.removeProperty('--accent-glow');
+      root.style.removeProperty('--accent-rgb');
+    } else {
+      const colors = {
+        'toxic-radar': '#00ff41',
+        'vapor-matrix': '#ff00c7',
+        'amber-console': '#ffb000',
+        'blueprint-arctic': '#0088ff',
+      };
+      const glows = {
+        'toxic-radar': 'rgba(0, 255, 65, 0.4)',
+        'vapor-matrix': 'rgba(255, 0, 199, 0.4)',
+        'amber-console': 'rgba(255, 176, 0, 0.4)',
+        'blueprint-arctic': 'rgba(0, 136, 255, 0.4)',
+      };
+      const rgbs = {
+        'toxic-radar': '0, 255, 65',
+        'vapor-matrix': '255, 0, 199',
+        'amber-console': '255, 176, 0',
+        'blueprint-arctic': '0, 136, 255',
+      };
+      root.style.setProperty('--accent-color', colors[theme]);
+      root.style.setProperty('--accent-glow', glows[theme]);
+      root.style.setProperty('--accent-rgb', rgbs[theme]);
+    }
+    setActiveTheme(theme);
+  };
 
   const [activeSection, setActiveSection] = useState('SYS_BOOT');
 
@@ -134,6 +169,8 @@ function App() {
         onToggleCursorTrail={() => setIsCursorTrailActive((prev) => !prev)}
         isHudActive={isHudActive}
         onToggleHud={() => setIsHudActive((prev) => !prev)}
+        activeTheme={activeTheme}
+        onChangeTheme={handleSetTheme}
       />
 
       {/* 1. HERO SECTION */}
@@ -155,7 +192,10 @@ function App() {
       <ServicesSection />
 
       {/* 6. PROJECTS SECTION (Terminal CLI deploy) */}
-      <ProjectsSection />
+      <ProjectsSection
+        activeTheme={activeTheme}
+        setActiveTheme={handleSetTheme}
+      />
 
       {/* 7. CERTIFICATIONS FILTER BROWSER */}
       <CertificationsSection />

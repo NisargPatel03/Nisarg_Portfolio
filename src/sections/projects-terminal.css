@@ -125,12 +125,11 @@
   box-shadow: 0 0 4px currentColor;
 }
 
-.terminal-theme-selector .theme-dot.is-project { background: linear-gradient(135deg, #00ff41 50%, #ff2d78 50%); color: #00ff41; }
-.terminal-theme-selector .theme-dot.is-classic { background: #00ff41; color: #00ff41; }
-.terminal-theme-selector .theme-dot.is-dracula { background: #ff2d78; color: #ff2d78; }
-.terminal-theme-selector .theme-dot.is-amber { background: #ffb000; color: #ffb000; }
-.terminal-theme-selector .theme-dot.is-cyber { background: #f5a623; color: #f5a623; }
-.terminal-theme-selector .theme-dot.is-nord { background: #88c0d0; color: #88c0d0; }
+.terminal-theme-selector .theme-dot.is-project { background: linear-gradient(135deg, #00ff41 50%, #ff00c7 50%); color: #00ff41; }
+.terminal-theme-selector .theme-dot.is-toxic-radar { background: #00ff41; color: #00ff41; }
+.terminal-theme-selector .theme-dot.is-vapor-matrix { background: #ff00c7; color: #ff00c7; }
+.terminal-theme-selector .theme-dot.is-amber-console { background: #ffb000; color: #ffb000; }
+.terminal-theme-selector .theme-dot.is-blueprint-arctic { background: #0088ff; color: #0088ff; }
 
 .terminal-titlebar-text {
   color: #444;
@@ -179,7 +178,7 @@
 }
 
 .terminal-cmd-line .prompt {
-  color: #00ff41;
+  color: var(--accent, #00ff41);
   flex-shrink: 0;
 }
 
@@ -250,7 +249,7 @@
 }
 
 .terminal-log-line.log-output { color: #555; }
-.terminal-log-line.log-success { color: #00ff41; }
+.terminal-log-line.log-success { color: var(--accent, #00ff41); }
 .terminal-log-line.log-warn { color: #ffaa00; }
 .terminal-log-line.log-error { color: #ff2d78; }
 
@@ -489,7 +488,7 @@
 .terminal-cursor-line {
   margin-top: 16px;
   padding-top: 8px;
-  color: #00ff41;
+  color: var(--accent, #00ff41);
   font-size: 11px;
   display: flex;
   align-items: center;
@@ -500,7 +499,7 @@
   display: inline-block;
   width: 8px;
   height: 14px;
-  background: #00ff41;
+  background: var(--accent, #00ff41);
   animation: terminal-blink 1s step-end infinite;
 }
 
@@ -597,8 +596,8 @@
     0deg,
     transparent,
     transparent 2px,
-    rgba(0, 255, 65, 0.03) 2px,
-    rgba(0, 255, 65, 0.03) 4px
+    rgba(var(--accent-rgb, 0, 255, 65), 0.04) 2px,
+    rgba(var(--accent-rgb, 0, 255, 65), 0.04) 4px
   );
   mix-blend-mode: screen;
   z-index: 20;
@@ -620,7 +619,7 @@
 }
 
 .projects-terminal-heading span {
-  color: #00ff41;
+  color: var(--accent, #00ff41);
   text-transform: uppercase;
   font-weight: 700;
   letter-spacing: 0.2em;

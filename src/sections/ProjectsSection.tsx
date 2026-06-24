@@ -16,7 +16,12 @@ const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
 const logGap = () => sleep(60 + Math.random() * 80);
 
-export const ProjectsSection: React.FC = () => {
+interface ProjectsSectionProps {
+  activeTheme: 'project' | 'toxic-radar' | 'vapor-matrix' | 'amber-console' | 'blueprint-arctic';
+  setActiveTheme: (theme: 'project' | 'toxic-radar' | 'vapor-matrix' | 'amber-console' | 'blueprint-arctic') => void;
+}
+
+export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ activeTheme, setActiveTheme }) => {
   const sectionRef = useRef<HTMLElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
   const curRef = useRef(0);
@@ -378,6 +383,8 @@ export const ProjectsSection: React.FC = () => {
                   setSoundEnabled={setSoundEnabled}
                   isActive={isActive}
                   flickerActive={isActive && flickerActive}
+                  activeTheme={activeTheme}
+                  setActiveTheme={setActiveTheme}
                 />
               </div>
             );
@@ -410,6 +417,8 @@ interface TerminalPanelProps {
   setSoundEnabled: React.Dispatch<React.SetStateAction<boolean>>;
   isActive: boolean;
   flickerActive: boolean;
+  activeTheme: 'project' | 'toxic-radar' | 'vapor-matrix' | 'amber-console' | 'blueprint-arctic';
+  setActiveTheme: (theme: 'project' | 'toxic-radar' | 'vapor-matrix' | 'amber-console' | 'blueprint-arctic') => void;
 }
 
 const TerminalPanel: React.FC<TerminalPanelProps> = ({
@@ -434,13 +443,18 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
   setSoundEnabled,
   isActive,
   flickerActive,
+  activeTheme,
+  setActiveTheme,
 }) => {
-  const [activeTheme, setActiveTheme] = useState<'project' | 'classic' | 'dracula' | 'amber' | 'cyber' | 'nord'>('project');
   const [activeTab, setActiveTab] = useState<'overview' | 'features' | 'tech' | 'sysinfo'>('overview');
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
 
   const formatThemeName = (theme: string) => {
     if (theme === 'project') return 'Auto (Project)';
+    if (theme === 'toxic-radar') return 'Toxic Radar';
+    if (theme === 'vapor-matrix') return 'Vapor Matrix';
+    if (theme === 'amber-console') return 'Amber Console';
+    if (theme === 'blueprint-arctic') return 'Blueprint Arctic';
     return theme.charAt(0).toUpperCase() + theme.slice(1);
   };
 
@@ -451,11 +465,10 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
 
   const getThemeColor = () => {
     switch (activeTheme) {
-      case 'classic': return '#00ff41';
-      case 'dracula': return '#ff2d78';
-      case 'amber': return '#ffb000';
-      case 'cyber': return '#f5a623';
-      case 'nord': return '#88c0d0';
+      case 'toxic-radar': return '#00ff41';
+      case 'vapor-matrix': return '#ff00c7';
+      case 'amber-console': return '#ffb000';
+      case 'blueprint-arctic': return '#0088ff';
       case 'project':
       default:
         return accentColor;
@@ -491,48 +504,39 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
               />
               <button
                 type="button"
-                className={`theme-dot is-classic ${activeTheme === 'classic' ? 'is-active' : ''}`}
+                className={`theme-dot is-toxic-radar ${activeTheme === 'toxic-radar' ? 'is-active' : ''}`}
                 onClick={() => {
                   soundFX.playClick();
-                  setActiveTheme('classic');
+                  setActiveTheme('toxic-radar');
                 }}
-                title="Classic Green"
+                title="Toxic Radar Green"
               />
               <button
                 type="button"
-                className={`theme-dot is-dracula ${activeTheme === 'dracula' ? 'is-active' : ''}`}
+                className={`theme-dot is-vapor-matrix ${activeTheme === 'vapor-matrix' ? 'is-active' : ''}`}
                 onClick={() => {
                   soundFX.playClick();
-                  setActiveTheme('dracula');
+                  setActiveTheme('vapor-matrix');
                 }}
-                title="Dracula Pink"
+                title="Vapor Matrix Pink"
               />
               <button
                 type="button"
-                className={`theme-dot is-amber ${activeTheme === 'amber' ? 'is-active' : ''}`}
+                className={`theme-dot is-amber-console ${activeTheme === 'amber-console' ? 'is-active' : ''}`}
                 onClick={() => {
                   soundFX.playClick();
-                  setActiveTheme('amber');
+                  setActiveTheme('amber-console');
                 }}
-                title="Amber CRT"
+                title="Amber Console"
               />
               <button
                 type="button"
-                className={`theme-dot is-cyber ${activeTheme === 'cyber' ? 'is-active' : ''}`}
+                className={`theme-dot is-blueprint-arctic ${activeTheme === 'blueprint-arctic' ? 'is-active' : ''}`}
                 onClick={() => {
                   soundFX.playClick();
-                  setActiveTheme('cyber');
+                  setActiveTheme('blueprint-arctic');
                 }}
-                title="Cyber Gold"
-              />
-              <button
-                type="button"
-                className={`theme-dot is-nord ${activeTheme === 'nord' ? 'is-active' : ''}`}
-                onClick={() => {
-                  soundFX.playClick();
-                  setActiveTheme('nord');
-                }}
-                title="Nord Blue"
+                title="Blueprint Arctic Blue"
               />
             </div>
 
