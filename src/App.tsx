@@ -15,6 +15,8 @@ import { CursorTrail } from './components/CursorTrail';
 import { soundFX } from './utils/terminalAudio';
 import { DiagnosticsHUD } from './components/DiagnosticsHUD';
 import { useRef } from 'react';
+import { BiometricAuthScreen } from './components/BiometricAuthScreen';
+import { AnimatePresence } from 'framer-motion';
 
 const SECTIONS = [
   { id: 'hero', label: 'SYS_BOOT' },
@@ -34,6 +36,7 @@ function App() {
   const [isAmbientActive, setIsAmbientActive] = useState(false);
   const [isCursorTrailActive, setIsCursorTrailActive] = useState(false);
   const [isHudActive, setIsHudActive] = useState(false);
+  const [showAuthScreen, setShowAuthScreen] = useState(true);
   const [activeTheme, setActiveTheme] = useState<'project' | 'toxic-radar' | 'vapor-matrix' | 'amber-console' | 'blueprint-arctic'>('project');
 
   const handleSetTheme = (theme: 'project' | 'toxic-radar' | 'vapor-matrix' | 'amber-console' | 'blueprint-arctic') => {
@@ -141,6 +144,21 @@ function App() {
 
   return (
     <div className="w-full min-h-screen bg-[#0C0C0C] text-[#D7E2EA] overflow-x-clip select-none relative">
+      {/* Onboarding Biometric Auth Scan Screen */}
+      <AnimatePresence>
+        {showAuthScreen && (
+          <BiometricAuthScreen
+            onBypass={() => setShowAuthScreen(false)}
+            onUnlock={() => {
+              setIsMatrixActive(true);
+              setIsHudActive(true);
+              setIsSoundActive(true);
+              setShowAuthScreen(false);
+            }}
+          />
+        )}
+      </AnimatePresence>
+
       {/* Easter Egg Matrix digital rain layer */}
       {isMatrixActive && <MatrixRain />}
 
