@@ -1,7 +1,7 @@
 class TerminalSoundFX {
   private ctx: AudioContext | null = null;
   private analyser: AnalyserNode | null = null;
-  public enabled = false;
+  public enabled = true;
   public isAmbientPlaying = false;
   private ambientGain: GainNode | null = null;
   private ambientNodes: AudioNode[] = [];
@@ -97,6 +97,81 @@ class TerminalSoundFX {
       osc.stop(now + 0.3);
     } catch (e) {
       console.warn('Error playing success chime:', e);
+    }
+  }
+
+  private alarmInterval: any = null;
+
+  public playError() {
+    this.init();
+    if (!this.ctx) return;
+
+    try {
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(120, now);
+      osc.frequency.setValueAtTime(80, now + 0.08);
+
+      gain.gain.setValueAtTime(0.15, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.25);
+
+      osc.connect(gain);
+      gain.connect(this.analyser || this.ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.25);
+    } catch (e) {
+      console.warn('Error playing error chime:', e);
+    }
+  }
+
+  public playLockdownAlarm() {
+    this.init();
+    if (!this.ctx) return;
+
+    this.stopLockdownAlarm(); // Clear any existing alarm
+
+    let count = 0;
+    const triggerSiren = () => {
+      if (!this.ctx || count >= 30) {
+        this.stopLockdownAlarm();
+        return;
+      }
+      try {
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(450, now);
+        osc.frequency.linearRampToValueAtTime(750, now + 0.38);
+        osc.frequency.linearRampToValueAtTime(450, now + 0.75);
+
+        gain.gain.setValueAtTime(0.07, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.8);
+
+        osc.connect(gain);
+        gain.connect(this.analyser || this.ctx.destination);
+
+        osc.start(now);
+        osc.stop(now + 0.8);
+        count++;
+      } catch (e) {
+        console.warn('Error playing siren cycle:', e);
+      }
+    };
+
+    triggerSiren();
+    this.alarmInterval = setInterval(triggerSiren, 1000);
+  }
+
+  public stopLockdownAlarm() {
+    if (this.alarmInterval) {
+      clearInterval(this.alarmInterval);
+      this.alarmInterval = null;
     }
   }
 
