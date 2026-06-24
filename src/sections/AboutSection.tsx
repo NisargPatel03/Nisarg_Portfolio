@@ -3,6 +3,7 @@ import { FadeIn } from '../components/FadeIn';
 import { AnimatedText } from '../components/AnimatedText';
 import { ContactButton } from '../components/ContactButton';
 import { Award, Code, BookOpen, Star } from 'lucide-react';
+import { TiltCard } from '../components/TiltCard';
 
 export const AboutSection: React.FC = () => {
   return (
@@ -80,37 +81,37 @@ export const AboutSection: React.FC = () => {
 
         {/* Nisarg's Professional Details Cards Grid */}
         <FadeIn crtFlicker={true} delay={0.4} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl w-full mt-6">
-          <div className="bg-[#121212] border border-[#232323] rounded-3xl p-5 hover:border-[#B600A8]/45 transition-colors flex flex-col gap-3 crt-glitch-hover">
+          <TiltCard className="bg-[#121212] border border-[#232323] rounded-3xl p-5 hover:border-[#B600A8]/45 transition-colors flex flex-col gap-3 crt-glitch-hover">
             <BookOpen className="w-8 h-8 text-[#B600A8]" />
             <h3 className="text-white font-bold text-lg uppercase tracking-wider">Education</h3>
             <p className="text-[#D7E2EA]/70 text-sm font-light leading-snug">
               B.Tech in Computer Science & Engineering (3rd Year) at CHARUSAT University (2023 - 2027)
             </p>
-          </div>
+          </TiltCard>
 
-          <div className="bg-[#121212] border border-[#232323] rounded-3xl p-5 hover:border-[#7621B0]/45 transition-colors flex flex-col gap-3 crt-glitch-hover">
+          <TiltCard className="bg-[#121212] border border-[#232323] rounded-3xl p-5 hover:border-[#7621B0]/45 transition-colors flex flex-col gap-3 crt-glitch-hover">
             <Award className="w-8 h-8 text-[#7621B0]" />
             <h3 className="text-white font-bold text-lg uppercase tracking-wider">Awards</h3>
             <p className="text-[#D7E2EA]/70 text-sm font-light leading-snug">
               Devang Mehta IT Award Winner & NPTEL National Topper (Top 1-2% in DSA, DBMS, DAA)
             </p>
-          </div>
+          </TiltCard>
 
-          <div className="bg-[#121212] border border-[#232323] rounded-3xl p-5 hover:border-[#BE4C00]/45 transition-colors flex flex-col gap-3 crt-glitch-hover">
+          <TiltCard className="bg-[#121212] border border-[#232323] rounded-3xl p-5 hover:border-[#BE4C00]/45 transition-colors flex flex-col gap-3 crt-glitch-hover">
             <Code className="w-8 h-8 text-[#BE4C00]" />
             <h3 className="text-white font-bold text-lg uppercase tracking-wider">Coding</h3>
             <p className="text-[#D7E2EA]/70 text-sm font-light leading-snug">
               Solved 196+ LeetCode problems. Specialized in C++, Java, JavaScript, Python, and SQL systems.
             </p>
-          </div>
+          </TiltCard>
 
-          <div className="bg-[#121212] border border-[#232323] rounded-3xl p-5 hover:border-[#B600A8]/45 transition-colors flex flex-col gap-3 crt-glitch-hover">
+          <TiltCard className="bg-[#121212] border border-[#232323] rounded-3xl p-5 hover:border-[#B600A8]/45 transition-colors flex flex-col gap-3 crt-glitch-hover">
             <Star className="w-8 h-8 text-[#B600A8]" />
             <h3 className="text-white font-bold text-lg uppercase tracking-wider">HackerRank</h3>
             <p className="text-[#D7E2EA]/70 text-sm font-light leading-snug">
               5-Star programmer in C++ and Java. Extensive background in problem-solving & data algorithms.
             </p>
-          </div>
+          </TiltCard>
         </FadeIn>
       </div>
 

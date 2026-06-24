@@ -1,6 +1,7 @@
 import React from 'react';
 import { FadeIn } from '../components/FadeIn';
 import { ExternalLink, Code2, Layers } from 'lucide-react';
+import { TiltCard } from '../components/TiltCard';
 
 interface ExtraProject {
   title: string;
@@ -96,69 +97,70 @@ export const ExtraProjects: React.FC = () => {
               key={proj.title}
               crtFlicker={true}
               delay={i * 0.05}
-              className="bg-[#121212] border border-[#232323] hover:border-[#7621B0]/45 rounded-3xl p-6 flex flex-col justify-between gap-6 transition-all duration-300 group hover:shadow-[0_10px_30px_rgba(118,33,176,0.1)] relative crt-glitch-hover"
             >
-              {/* Header and description */}
-              <div className="flex flex-col gap-3">
-                <div className="flex justify-between items-start gap-4">
-                  <span className="font-mono text-[#D7E2EA]/50 uppercase tracking-wider text-[10px] sm:text-xs">
-                    {proj.category}
-                  </span>
-                  <Code2 className="w-5 h-5 text-[#D7E2EA]/30 group-hover:text-[#7621B0] transition-colors" />
-                </div>
-                
-                <h4 className="text-white font-bold text-lg uppercase tracking-wide group-hover:text-blue-400 transition-colors">
-                  {proj.title}
-                </h4>
-                
-                <p className="text-[#D7E2EA]/70 text-xs sm:text-sm font-light leading-relaxed">
-                  {proj.description}
-                </p>
-              </div>
-
-              {/* Technologies and Action Links */}
-              <div className="flex flex-col gap-4 mt-auto">
-                {/* Tech chips list */}
-                <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                  {proj.techs.map((tech) => (
-                    <span
-                      key={tech}
-                      className="bg-[#1c1c1c] text-[#D7E2EA]/85 text-[10px] sm:text-xs font-medium uppercase tracking-wider px-2.5 py-1 rounded-full border border-white/5"
-                    >
-                      {tech}
+              <TiltCard className="bg-[#121212] border border-[#232323] hover:border-[#7621B0]/45 rounded-3xl p-6 flex flex-col justify-between gap-6 transition-all duration-300 group hover:shadow-[0_10px_30px_rgba(118,33,176,0.1)] relative crt-glitch-hover h-full">
+                {/* Header and description */}
+                <div className="flex flex-col gap-3">
+                  <div className="flex justify-between items-start gap-4">
+                    <span className="font-mono text-[#D7E2EA]/50 uppercase tracking-wider text-[10px] sm:text-xs">
+                      {proj.category}
                     </span>
-                  ))}
+                    <Code2 className="w-5 h-5 text-[#D7E2EA]/30 group-hover:text-[#7621B0] transition-colors" />
+                  </div>
+                  
+                  <h4 className="text-white font-bold text-lg uppercase tracking-wide group-hover:text-blue-400 transition-colors">
+                    {proj.title}
+                  </h4>
+                  
+                  <p className="text-[#D7E2EA]/70 text-xs sm:text-sm font-light leading-relaxed">
+                    {proj.description}
+                  </p>
                 </div>
 
-                {/* Footer action icons */}
-                <div className="flex items-center gap-3 pt-2 border-t border-white/5">
-                  {/* GitHub Repo */}
-                  <a
-                    href={proj.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-[#D7E2EA]/60 hover:text-white transition-colors"
-                  >
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
-                    </svg>
-                    <span>Codebase</span>
-                  </a>
+                {/* Technologies and Action Links */}
+                <div className="flex flex-col gap-4 mt-auto">
+                  {/* Tech chips list */}
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                    {proj.techs.map((tech) => (
+                      <span
+                        key={tech}
+                        className="bg-[#1c1c1c] text-[#D7E2EA]/85 text-[10px] sm:text-xs font-medium uppercase tracking-wider px-2.5 py-1 rounded-full border border-white/5"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
 
-                  {/* Vercel App */}
-                  {proj.vercel && (
+                  {/* Footer action icons */}
+                  <div className="flex items-center gap-3 pt-2 border-t border-white/5">
+                    {/* GitHub Repo */}
                     <a
-                      href={proj.vercel}
+                      href={proj.github}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-[#D7E2EA]/60 hover:text-white transition-colors ml-auto"
+                      className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-[#D7E2EA]/60 hover:text-white transition-colors"
                     >
-                      <span>App Live</span>
-                      <ExternalLink className="w-3.5 h-3.5" />
+                      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+                      </svg>
+                      <span>Codebase</span>
                     </a>
-                  )}
+
+                    {/* Vercel App */}
+                    {proj.vercel && (
+                      <a
+                        href={proj.vercel}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-[#D7E2EA]/60 hover:text-white transition-colors ml-auto"
+                      >
+                        <span>App Live</span>
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    )}
+                  </div>
                 </div>
-              </div>
+              </TiltCard>
             </FadeIn>
           ))}
         </div>
