@@ -432,3 +432,59 @@ body::before {
   background-color: var(--accent-color, #00ff41);
   color: #000000;
 }
+
+/* Custom Typography Utilities */
+.font-glow {
+  text-shadow: 
+    0 0 2px var(--accent-color, #00ff41), 
+    0 0 8px var(--accent-glow, rgba(0, 255, 65, 0.4)) !important;
+}
+
+.font-interlaced {
+  background: linear-gradient(
+    to bottom,
+    currentColor,
+    currentColor 3px,
+    transparent 3px,
+    transparent 4px
+  );
+  background-size: 100% 4px;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: none !important;
+}
+
+/* Global Font Overrides */
+.font-share-mono,
+code, pre, kbd, samp, .font-mono, .terminal-window, input, textarea {
+  font-family: 'Share Tech Mono', 'JetBrains Mono', ui-monospace, monospace !important;
+}
+
+h1, h2, h3, h4, h5, h6, button, nav a, .nav-link, .card-title {
+  font-family: 'Orbitron', 'Kanit', sans-serif !important;
+  letter-spacing: 0.05em;
+}
+
+.font-orbitron {
+  font-family: 'Orbitron', 'Kanit', sans-serif !important;
+  letter-spacing: 0.08em;
+}
+
+/* Uniform retro interlacing scanner effect for all main section titles */
+.hero-heading {
+  font-family: 'Orbitron', 'Kanit', sans-serif !important;
+  font-weight: 900 !important;
+  background: linear-gradient(
+    to bottom,
+    currentColor,
+    currentColor 3px,
+    transparent 3px,
+    transparent 4px
+  ) !important;
+  background-size: 100% 4px !important;
+  background-clip: text !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  text-shadow: none !important;
+}

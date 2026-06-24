@@ -122,10 +122,10 @@ export const BiometricAuthScreen: React.FC<BiometricAuthScreenProps> = ({
       {/* Background Matrix Rain Simulation when Authorized */}
       {isExploding && (
         <div className="absolute inset-0 bg-[#000]/90 z-20 flex flex-col justify-center items-center text-center">
-          <div className="text-[#00ff41] text-3xl md:text-5xl font-extrabold tracking-widest mb-4 animate-pulse uppercase">
+          <div className="text-[#00ff41] text-3xl md:text-5xl font-extrabold tracking-widest mb-4 animate-pulse uppercase font-orbitron font-interlaced">
             ⚡ Auth Verified ⚡
           </div>
-          <div className="text-xs md:text-sm text-[#00ff41]/60 max-w-md px-4 leading-relaxed uppercase">
+          <div className="text-xs md:text-sm text-[#00ff41]/60 max-w-md px-4 leading-relaxed uppercase font-share-mono">
             System override engaged. Unlocking hidden telemetry streams and diagnostic HUD overlays...
           </div>
           <div className="absolute inset-0 pointer-events-none opacity-20 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-emerald-500/20 via-black to-black" />
@@ -135,12 +135,12 @@ export const BiometricAuthScreen: React.FC<BiometricAuthScreenProps> = ({
       {/* Frame Container */}
       <div className="w-full max-w-xl border border-[#00ff41]/20 rounded-2xl p-6 bg-black/60 backdrop-blur-md relative flex flex-col gap-6 shadow-[0_0_40px_rgba(0,255,65,0.08)]">
         {/* Terminal Header */}
-        <div className="flex items-center justify-between border-b border-[#00ff41]/20 pb-3 text-[10px] tracking-wider text-[#00ff41]/60">
+        <div className="flex items-center justify-between border-b border-[#00ff41]/20 pb-3 text-[10px] tracking-wider text-[#00ff41]/60 font-orbitron">
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-red-500/80 animate-pulse" />
-            <span>GATEWAY_SECURE_AUTH</span>
+            <span className="font-glow">GATEWAY_SECURE_AUTH</span>
           </div>
-          <span>ACCESS_LEVEL: RESTRICTED</span>
+          <span className="font-glow">ACCESS_LEVEL: RESTRICTED</span>
         </div>
 
         {/* Biometric SVG Scanner */}

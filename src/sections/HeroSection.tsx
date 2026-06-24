@@ -188,7 +188,7 @@ export const HeroSection: React.FC = () => {
                 key={item.id}
                 type="button"
                 onClick={() => handleNavClick(item.id)}
-                className="text-[#D7E2EA] font-medium uppercase tracking-wider text-xs sm:text-sm md:text-base lg:text-[1.1rem] hover:opacity-70 transition-opacity duration-200"
+                className="text-[#D7E2EA] font-medium uppercase tracking-wider text-xs sm:text-sm md:text-base lg:text-[1.1rem] hover:opacity-70 transition-opacity duration-200 font-orbitron font-glow"
               >
                 {item.label}
               </button>
@@ -229,7 +229,7 @@ export const HeroSection: React.FC = () => {
                   setIsOpen(false);
                   handleNavClick(item.id);
                 }}
-                className="text-white font-extrabold uppercase tracking-widest text-lg sm:text-xl hover:text-[#B600A8] transition-colors"
+                className="text-white font-extrabold uppercase tracking-widest text-lg sm:text-xl hover:text-[#B600A8] transition-colors font-orbitron"
               >
                 {item.label}
               </motion.button>
@@ -267,7 +267,7 @@ export const HeroSection: React.FC = () => {
         <div className="overflow-hidden w-full text-center mt-6 sm:mt-4 md:-mt-5">
           <FadeIn y={40} delay={0.15} duration={0.8}>
             <h1 
-              className={`hero-heading font-black uppercase tracking-tighter leading-none whitespace-nowrap w-full ${isGlitched ? 'glitch-text' : ''}`}
+              className={`hero-heading font-black uppercase tracking-tighter leading-none whitespace-nowrap w-full font-orbitron font-interlaced ${isGlitched ? 'glitch-text' : ''}`}
               style={{ fontSize: 'clamp(1.8rem, 10vw, 165px)' }}
             >
               Hi, i&apos;m nisarg
