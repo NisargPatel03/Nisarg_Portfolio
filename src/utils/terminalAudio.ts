@@ -1,5 +1,6 @@
 class TerminalSoundFX {
   private ctx: AudioContext | null = null;
+  private analyser: AnalyserNode | null = null;
   public enabled = false;
   public isAmbientPlaying = false;
   private ambientGain: GainNode | null = null;
@@ -18,6 +19,31 @@ class TerminalSoundFX {
     }
     if (this.ctx && this.ctx.state === 'suspended') {
       this.ctx.resume();
+    }
+    if (this.ctx && !this.analyser) {
+      try {
+        this.analyser = this.ctx.createAnalyser();
+        this.analyser.fftSize = 256; // Responsive time-domain resolution
+        this.analyser.connect(this.ctx.destination);
+      } catch (e) {
+        console.warn('Failed to create AnalyserNode:', e);
+      }
+    }
+  }
+
+  public getAudioContext(): AudioContext | null {
+    this.init();
+    return this.ctx;
+  }
+
+  public getAnalyser(): AnalyserNode | null {
+    this.init();
+    return this.analyser;
+  }
+
+  public getAnalyserData(array: Uint8Array) {
+    if (this.analyser) {
+      this.analyser.getByteTimeDomainData(array as any);
     }
   }
 
@@ -40,7 +66,7 @@ class TerminalSoundFX {
       gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
 
       osc.connect(gain);
-      gain.connect(this.ctx.destination);
+      gain.connect(this.analyser || this.ctx.destination);
 
       osc.start(now);
       osc.stop(now + 0.05);
@@ -59,7 +85,7 @@ class TerminalSoundFX {
       const gain = this.ctx.createGain();
       gain.gain.setValueAtTime(0.12, now);
       gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.3);
-      gain.connect(this.ctx.destination);
+      gain.connect(this.analyser || this.ctx.destination);
 
       const osc = this.ctx.createOscillator();
       osc.type = 'sine';
@@ -104,7 +130,7 @@ class TerminalSoundFX {
       const masterGain = this.ctx.createGain();
       masterGain.gain.setValueAtTime(0, now);
       masterGain.gain.linearRampToValueAtTime(0.12, now + 1.5); // Smooth 1.5s fade-in
-      masterGain.connect(this.ctx.destination);
+      masterGain.connect(this.analyser || this.ctx.destination);
       this.ambientGain = masterGain;
 
       // Create Low-pass Filter for warm cybernetic tone

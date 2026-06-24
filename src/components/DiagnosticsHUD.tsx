@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { soundFX } from '../utils/terminalAudio';
 
 interface DiagnosticsHUDProps {
   enabled: boolean;
@@ -97,6 +98,8 @@ export const DiagnosticsHUD: React.FC<DiagnosticsHUDProps> = ({
 
     let animationId: number;
     let phase = 0;
+    const bufferLength = 128;
+    const dataArray = new Uint8Array(bufferLength);
 
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -123,6 +126,19 @@ export const DiagnosticsHUD: React.FC<DiagnosticsHUDProps> = ({
       ctx.lineTo(canvas.width, canvas.height / 2);
       ctx.stroke();
 
+      // Check if real audio is active
+      let isAudioActive = false;
+      if (isSoundActive || isAmbientActive) {
+        soundFX.getAnalyserData(dataArray);
+        let totalDeviation = 0;
+        for (let i = 0; i < bufferLength; i++) {
+          totalDeviation += Math.abs(dataArray[i] - 128);
+        }
+        if (totalDeviation > 1.5) {
+          isAudioActive = true;
+        }
+      }
+
       // Draw glowing oscilloscope wave
       ctx.beginPath();
       const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim() || '#00ff41';
@@ -132,15 +148,29 @@ export const DiagnosticsHUD: React.FC<DiagnosticsHUDProps> = ({
       ctx.shadowColor = accentColor;
 
       for (let x = 0; x < canvas.width; x++) {
-        // Multi-frequency sine superposition
-        const y = canvas.height / 2 + 
-          Math.sin(x * frequency + phase) * amplitude + 
-          Math.sin(x * frequency * 2.1 - phase * 1.3) * (amplitude * 0.25);
-        
-        if (x === 0) {
-          ctx.moveTo(x, y);
+        if (isAudioActive) {
+          // Map x coordinate to indices in dataArray
+          const dataIndex = Math.floor((x / canvas.width) * bufferLength);
+          const normalizedVal = (dataArray[dataIndex] - 128) / 128.0; // range -1.0 to 1.0
+          // Center baseline, apply 1.35x visual gain amplification for responsiveness
+          const y = canvas.height / 2 + normalizedVal * (canvas.height / 2) * 1.35;
+          
+          if (x === 0) {
+            ctx.moveTo(x, y);
+          } else {
+            ctx.lineTo(x, y);
+          }
         } else {
-          ctx.lineTo(x, y);
+          // Fallback simulated sine wave superpositions (idle/scroll dynamics)
+          const y = canvas.height / 2 + 
+            Math.sin(x * frequency + phase) * amplitude + 
+            Math.sin(x * frequency * 2.1 - phase * 1.3) * (amplitude * 0.25);
+          
+          if (x === 0) {
+            ctx.moveTo(x, y);
+          } else {
+            ctx.lineTo(x, y);
+          }
         }
       }
       ctx.stroke();

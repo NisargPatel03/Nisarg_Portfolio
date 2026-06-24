@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { soundFX } from '../utils/terminalAudio';
 
 interface TechNode {
   id: string;
@@ -53,126 +54,142 @@ interface SimulationFlow {
 }
 
 class WebAudioSynth {
-  private ctx: AudioContext | null = null;
-  private humOsc: OscillatorNode | null = null;
-  private humGain: GainNode | null = null;
+  private get ctx(): AudioContext | null {
+    return soundFX.getAudioContext();
+  }
 
-  private init() {
-    if (this.ctx) return;
-    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
-    if (!AudioContextClass) return;
-    this.ctx = new AudioContextClass();
+  private get analyser(): AnalyserNode | null {
+    return soundFX.getAnalyser();
   }
 
   public playSparkSweep(duration = 0.5) {
-    this.init();
-    if (!this.ctx) return;
+    const context = this.ctx;
+    if (!context) return;
     
-    if (this.ctx.state === 'suspended') {
-      this.ctx.resume();
+    if (context.state === 'suspended') {
+      context.resume();
     }
 
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
-    
-    osc.connect(gain);
-    gain.connect(this.ctx.destination);
-    
-    osc.type = 'sine';
-    
-    const now = this.ctx.currentTime;
-    osc.frequency.setValueAtTime(300, now);
-    osc.frequency.exponentialRampToValueAtTime(1200, now + duration);
-    
-    gain.gain.setValueAtTime(0.08, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
-    
-    osc.start(now);
-    osc.stop(now + duration);
+    try {
+      const osc = context.createOscillator();
+      const gain = context.createGain();
+      
+      osc.connect(gain);
+      gain.connect(this.analyser || context.destination);
+      
+      osc.type = 'sine';
+      
+      const now = context.currentTime;
+      osc.frequency.setValueAtTime(300, now);
+      osc.frequency.exponentialRampToValueAtTime(1200, now + duration);
+      
+      gain.gain.setValueAtTime(0.08, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+      
+      osc.start(now);
+      osc.stop(now + duration);
+    } catch (e) {
+      console.warn('Error in playSparkSweep:', e);
+    }
   }
 
   public playDetonationBurst() {
-    this.init();
-    if (!this.ctx) return;
-    if (this.ctx.state === 'suspended') {
-      this.ctx.resume();
+    const context = this.ctx;
+    if (!context) return;
+    if (context.state === 'suspended') {
+      context.resume();
     }
 
-    const now = this.ctx.currentTime;
-    const duration = 0.4;
-    
-    const bufferSize = this.ctx.sampleRate * duration;
-    const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
-    const data = buffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) {
-      data[i] = Math.random() * 2 - 1;
+    try {
+      const now = context.currentTime;
+      const duration = 0.4;
+      
+      const bufferSize = context.sampleRate * duration;
+      const buffer = context.createBuffer(1, bufferSize, context.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1;
+      }
+
+      const noise = context.createBufferSource();
+      noise.buffer = buffer;
+
+      const filter = context.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(800, now);
+      filter.frequency.exponentialRampToValueAtTime(50, now + duration);
+
+      const gain = context.createGain();
+      gain.gain.setValueAtTime(0.12, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(this.analyser || context.destination);
+
+      noise.start(now);
+      noise.stop(now + duration);
+      
+      const osc = context.createOscillator();
+      const oscGain = context.createGain();
+      osc.connect(oscGain);
+      oscGain.connect(this.analyser || context.destination);
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(90, now);
+      osc.frequency.linearRampToValueAtTime(20, now + 0.2);
+      
+      oscGain.gain.setValueAtTime(0.1, now);
+      oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+      osc.start(now);
+      osc.stop(now + 0.25);
+    } catch (e) {
+      console.warn('Error in playDetonationBurst:', e);
     }
-
-    const noise = this.ctx.createBufferSource();
-    noise.buffer = buffer;
-
-    const filter = this.ctx.createBiquadFilter();
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(800, now);
-    filter.frequency.exponentialRampToValueAtTime(50, now + duration);
-
-    const gain = this.ctx.createGain();
-    gain.gain.setValueAtTime(0.12, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
-
-    noise.connect(filter);
-    filter.connect(gain);
-    gain.connect(this.ctx.destination);
-
-    noise.start(now);
-    noise.stop(now + duration);
-    
-    const osc = this.ctx.createOscillator();
-    const oscGain = this.ctx.createGain();
-    osc.connect(oscGain);
-    oscGain.connect(this.ctx.destination);
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(90, now);
-    osc.frequency.linearRampToValueAtTime(20, now + 0.2);
-    
-    oscGain.gain.setValueAtTime(0.1, now);
-    oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
-    osc.start(now);
-    osc.stop(now + 0.25);
   }
 
+  private humOsc: OscillatorNode | null = null;
+  private humGain: GainNode | null = null;
+
   public startHoverHum() {
-    this.init();
-    if (!this.ctx) return;
-    if (this.ctx.state === 'suspended') {
-      this.ctx.resume();
+    const context = this.ctx;
+    if (!context) return;
+    if (context.state === 'suspended') {
+      context.resume();
     }
     if (this.humOsc) return;
 
-    const now = this.ctx.currentTime;
-    this.humOsc = this.ctx.createOscillator();
-    this.humGain = this.ctx.createGain();
+    try {
+      const now = context.currentTime;
+      this.humOsc = context.createOscillator();
+      this.humGain = context.createGain();
 
-    this.humOsc.connect(this.humGain);
-    this.humGain.connect(this.ctx.destination);
+      this.humOsc.connect(this.humGain);
+      this.humGain.connect(this.analyser || context.destination);
 
-    this.humOsc.type = 'triangle';
-    this.humOsc.frequency.setValueAtTime(55, now);
+      this.humOsc.type = 'triangle';
+      this.humOsc.frequency.setValueAtTime(55, now);
 
-    this.humGain.gain.setValueAtTime(0, now);
-    this.humGain.gain.linearRampToValueAtTime(0.04, now + 0.1);
+      this.humGain.gain.setValueAtTime(0, now);
+      this.humGain.gain.linearRampToValueAtTime(0.04, now + 0.1);
 
-    this.humOsc.start(now);
+      this.humOsc.start(now);
+    } catch (e) {
+      console.warn('Error in startHoverHum:', e);
+    }
   }
 
   public updateHoverHumPitch(frequency: number) {
-    if (!this.ctx || !this.humOsc) return;
-    this.humOsc.frequency.setTargetAtTime(frequency, this.ctx.currentTime, 0.05);
+    const context = this.ctx;
+    if (!context || !this.humOsc) return;
+    try {
+      this.humOsc.frequency.setTargetAtTime(frequency, context.currentTime, 0.05);
+    } catch (e) {}
   }
 
   public stopHoverHum() {
-    if (!this.ctx || !this.humOsc || !this.humGain) return;
-    const now = this.ctx.currentTime;
+    const context = this.ctx;
+    if (!context || !this.humOsc || !this.humGain) return;
+    const now = context.currentTime;
     try {
       this.humGain.gain.cancelScheduledValues(now);
       this.humGain.gain.setValueAtTime(this.humGain.gain.value, now);
