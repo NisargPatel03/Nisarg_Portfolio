@@ -105,6 +105,13 @@ export const BiometricAuthScreen: React.FC<BiometricAuthScreenProps> = ({
     onBypass();
   };
 
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, []);
+
   return (
     <motion.div
       initial={{ opacity: 1 }}

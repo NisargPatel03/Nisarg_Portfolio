@@ -16,7 +16,7 @@ import { soundFX } from './utils/terminalAudio';
 import { DiagnosticsHUD } from './components/DiagnosticsHUD';
 import { useRef } from 'react';
 import { BiometricAuthScreen } from './components/BiometricAuthScreen';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const SECTIONS = [
   { id: 'hero', label: 'SYS_BOOT' },
@@ -159,67 +159,75 @@ function App() {
         )}
       </AnimatePresence>
 
-      {/* Easter Egg Matrix digital rain layer */}
-      {isMatrixActive && <MatrixRain />}
+      {!showAuthScreen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, ease: 'easeOut' }}
+        >
+          {/* Easter Egg Matrix digital rain layer */}
+          {isMatrixActive && <MatrixRain />}
 
-      {/* Cybernetic pointer coordinate trail */}
-      <CursorTrail enabled={isCursorTrailActive} />
+          {/* Cybernetic pointer coordinate trail */}
+          <CursorTrail enabled={isCursorTrailActive} />
 
-      {/* Real-time Diagnostics HUD sidebar */}
-      <DiagnosticsHUD 
-        enabled={isHudActive}
-        isSoundActive={isSoundActive}
-        isAmbientActive={isAmbientActive}
-        isCursorTrailActive={isCursorTrailActive}
-        isMatrixActive={isMatrixActive}
-        activeSection={activeSection}
-      />
+          {/* Real-time Diagnostics HUD sidebar */}
+          <DiagnosticsHUD 
+            enabled={isHudActive}
+            isSoundActive={isSoundActive}
+            isAmbientActive={isAmbientActive}
+            isCursorTrailActive={isCursorTrailActive}
+            isMatrixActive={isMatrixActive}
+            activeSection={activeSection}
+          />
 
-      {/* Global command search shell */}
-      <CommandPalette
-        isMatrixActive={isMatrixActive}
-        onToggleMatrix={() => setIsMatrixActive((prev) => !prev)}
-        isSoundActive={isSoundActive}
-        onToggleSound={() => setIsSoundActive((prev) => !prev)}
-        isAmbientActive={isAmbientActive}
-        onToggleAmbient={() => setIsAmbientActive((prev) => !prev)}
-        isCursorTrailActive={isCursorTrailActive}
-        onToggleCursorTrail={() => setIsCursorTrailActive((prev) => !prev)}
-        isHudActive={isHudActive}
-        onToggleHud={() => setIsHudActive((prev) => !prev)}
-        activeTheme={activeTheme}
-        onChangeTheme={handleSetTheme}
-      />
+          {/* Global command search shell */}
+          <CommandPalette
+            isMatrixActive={isMatrixActive}
+            onToggleMatrix={() => setIsMatrixActive((prev) => !prev)}
+            isSoundActive={isSoundActive}
+            onToggleSound={() => setIsSoundActive((prev) => !prev)}
+            isAmbientActive={isAmbientActive}
+            onToggleAmbient={() => setIsAmbientActive((prev) => !prev)}
+            isCursorTrailActive={isCursorTrailActive}
+            onToggleCursorTrail={() => setIsCursorTrailActive((prev) => !prev)}
+            isHudActive={isHudActive}
+            onToggleHud={() => setIsHudActive((prev) => !prev)}
+            activeTheme={activeTheme}
+            onChangeTheme={handleSetTheme}
+          />
 
-      {/* 1. HERO SECTION */}
-      <HeroSection />
+          {/* 1. HERO SECTION */}
+          <HeroSection />
 
-      {/* 2. MARQUEE SECTION */}
-      <MarqueeSection />
+          {/* 2. MARQUEE SECTION */}
+          <MarqueeSection />
 
-      {/* 2b. SYSTEM ARCHITECTURE BLUEPRINT SECTION */}
-      <ArchitectureSection />
+          {/* 2b. SYSTEM ARCHITECTURE BLUEPRINT SECTION */}
+          <ArchitectureSection />
 
-      {/* 3. ABOUT SECTION */}
-      <AboutSection />
+          {/* 3. ABOUT SECTION */}
+          <AboutSection />
 
-      {/* 4. WORK EXPERIENCE TIMELINE */}
-      <WorkExperience />
+          {/* 4. WORK EXPERIENCE TIMELINE */}
+          <WorkExperience />
 
-      {/* 5. SERVICES SECTION */}
-      <ServicesSection />
+          {/* 5. SERVICES SECTION */}
+          <ServicesSection />
 
-      {/* 6. PROJECTS SECTION (Terminal CLI deploy) */}
-      <ProjectsSection
-        activeTheme={activeTheme}
-        setActiveTheme={handleSetTheme}
-      />
+          {/* 6. PROJECTS SECTION (Terminal CLI deploy) */}
+          <ProjectsSection
+            activeTheme={activeTheme}
+            setActiveTheme={handleSetTheme}
+          />
 
-      {/* 7. CERTIFICATIONS FILTER BROWSER */}
-      <CertificationsSection />
+          {/* 7. CERTIFICATIONS FILTER BROWSER */}
+          <CertificationsSection />
 
-      {/* 9. CONTACT & FOOTER */}
-      <ContactSection />
+          {/* 9. CONTACT & FOOTER */}
+          <ContactSection />
+        </motion.div>
+      )}
     </div>
   );
 }
