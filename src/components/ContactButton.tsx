@@ -11,9 +11,13 @@ export const ContactButton: React.FC<ContactButtonProps> = ({ className = '', on
     if (onClick) {
       onClick();
     } else {
-      const contactSec = document.getElementById('contact');
-      if (contactSec) {
-        contactSec.scrollIntoView({ behavior: 'smooth' });
+      if ((window as any).triggerWarpScroll) {
+        (window as any).triggerWarpScroll('contact');
+      } else {
+        const contactSec = document.getElementById('contact');
+        if (contactSec) {
+          contactSec.scrollIntoView({ behavior: 'smooth' });
+        }
       }
     }
   };

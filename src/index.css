@@ -332,21 +332,33 @@
 
 /* Theme background overrides with radial gradients and dynamic grid overlays */
 /* Holographic Grid Backdrop with Parallax & Audio Reactive Scaling */
-.cyber-grid {
+.cyber-grid-wrapper {
   position: fixed;
-  top: -20vh;
-  left: -10vw;
-  right: -10vw;
-  height: 140vh;
+  top: -30vh;
+  left: -20vw;
+  right: -20vw;
+  height: 160vh;
+  pointer-events: none;
+  z-index: 1;
+  transform-origin: center;
+}
+
+.cyber-grid {
+  width: 100%;
+  height: 100%;
   background-image: 
     linear-gradient(rgba(var(--accent-rgb, 0, 255, 65), 0.015) 1px, transparent 1px),
     linear-gradient(90deg, rgba(var(--accent-rgb, 0, 255, 65), 0.015) 1px, transparent 1px);
   background-size: 50px 50px;
   pointer-events: none;
-  z-index: 1;
   opacity: 0;
   transform-origin: center;
-  transition: opacity 0.5s ease;
+  transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), background-size 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease;
+}
+
+.cyber-grid.is-warping {
+  background-size: 35px 120px;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-size 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
 }
 
 .theme-toxic-radar .cyber-grid,

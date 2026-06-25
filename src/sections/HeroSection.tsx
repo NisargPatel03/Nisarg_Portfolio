@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { FadeIn } from '../components/FadeIn';
 import { Magnet } from '../components/Magnet';
 import { ContactButton } from '../components/ContactButton';
-import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, X } from 'lucide-react';
 
 export const HeroSection: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,9 +20,13 @@ export const HeroSection: React.FC = () => {
   ];
 
   const handleNavClick = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+    if ((window as any).triggerWarpScroll) {
+      (window as any).triggerWarpScroll(id);
+    } else {
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   };
 

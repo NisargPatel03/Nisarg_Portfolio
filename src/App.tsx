@@ -131,6 +131,8 @@ function App() {
       smoothWheel: true,
     });
 
+    (window as any).lenis = lenis;
+
     function raf(time: number) {
       lenis.raf(time);
       requestAnimationFrame(raf);
@@ -139,9 +141,34 @@ function App() {
     requestAnimationFrame(raf);
 
     return () => {
+      delete (window as any).lenis;
       lenis.destroy();
     };
   }, []);
+
+  useEffect(() => {
+    (window as any).triggerWarpScroll = (id: string) => {
+      const element = document.getElementById(id);
+      if (element) {
+        window.dispatchEvent(new CustomEvent('grid-warp-start'));
+        const lenisInstance = (window as any).lenis;
+        if (lenisInstance) {
+          lenisInstance.scrollTo(element);
+        } else {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+        soundFX.playClick();
+        setTimeout(() => {
+          window.dispatchEvent(new CustomEvent('grid-warp-end'));
+        }, 1200);
+      }
+    };
+
+    return () => {
+      delete (window as any).triggerWarpScroll;
+    };
+  }, []);
+
 
   return (
     <div className="w-full min-h-screen bg-[#0C0C0C] text-[#D7E2EA] overflow-x-clip select-none relative">

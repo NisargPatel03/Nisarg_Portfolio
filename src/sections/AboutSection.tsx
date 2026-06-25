@@ -5,6 +5,7 @@ import { ContactButton } from '../components/ContactButton';
 import { Award, Code, BookOpen, Star } from 'lucide-react';
 import { TiltCard } from '../components/TiltCard';
 
+
 export const AboutSection: React.FC = () => {
   return (
     <section
