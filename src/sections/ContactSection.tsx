@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FadeIn } from '../components/FadeIn';
 import { Mail, Phone, MapPin, Send, CheckCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { EmergencyButton } from '../components/EmergencyButton';
 
 export const ContactSection: React.FC = () => {
   const [formState, setFormState] = useState({ name: '', email: '', message: '' });
@@ -95,8 +96,7 @@ export const ContactSection: React.FC = () => {
       className="bg-[#0C0C0C] py-24 md:py-32 w-full px-6 md:px-10 border-t border-[#D7E2EA]/5 relative overflow-hidden select-none"
     >
       <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-10 gap-12 sm:gap-16 items-start">
-        {/* Left Side: Contact Information Cards (Col span 4) */}
-        <div className="md:col-span-4 flex flex-col gap-8">
+        <div className="md:col-span-4 flex flex-col gap-8 contact-panel">
           <FadeIn y={30} delay={0} duration={0.8}>
             <span className="text-[#B600A8] uppercase font-bold tracking-widest text-xs sm:text-sm">
               Let&apos;s Build Together
@@ -139,8 +139,7 @@ export const ContactSection: React.FC = () => {
           </div>
         </div>
 
-        {/* Right Side: Message form (Col span 6) */}
-        <div className="md:col-span-6 bg-[#121212] border border-[#232323] rounded-[30px] p-6 sm:p-8 relative">
+        <div className="md:col-span-6 bg-[#121212] border border-[#232323] rounded-[30px] p-6 sm:p-8 relative contact-panel">
           <FadeIn y={30} delay={0.2} duration={0.8}>
             <h3 className="text-white font-extrabold uppercase text-xl sm:text-2xl tracking-wider mb-6">
               Send an Inquiry
@@ -225,6 +224,9 @@ export const ContactSection: React.FC = () => {
           </FadeIn>
         </div>
       </div>
+
+      {/* Meltdown Emergency Override Button */}
+      <EmergencyButton />
 
       {/* CopyRights Footer */}
       <div className="w-full max-w-5xl mx-auto border-t border-white/5 mt-16 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-[#D7E2EA]/30 text-xs font-mono uppercase tracking-widest">

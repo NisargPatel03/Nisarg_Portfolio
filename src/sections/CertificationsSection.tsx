@@ -215,7 +215,7 @@ export const CertificationsSection: React.FC = () => {
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.3 }}
                 key={cert.title}
-                className="bg-[#121212] border border-[#232323] hover:border-[#B600A8]/30 rounded-3xl p-6 flex flex-col justify-between gap-5 transition-all duration-300 group hover:shadow-[0_10px_25px_rgba(182,0,168,0.06)] relative h-full"
+                className="cert-card bg-[#121212] border border-[#232323] hover:border-[#B600A8]/30 rounded-3xl p-6 flex flex-col justify-between gap-5 transition-all duration-300 group hover:shadow-[0_10px_25px_rgba(182,0,168,0.06)] relative h-full"
               >
                 {/* Upper section details */}
                 <div className="flex flex-col gap-4">

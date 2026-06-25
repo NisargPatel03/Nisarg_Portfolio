@@ -18,6 +18,7 @@ import { useRef } from 'react';
 import { CyberGrid } from './components/CyberGrid';
 import { BiometricAuthScreen } from './components/BiometricAuthScreen';
 import { AnimatePresence, motion } from 'framer-motion';
+import { MeltdownOverlay } from './components/MeltdownOverlay';
 
 const SECTIONS = [
   { id: 'hero', label: 'SYS_BOOT' },
@@ -38,6 +39,7 @@ function App() {
   const [isCursorTrailActive, setIsCursorTrailActive] = useState(false);
   const [isHudActive, setIsHudActive] = useState(false);
   const [showAuthScreen, setShowAuthScreen] = useState(true);
+  const [isMeltdownActive, setIsMeltdownActive] = useState(false);
   const [activeTheme, setActiveTheme] = useState<'project' | 'toxic-radar' | 'vapor-matrix' | 'amber-console' | 'blueprint-arctic'>('project');
 
   const handleSetTheme = (theme: 'project' | 'toxic-radar' | 'vapor-matrix' | 'amber-console' | 'blueprint-arctic') => {
@@ -164,8 +166,28 @@ function App() {
       }
     };
 
+    (window as any).triggerMeltdown = () => {
+      setIsMeltdownActive(true);
+      soundFX.playLockdownAlarm();
+      const lenisInstance = (window as any).lenis;
+      if (lenisInstance) {
+        lenisInstance.stop();
+      }
+    };
+
+    (window as any).stabilizeMeltdown = () => {
+      setIsMeltdownActive(false);
+      soundFX.stopLockdownAlarm();
+      const lenisInstance = (window as any).lenis;
+      if (lenisInstance) {
+        lenisInstance.start();
+      }
+    };
+
     return () => {
       delete (window as any).triggerWarpScroll;
+      delete (window as any).triggerMeltdown;
+      delete (window as any).stabilizeMeltdown;
     };
   }, []);
 
@@ -188,13 +210,16 @@ function App() {
       </AnimatePresence>
 
       {!showAuthScreen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, ease: 'easeOut' }}
-        >
-          {/* Parallax Audio-reactive Grid */}
-          <CyberGrid />
+        <>
+          {isMeltdownActive && <MeltdownOverlay />}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, ease: 'easeOut' }}
+            className={isMeltdownActive ? 'meltdown-active' : ''}
+          >
+            {/* Parallax Audio-reactive Grid */}
+            <CyberGrid />
 
           {/* Easter Egg Matrix digital rain layer */}
           {isMatrixActive && <MatrixRain />}
@@ -258,6 +283,7 @@ function App() {
           {/* 9. CONTACT & FOOTER */}
           <ContactSection />
         </motion.div>
+      </>
       )}
     </div>
   );

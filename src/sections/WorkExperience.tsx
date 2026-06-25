@@ -107,7 +107,7 @@ export const WorkExperience: React.FC = () => {
                     transition={{ type: 'spring', stiffness: 50, damping: 15, delay: 0.05 }}
                     className="w-full pl-12 md:pl-0 md:pr-10"
                   >
-                    <div className="bg-gradient-to-br from-blue-950/40 to-slate-950/70 border border-blue-900/30 hover:border-[#B600A8]/40 transition-colors p-6 rounded-3xl relative group shadow-[0_15px_35px_rgba(0,0,0,0.5)]">
+                    <div className="timeline-card bg-gradient-to-br from-blue-950/40 to-slate-950/70 border border-blue-900/30 hover:border-[#B600A8]/40 transition-colors p-6 rounded-3xl relative group shadow-[0_15px_35px_rgba(0,0,0,0.5)]">
                       {/* Arrow pointer targeting the center line */}
                       <div className="absolute right-full top-6 translate-x-[9px] border-[10px] border-transparent border-r-blue-950/40 hidden md:block" />
 
@@ -187,7 +187,7 @@ export const WorkExperience: React.FC = () => {
                     transition={{ type: 'spring', stiffness: 50, damping: 15, delay: 0.05 }}
                     className="w-full"
                   >
-                    <div className="bg-gradient-to-br from-blue-950/40 to-slate-950/70 border border-blue-900/30 hover:border-[#7621B0]/40 transition-colors p-6 rounded-3xl relative group shadow-[0_15px_35px_rgba(0,0,0,0.5)]">
+                    <div className="timeline-card bg-gradient-to-br from-blue-950/40 to-slate-950/70 border border-blue-900/30 hover:border-[#7621B0]/40 transition-colors p-6 rounded-3xl relative group shadow-[0_15px_35px_rgba(0,0,0,0.5)]">
                       {/* Arrow pointer targeting the center line */}
                       <div className="absolute left-full top-6 -translate-x-[9px] border-[10px] border-transparent border-l-blue-950/40 hidden md:block" />
 
