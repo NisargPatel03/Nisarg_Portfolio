@@ -258,9 +258,7 @@ export const AiCloneTerminal: React.FC<AiCloneTerminalProps> = ({ isBlueprintMod
   return (
     <>
       {/* Floating launcher trigger */}
-      <div className={`fixed right-6 md:right-8 z-[999] transition-all duration-300 ${
-        isBlueprintMode ? 'bottom-44 md:bottom-48' : 'bottom-20 md:bottom-24'
-      }`}>
+      <div className="fixed bottom-20 right-6 md:bottom-24 md:right-8 z-[999]">
         <button
           type="button"
           onClick={handleToggleOpen}

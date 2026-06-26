@@ -2,24 +2,16 @@ import React, { useEffect, useState } from 'react';
 
 export const BlueprintOverlay: React.FC = () => {
   const [coords, setCoords] = useState({ x: 0, y: 0 });
-  const [dimensions, setDimensions] = useState({ w: 0, h: 0 });
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       setCoords({ x: e.clientX, y: e.clientY });
     };
 
-    const handleResize = () => {
-      setDimensions({ w: window.innerWidth, h: window.innerHeight });
-    };
-
     window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('resize', handleResize);
-    handleResize();
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
@@ -93,32 +85,6 @@ export const BlueprintOverlay: React.FC = () => {
         {rows.map((row, idx) => <span key={idx}>{row}</span>)}
       </div>
 
-      {/* Blueprint Title Block (Bottom-Right) */}
-      <div 
-        className="absolute bottom-6 right-6 md:bottom-8 md:right-8 bg-[#040d1a]/95 border border-cyan-500 text-cyan-400 p-2 font-mono text-[7px] tracking-wider z-[998] shadow-[0_5px_15px_rgba(0,0,0,0.5)] flex flex-col gap-1 w-[160px] pointer-events-auto"
-        style={{ borderCollapse: 'collapse' }}
-      >
-        <div className="font-bold border-b border-cyan-500/70 pb-1 mb-1 text-[8px] text-center text-cyan-300">
-          CAD BLUEPRINT LAYOUT
-        </div>
-        <div className="grid grid-cols-2 gap-x-2 gap-y-0.5">
-          <span className="text-cyan-500/50">PROJECT:</span>
-          <span>N_PATEL_PORTFOLIO</span>
-          <span className="text-cyan-500/50">DWG NO:</span>
-          <span>CAD-SGP-05</span>
-          <span className="text-cyan-500/50">SCALE:</span>
-          <span>1:1 (PIXEL)</span>
-          <span className="text-cyan-500/50">SIZE:</span>
-          <span>{dimensions.w} x {dimensions.h}</span>
-          <span className="text-cyan-500/50">ENGINEER:</span>
-          <span>NISARG PATEL</span>
-          <span className="text-cyan-500/50">STATUS:</span>
-          <span className="text-cyan-300 animate-pulse">WIRE_SKEL</span>
-        </div>
-        <div className="border-t border-cyan-500/30 pt-1 mt-1 text-[5px] text-cyan-400/35 text-center uppercase tracking-tight">
-          CONFIDENTIAL DEVELOPMENT COPY
-        </div>
-      </div>
     </div>
   );
 };

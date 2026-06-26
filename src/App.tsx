@@ -257,7 +257,6 @@ function App() {
 
           {/* Global command search shell */}
           <CommandPalette
-            isBlueprintMode={isBlueprintMode}
             isMatrixActive={isMatrixActive}
             onToggleMatrix={() => setIsMatrixActive((prev) => !prev)}
             isSoundActive={isSoundActive}

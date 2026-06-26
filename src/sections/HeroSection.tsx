@@ -293,7 +293,7 @@ export const HeroSection: React.FC = () => {
         </FadeIn>
 
         {/* Right: Contact Call-to-action */}
-        <FadeIn y={20} delay={0.5} duration={0.8} className="pr-16 sm:pr-24 md:pr-32 lg:pr-36">
+        <FadeIn y={20} delay={0.5} duration={0.8}>
           <ContactButton />
         </FadeIn>
       </div>
