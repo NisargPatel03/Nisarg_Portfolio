@@ -43,9 +43,27 @@ export const BlueprintToggle: React.FC<BlueprintToggleProps> = ({ isActive, onTo
           onClick={handleToggle}
           title="Toggle CAD Blueprint Wireframe Mode"
         >
-      {/* Heavy Industrial Metal Backplate */}
+      {/* Mobile View: Compact Glassmorphic Pill */}
       <div 
-        className="w-[84px] h-[135px] rounded-lg border-2 border-neutral-700/80 shadow-[0_12px_28px_rgba(0,0,0,0.7),_inset_0_1px_2px_rgba(255,255,255,0.15)] flex flex-col items-center justify-between py-2 relative cursor-pointer"
+        className={`flex md:hidden items-center gap-1.5 px-3 py-1.5 rounded-full border backdrop-blur-md transition-all active:scale-95 cursor-pointer shadow-lg ${
+          isActive 
+            ? 'border-[#00f3ff] bg-[#040d1a]/95 text-[#00f3ff] shadow-[0_0_12px_rgba(0,243,255,0.35)]' 
+            : 'border-white/10 bg-[#121212]/95 text-[#D7E2EA] hover:border-white/20'
+        }`}
+      >
+        <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <polygon points="12 2 2 7 12 12 22 7 12 2" />
+          <polyline points="2 17 12 22 22 17" />
+          <polyline points="2 12 12 17 22 12" />
+        </svg>
+        <span className="font-mono text-[9px] font-extrabold tracking-widest uppercase">
+          {isActive ? 'CAD MODE' : 'NORM MODE'}
+        </span>
+      </div>
+
+      {/* Desktop View: Heavy Industrial Metal Backplate */}
+      <div 
+        className="hidden md:flex w-[84px] h-[135px] rounded-lg border-2 border-neutral-700/80 shadow-[0_12px_28px_rgba(0,0,0,0.7),_inset_0_1px_2px_rgba(255,255,255,0.15)] flex-col items-center justify-between py-2 relative cursor-pointer"
         style={{
           background: 'linear-gradient(135deg, #2e2e2e 0%, #151515 50%, #1c1c1c 100%)',
           boxShadow: '0 12px 30px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.4)',
