@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { soundFX } from '../utils/terminalAudio';
 
 interface BlueprintToggleProps {
@@ -7,6 +8,18 @@ interface BlueprintToggleProps {
 }
 
 export const BlueprintToggle: React.FC<BlueprintToggleProps> = ({ isActive, onToggle }) => {
+  const [isAiCloneOpen, setIsAiCloneOpen] = useState(false);
+
+  useEffect(() => {
+    const handleStateChange = (e: any) => {
+      setIsAiCloneOpen(e.detail.isOpen);
+    };
+    window.addEventListener('aiCloneStateChange', handleStateChange);
+    return () => {
+      window.removeEventListener('aiCloneStateChange', handleStateChange);
+    };
+  }, []);
+
   const handleToggle = () => {
     const newState = !isActive;
     onToggle(newState);
@@ -19,11 +32,17 @@ export const BlueprintToggle: React.FC<BlueprintToggleProps> = ({ isActive, onTo
   };
 
   return (
-    <div 
-      className="fixed top-24 left-6 z-[999] md:top-28 md:left-8 select-none"
-      onClick={handleToggle}
-      title="Toggle CAD Blueprint Wireframe Mode"
-    >
+    <AnimatePresence>
+      {!isAiCloneOpen && (
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.8, x: 20 }}
+          animate={{ opacity: 1, scale: 1, x: 0 }}
+          exit={{ opacity: 0, scale: 0.8, x: 20 }}
+          transition={{ duration: 0.25, ease: 'easeOut' }}
+          className="fixed top-24 right-6 z-[999] md:top-28 md:right-8 select-none"
+          onClick={handleToggle}
+          title="Toggle CAD Blueprint Wireframe Mode"
+        >
       {/* Heavy Industrial Metal Backplate */}
       <div 
         className="w-[84px] h-[135px] rounded-lg border-2 border-neutral-700/80 shadow-[0_12px_28px_rgba(0,0,0,0.7),_inset_0_1px_2px_rgba(255,255,255,0.15)] flex flex-col items-center justify-between py-2 relative cursor-pointer"
@@ -142,6 +161,8 @@ export const BlueprintToggle: React.FC<BlueprintToggleProps> = ({ isActive, onTo
           </span>
         </div>
       </div>
-    </div>
+    </motion.div>
+  )}
+</AnimatePresence>
   );
 };

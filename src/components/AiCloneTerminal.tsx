@@ -105,6 +105,12 @@ export const AiCloneTerminal: React.FC<AiCloneTerminalProps> = ({ isBlueprintMod
     };
   }, []);
 
+  // Dispatch custom event when open state changes to notify other components (e.g. BlueprintToggle)
+  useEffect(() => {
+    const event = new CustomEvent('aiCloneStateChange', { detail: { isOpen } });
+    window.dispatchEvent(event);
+  }, [isOpen]);
+
   // Scroll to bottom on new messages
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
