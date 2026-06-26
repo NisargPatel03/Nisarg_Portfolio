@@ -777,7 +777,8 @@ export const ArchitectureSection: React.FC = () => {
       const h = canvas.height;
 
       // Clear with background opacity trail effect
-      ctx.fillStyle = 'rgba(12, 12, 12, 0.22)';
+      const isBlueprint = document.documentElement.classList.contains('blueprint-mode-active');
+      ctx.fillStyle = isBlueprint ? 'rgba(4, 13, 26, 0.22)' : 'rgba(12, 12, 12, 0.22)';
       ctx.fillRect(0, 0, w, h);
 
       const mx = mouseRef.current.x;
@@ -879,8 +880,13 @@ export const ArchitectureSection: React.FC = () => {
         const isHovered = hoveredNodeIdRef.current === fromNode.id || hoveredNodeIdRef.current === toNode.id;
 
         if (isHovered || dist < maxDist) {
-          ctx.strokeStyle = isHovered ? fromNode.color : 'rgba(255, 255, 255, 0.03)';
-          ctx.lineWidth = isHovered ? 1.6 : 0.6;
+          if (isBlueprint) {
+            ctx.strokeStyle = isHovered ? '#00f3ff' : 'rgba(0, 243, 255, 0.15)';
+            ctx.lineWidth = isHovered ? 2.0 : 0.8;
+          } else {
+            ctx.strokeStyle = isHovered ? fromNode.color : 'rgba(255, 255, 255, 0.03)';
+            ctx.lineWidth = isHovered ? 1.6 : 0.6;
+          }
           ctx.beginPath();
           ctx.moveTo(fromNode.x, fromNode.y);
           ctx.lineTo(toNode.x, toNode.y);
@@ -898,10 +904,13 @@ export const ArchitectureSection: React.FC = () => {
           const currNode = nodesRef.current.find((n) => n.id === currId);
           if (prevNode && currNode) {
             // Draw active connection line
-            ctx.strokeStyle = prevNode.color;
+            const pathColor = isBlueprint ? '#00f3ff' : prevNode.color;
+            ctx.strokeStyle = pathColor;
             ctx.lineWidth = 2.2;
-            ctx.shadowColor = prevNode.color;
-            ctx.shadowBlur = 4;
+            if (!isBlueprint) {
+              ctx.shadowColor = prevNode.color;
+              ctx.shadowBlur = 4;
+            }
             ctx.beginPath();
             ctx.moveTo(prevNode.x, prevNode.y);
             ctx.lineTo(currNode.x, currNode.y);
@@ -913,9 +922,11 @@ export const ArchitectureSection: React.FC = () => {
               const progress = (Date.now() % 1200) / 1200;
               const spx = prevNode.x + (currNode.x - prevNode.x) * progress;
               const spy = prevNode.y + (currNode.y - prevNode.y) * progress;
-              ctx.fillStyle = prevNode.color;
-              ctx.shadowColor = prevNode.color;
-              ctx.shadowBlur = 12;
+              ctx.fillStyle = pathColor;
+              if (!isBlueprint) {
+                ctx.shadowColor = prevNode.color;
+                ctx.shadowBlur = 12;
+              }
               ctx.beginPath();
               ctx.arc(spx, spy, 6, 0, Math.PI * 2);
               ctx.fill();
@@ -936,8 +947,10 @@ export const ArchitectureSection: React.FC = () => {
           if (prevNode && currNode) {
             ctx.strokeStyle = '#00D8FF';
             ctx.lineWidth = 2.8;
-            ctx.shadowColor = '#00D8FF';
-            ctx.shadowBlur = 8;
+            if (!isBlueprint) {
+              ctx.shadowColor = '#00D8FF';
+              ctx.shadowBlur = 8;
+            }
             ctx.beginPath();
             ctx.moveTo(prevNode.x, prevNode.y);
             ctx.lineTo(currNode.x, currNode.y);
@@ -948,8 +961,10 @@ export const ArchitectureSection: React.FC = () => {
             const spx = prevNode.x + (currNode.x - prevNode.x) * progress;
             const spy = prevNode.y + (currNode.y - prevNode.y) * progress;
             ctx.fillStyle = '#00D8FF';
-            ctx.shadowColor = '#00D8FF';
-            ctx.shadowBlur = 12;
+            if (!isBlueprint) {
+              ctx.shadowColor = '#00D8FF';
+              ctx.shadowBlur = 12;
+            }
             ctx.beginPath();
             ctx.arc(spx, spy, 7, 0, Math.PI * 2);
             ctx.fill();
@@ -969,13 +984,18 @@ export const ArchitectureSection: React.FC = () => {
         const isSimPassed = activeSimRef.current && workflows[activeSimRef.current].steps.slice(0, simStepIndexRef.current).some((s) => s.nodeId === node.id);
 
         const isFocused = isHovered || isSimFocused || isRouterStart || isRouterEnd || isRouterPathNode;
-        const nodeStrokeColor = isRouterStart ? '#00D8FF' : isRouterEnd ? '#FF00C7' : isFocused ? node.color : 'rgba(255, 255, 255, 0.08)';
+        
+        let nodeStrokeColor = isRouterStart ? '#00D8FF' : isRouterEnd ? '#FF00C7' : isFocused ? node.color : 'rgba(255, 255, 255, 0.08)';
+        if (isBlueprint) {
+          nodeStrokeColor = isFocused ? '#00f3ff' : 'rgba(0, 243, 255, 0.35)';
+        }
 
         ctx.save();
 
         // Node Glow Backdrop
+        const glowColor = isBlueprint ? '#00f3ff' : node.color;
         const grad = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, node.radius + 18);
-        grad.addColorStop(0, isFocused ? `${node.color}35` : isSimPassed ? `${node.color}15` : `${node.color}05`);
+        grad.addColorStop(0, isFocused ? `${glowColor}30` : isSimPassed ? `${glowColor}15` : `${glowColor}03`);
         grad.addColorStop(1, 'transparent');
         ctx.fillStyle = grad;
         ctx.beginPath();
@@ -994,11 +1014,13 @@ export const ArchitectureSection: React.FC = () => {
         }
 
         // Base capsule pill drawing
-        ctx.fillStyle = 'rgba(10, 10, 10, 0.95)';
+        ctx.fillStyle = isBlueprint ? 'rgba(4, 13, 26, 0.95)' : 'rgba(10, 10, 10, 0.95)';
         ctx.strokeStyle = nodeStrokeColor;
         ctx.lineWidth = isFocused ? 2.5 : 1;
-        ctx.shadowColor = nodeStrokeColor;
-        ctx.shadowBlur = isFocused ? 14 : 0;
+        if (!isBlueprint) {
+          ctx.shadowColor = nodeStrokeColor;
+          ctx.shadowBlur = isFocused ? 14 : 0;
+        }
         ctx.beginPath();
         ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
         ctx.fill();
@@ -1006,15 +1028,15 @@ export const ArchitectureSection: React.FC = () => {
         ctx.shadowBlur = 0; // reset
 
         // Abbreviated Symbol Label in Center
-        ctx.fillStyle = isFocused || isSimPassed ? nodeStrokeColor : '#FFFFFF';
+        ctx.fillStyle = isFocused || isSimPassed ? nodeStrokeColor : (isBlueprint ? 'rgba(0, 243, 255, 0.7)' : '#FFFFFF');
         ctx.font = `bold ${node.radius * 0.5}px monospace`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(node.symbol, node.x, node.y - 4);
 
         // Subtitle Title below Symbol
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.55)';
-        ctx.font = `${node.radius * 0.28}px sans-serif`;
+        ctx.fillStyle = isBlueprint ? 'rgba(0, 243, 255, 0.5)' : 'rgba(255, 255, 255, 0.55)';
+        ctx.font = `${node.radius * 0.26}px sans-serif`;
         ctx.fillText(node.name, node.x, node.y + (node.radius * 0.45));
 
         ctx.restore();
@@ -1024,11 +1046,12 @@ export const ArchitectureSection: React.FC = () => {
       microParticlesRef.current.forEach((p) => {
         ctx.save();
         ctx.globalAlpha = p.life;
-        ctx.shadowColor = p.color;
-        ctx.shadowBlur = 6;
+        const particleColor = isBlueprint ? '#00f3ff' : p.color;
+        ctx.shadowColor = particleColor;
+        ctx.shadowBlur = isBlueprint ? 0 : 6;
         
-        ctx.fillStyle = 'rgba(15, 15, 15, 0.95)';
-        ctx.strokeStyle = p.color;
+        ctx.fillStyle = isBlueprint ? 'rgba(4, 13, 26, 0.95)' : 'rgba(15, 15, 15, 0.95)';
+        ctx.strokeStyle = particleColor;
         ctx.lineWidth = 1;
         
         ctx.font = '8px monospace';
@@ -1041,7 +1064,7 @@ export const ArchitectureSection: React.FC = () => {
         ctx.fill();
         ctx.stroke();
 
-        ctx.fillStyle = '#FFFFFF';
+        ctx.fillStyle = isBlueprint ? '#00f3ff' : '#FFFFFF';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(p.name, p.x, p.y);
@@ -1051,7 +1074,7 @@ export const ArchitectureSection: React.FC = () => {
 
       // --- RENDERING CONSTELATION NAMES (Labels) ---
       if (w > 640) {
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+        ctx.fillStyle = isBlueprint ? 'rgba(0, 243, 255, 0.35)' : 'rgba(255, 255, 255, 0.15)';
         ctx.font = 'bold 9px monospace';
         ctx.letterSpacing = '1px';
         ctx.textAlign = 'center';
@@ -1069,7 +1092,7 @@ export const ArchitectureSection: React.FC = () => {
         if (octx) {
           octx.clearRect(0, 0, oscCanvas.width, oscCanvas.height);
           
-          octx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+          octx.strokeStyle = isBlueprint ? 'rgba(0, 243, 255, 0.1)' : 'rgba(255, 255, 255, 0.05)';
           octx.lineWidth = 0.5;
           for (let x = 0; x < oscCanvas.width; x += 30) {
             octx.beginPath();
@@ -1085,10 +1108,12 @@ export const ArchitectureSection: React.FC = () => {
           }
 
           const isWaveActive = activeSimRef.current !== null || resolvedPathRef.current.length > 0;
-          octx.strokeStyle = isWaveActive ? '#FF00C7' : '#00D8FF';
+          octx.strokeStyle = isBlueprint ? '#00f3ff' : (isWaveActive ? '#FF00C7' : '#00D8FF');
           octx.lineWidth = 1.4;
-          octx.shadowColor = octx.strokeStyle;
-          octx.shadowBlur = 4;
+          if (!isBlueprint) {
+            octx.shadowColor = octx.strokeStyle;
+            octx.shadowBlur = 4;
+          }
           octx.beginPath();
 
           const amp = isWaveActive ? 16 : 5;

@@ -19,6 +19,9 @@ import { CyberGrid } from './components/CyberGrid';
 import { BiometricAuthScreen } from './components/BiometricAuthScreen';
 import { AnimatePresence, motion } from 'framer-motion';
 import { MeltdownOverlay } from './components/MeltdownOverlay';
+import { BlueprintToggle } from './components/BlueprintToggle';
+import { BlueprintOverlay } from './components/BlueprintOverlay';
+
 
 const SECTIONS = [
   { id: 'hero', label: 'SYS_BOOT' },
@@ -41,6 +44,17 @@ function App() {
   const [showAuthScreen, setShowAuthScreen] = useState(true);
   const [isMeltdownActive, setIsMeltdownActive] = useState(false);
   const [activeTheme, setActiveTheme] = useState<'project' | 'toxic-radar' | 'vapor-matrix' | 'amber-console' | 'blueprint-arctic'>('project');
+  const [isBlueprintMode, setIsBlueprintMode] = useState(false);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (isBlueprintMode) {
+      root.classList.add('blueprint-mode-active');
+    } else {
+      root.classList.remove('blueprint-mode-active');
+    }
+  }, [isBlueprintMode]);
+
 
   const handleSetTheme = (theme: 'project' | 'toxic-radar' | 'vapor-matrix' | 'amber-console' | 'blueprint-arctic') => {
     const root = document.documentElement;
@@ -212,6 +226,8 @@ function App() {
       {!showAuthScreen && (
         <>
           {isMeltdownActive && <MeltdownOverlay />}
+          {isBlueprintMode && <BlueprintOverlay />}
+          <BlueprintToggle isActive={isBlueprintMode} onToggle={setIsBlueprintMode} />
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

@@ -626,3 +626,218 @@ h1, h2, h3, h4, h5, h6, button, nav a, .nav-link, .card-title {
   pointer-events: none !important;
 }
 
+/* ---------------------------------------------------- */
+/* Holographic CAD "Blueprint Mode" CSS Style System    */
+/* ---------------------------------------------------- */
+
+.blueprint-mode-active {
+  --accent-color: #00f3ff !important;
+  --accent-glow: rgba(0, 243, 255, 0.4) !important;
+  --accent-rgb: 0, 243, 255 !important;
+}
+
+/* Force background grid paper */
+.blueprint-mode-active,
+.blueprint-mode-active body,
+.blueprint-mode-active #root,
+.blueprint-mode-active .bg-\[\#0C0C0C\],
+.blueprint-mode-active [class*="bg-"] {
+  background-color: #040d1a !important; /* Deep blueprint navy blue */
+  background-image: 
+    linear-gradient(rgba(0, 243, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 243, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(rgba(0, 243, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 243, 255, 0.02) 1px, transparent 1px) !important;
+  background-size: 80px 80px, 80px 80px, 16px 16px, 16px 16px !important;
+  background-position: center center !important;
+  color: #00f3ff !important;
+  text-shadow: none !important;
+  box-shadow: none !important;
+}
+
+/* Fade out background videos, images, gradients, decorative graphics */
+.blueprint-mode-active .cyber-grid-wrapper,
+.blueprint-mode-active .matrix-rain-canvas,
+.blueprint-mode-active .bg-gradient-to-b,
+.blueprint-mode-active .bg-gradient-to-r,
+.blueprint-mode-active .bg-gradient-to-tr,
+.blueprint-mode-active .bg-radial-gradient,
+.blueprint-mode-active [class*="bg-gradient"] {
+  background-image: none !important;
+  background-color: transparent !important;
+}
+
+/* Target images to become CAD outline blueprints */
+.blueprint-mode-active img {
+  content: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'><rect width='200' height='200' fill='none' stroke='%2300f3ff' stroke-width='1.5'/><line x1='0' y1='0' x2='200' y2='200' stroke='%2300f3ff' stroke-width='0.75'/><line x1='200' y1='0' x2='0' y2='200' stroke='%2300f3ff' stroke-width='0.75'/><text x='100' y='105' fill='%2300f3ff' font-family='monospace' font-size='9' text-anchor='middle' font-weight='bold'>CHASSIS_LAYOUT_IMG</text></svg>") !important;
+  opacity: 0.75 !important;
+  filter: drop-shadow(0 0 4px rgba(0, 243, 255, 0.4)) !important;
+  border: 1px solid #00f3ff !important;
+  background-color: rgba(0, 243, 255, 0.03) !important;
+}
+
+/* Remove 3D holographic hover card tilts, replace with flat layout wireframes */
+.blueprint-mode-active .marquee-card-3d,
+.blueprint-mode-active .crt-glitch-hover,
+.blueprint-mode-active .project-deck-card,
+.blueprint-mode-active .timeline-card,
+.blueprint-mode-active .service-card,
+.blueprint-mode-active .cert-card,
+.blueprint-mode-active .hud-panel-card,
+.blueprint-mode-active .diagnostics-hud-container,
+.blueprint-mode-active .terminal-window,
+.blueprint-mode-active .contact-panel,
+.blueprint-mode-active .contact-button-container {
+  transform: none !important;
+  background: rgba(4, 13, 26, 0.75) !important;
+  border: 1.5px solid #00f3ff !important;
+  outline: 1px dashed rgba(0, 243, 255, 0.25) !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 10px rgba(0, 243, 255, 0.15) !important;
+  border-radius: 2px !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  transition: none !important;
+}
+
+/* Show structural layout annotations on cards */
+.blueprint-mode-active .crt-glitch-hover::before,
+.blueprint-mode-active .project-deck-card::before,
+.blueprint-mode-active .timeline-card::before,
+.blueprint-mode-active .service-card::before,
+.blueprint-mode-active .cert-card::before,
+.blueprint-mode-active .diagnostics-hud-container::before {
+  content: "[SYS_MODULE]" !important;
+  position: absolute !important;
+  top: -8px !important;
+  left: 8px !important;
+  font-family: monospace !important;
+  font-size: 7px !important;
+  font-weight: bold !important;
+  background: #040d1a !important;
+  color: #00f3ff !important;
+  border: 1px solid #00f3ff !important;
+  padding: 1px 4px !important;
+  line-height: 1 !important;
+  z-index: 10 !important;
+  border-radius: 1px !important;
+}
+
+.blueprint-mode-active .project-deck-card::before { content: "[PROJECT_DECK_UNIT]" !important; }
+.blueprint-mode-active .timeline-card::before { content: "[TIMELINE_NODE]" !important; }
+.blueprint-mode-active .service-card::before { content: "[SERVICE_MODULE]" !important; }
+.blueprint-mode-active .cert-card::before { content: "[CREDENTIAL_BLOCK]" !important; }
+.blueprint-mode-active .diagnostics-hud-container::before { content: "[TELEMETRY_HUD]" !important; }
+
+/* Draw dimensions markers on major components in blueprint mode */
+.blueprint-mode-active .crt-glitch-hover::after,
+.blueprint-mode-active .project-deck-card::after,
+.blueprint-mode-active .timeline-card::after,
+.blueprint-mode-active .service-card::after,
+.blueprint-mode-active .cert-card::after {
+  content: "W:100% | H:AUTO" !important;
+  position: absolute !important;
+  bottom: -8px !important;
+  right: 8px !important;
+  font-family: monospace !important;
+  font-size: 6px !important;
+  background: #040d1a !important;
+  color: rgba(0, 243, 255, 0.7) !important;
+  border: 1px solid rgba(0, 243, 255, 0.5) !important;
+  padding: 0 3px !important;
+  line-height: 1.2 !important;
+  z-index: 10 !important;
+}
+
+/* Make all text elements sharp cyan line drawings */
+.blueprint-mode-active h1,
+.blueprint-mode-active h2,
+.blueprint-mode-active h3,
+.blueprint-mode-active h4,
+.blueprint-mode-active h5,
+.blueprint-mode-active h6,
+.blueprint-mode-active p,
+.blueprint-mode-active span,
+.blueprint-mode-active a,
+.blueprint-mode-active button,
+.blueprint-mode-active li,
+.blueprint-mode-active label,
+.blueprint-mode-active input,
+.blueprint-mode-active textarea,
+.blueprint-mode-active div,
+.blueprint-mode-active svg {
+  color: #00f3ff !important;
+  text-shadow: none !important;
+  font-family: 'Share Tech Mono', 'JetBrains Mono', ui-monospace, monospace !important;
+}
+
+/* Force svg paths and lines to cyan outlines */
+.blueprint-mode-active svg path,
+.blueprint-mode-active svg rect,
+.blueprint-mode-active svg circle,
+.blueprint-mode-active svg line,
+.blueprint-mode-active svg polyline,
+.blueprint-mode-active svg polygon {
+  stroke: #00f3ff !important;
+  fill: transparent !important;
+}
+
+/* Highlight headings with custom wireframe lines */
+.blueprint-mode-active h2 {
+  border-bottom: 1.5px dashed rgba(0, 243, 255, 0.5) !important;
+  padding-bottom: 8px !important;
+  position: relative !important;
+}
+
+/* Turn buttons into blueprint style controls */
+.blueprint-mode-active button,
+.blueprint-mode-active .nav-link,
+.blueprint-mode-active a.btn {
+  border: 1px solid #00f3ff !important;
+  background: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.blueprint-mode-active button:hover,
+.blueprint-mode-active .nav-link:hover {
+  background: rgba(0, 243, 255, 0.1) !important;
+}
+
+/* Force range input sliders to cyan */
+.blueprint-mode-active input[type="range"] {
+  accent-color: #00f3ff !important;
+}
+
+
+/* Override scrollbar */
+.blueprint-mode-active ::-webkit-scrollbar-track {
+  background: #040d1a !important;
+}
+.blueprint-mode-active ::-webkit-scrollbar-thumb {
+  background: #00f3ff !important;
+  border: 2px solid #040d1a !important;
+}
+
+/* Disable neon glow text-shadows, animations, and non-structural elements */
+.blueprint-mode-active .font-glow {
+  text-shadow: none !important;
+}
+
+.blueprint-mode-active .marquee-fade-edges::before,
+.blueprint-mode-active .marquee-fade-edges::after {
+  display: none !important;
+}
+
+.blueprint-mode-active .biometric-panel,
+.blueprint-mode-active .biometric-glitch-layer {
+  background: #040d1a !important;
+  border: 1.5px solid #00f3ff !important;
+}
+
+.blueprint-mode-active .projects-terminal-sticky {
+  background: rgba(4, 13, 26, 0.9) !important;
+  border: 2px solid #00f3ff !important;
+}
+
+
