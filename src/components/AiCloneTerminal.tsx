@@ -213,8 +213,28 @@ export const AiCloneTerminal: React.FC<AiCloneTerminalProps> = ({ isBlueprintMod
       content = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
       content = content.replace(/`(.*?)`/g, '<code class="bg-black/40 px-1 py-0.5 rounded text-[10px]">$1</code>');
       
-      // Simple link parser
-      content = content.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="underline text-emerald-400 hover:text-emerald-300">$1</a>');
+      const linkClass = isBlueprintMode 
+        ? "underline text-[#00f3ff] hover:text-[#00c8ff]"
+        : "underline text-[#00ff41] hover:text-[#00ff9f]";
+
+      // 1. Parse markdown links: [Text](URL)
+      content = content.replace(/\[([^\]]+)\]\(([^)]+)\)/g, `<a href="$2" target="_blank" rel="noopener noreferrer" class="${linkClass}">$1</a>`);
+
+      // 2. Parse raw emails (e.g. kbnisargpatel001454@gmail.com) that are not already inside href
+      content = content.replace(/(?<!href="mailto:)(?<!mailto:)\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/g, (match) => {
+        return `<a href="mailto:${match}" class="${linkClass}">${match}</a>`;
+      });
+
+      // 3. Parse raw github.com/xxx and linkedin.com/xxx links that are not already inside href attributes
+      content = content.replace(/(?<!href=")(?<!">)\b(github\.com\/[A-Za-z0-9\/._%+-]*[A-Za-z0-9\/]|linkedin\.com\/[A-Za-z0-9\/._%+-]*[A-Za-z0-9\/])\b/g, (match) => {
+        return `<a href="https://${match}" target="_blank" rel="noopener noreferrer" class="${linkClass}">${match}</a>`;
+      });
+
+      // 4. Parse any other raw http://, https:// or www. links that are not already inside href
+      content = content.replace(/(?<!href=")(?<!">)\b(https?:\/\/[A-Za-z0-9\/._%+-]*[A-Za-z0-9\/]|www\.[A-Za-z0-9\/._%+-]*[A-Za-z0-9\/])\b/g, (match) => {
+        const url = match.startsWith('www.') ? `https://${match}` : match;
+        return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="${linkClass}">${match}</a>`;
+      });
 
       if (line.startsWith('- ') || line.startsWith('* ')) {
         const clean = content.substring(2);

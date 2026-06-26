@@ -45,7 +45,7 @@ export const CLONE_PROFILE: CloneProfile = {
   cgpa: "9.2 CGPA",
   email: "kbnisargpatel001454@gmail.com",
   github: "https://github.com/NisargPatel03",
-  linkedin: "https://www.linkedin.com/in/nisarg-patel-9003b8256/",
+  linkedin: "https://www.linkedin.com/in/nisargpatel030305",
   summary: "A passionate full-stack developer and CSE student specializing in high-fidelity React architectures, AI/ML integrations, serverless databases (Supabase, PostgreSQL), and interactive data visualization (D3.js, Canvas). Built multiple academic and commercial platforms focusing on offline-first capabilities and responsive designs.",
   skills: {
     frontend: ["React 18/19", "Next.js", "TypeScript", "Tailwind CSS", "Framer Motion", "D3.js", "Three.js", "Zustand", "Redux"],

@@ -23,6 +23,7 @@ interface CommandPaletteProps {
   onToggleHud: () => void;
   activeTheme: 'project' | 'toxic-radar' | 'vapor-matrix' | 'amber-console' | 'blueprint-arctic';
   onChangeTheme: (theme: 'project' | 'toxic-radar' | 'vapor-matrix' | 'amber-console' | 'blueprint-arctic') => void;
+  isBlueprintMode?: boolean;
 }
 
 export const CommandPalette: React.FC<CommandPaletteProps> = ({
@@ -38,6 +39,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   onToggleHud,
   activeTheme,
   onChangeTheme,
+  isBlueprintMode = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
@@ -238,7 +240,11 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
           setIsOpen(true);
           soundFX.playSuccess();
         }}
-        className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-40 flex items-center gap-2 bg-[#121212]/90 border border-white/10 px-4 py-2.5 rounded-full backdrop-blur-md text-[11px] font-mono text-[#D7E2EA] hover:text-white hover:border-emerald-500/40 hover:shadow-[0_0_15px_rgba(16,185,129,0.25)] active:scale-95 transition-all cursor-pointer select-none group shadow-lg"
+        className={`fixed bottom-6 z-[999] flex items-center gap-2 bg-[#121212]/90 border border-white/10 px-4 py-2.5 rounded-full backdrop-blur-md text-[11px] font-mono text-[#D7E2EA] hover:text-white hover:border-emerald-500/40 hover:shadow-[0_0_15px_rgba(16,185,129,0.25)] active:scale-95 transition-all cursor-pointer select-none group shadow-lg ${
+          isBlueprintMode 
+            ? 'right-[190px] md:right-[200px]' 
+            : 'right-6 md:right-8'
+        }`}
       >
         <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
         <span className="font-bold tracking-wider uppercase group-hover:text-emerald-400 transition-colors">CMD Palette</span>

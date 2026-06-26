@@ -70,7 +70,7 @@ export const ContactSection: React.FC = () => {
       ),
       label: 'LinkedIn',
       value: 'linkedin.com/in/nisargpatel030305',
-      link: 'http://www.linkedin.com/in/nisargpatel030305',
+      link: 'https://www.linkedin.com/in/nisargpatel030305',
     },
     {
       icon: (

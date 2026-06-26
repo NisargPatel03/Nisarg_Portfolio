@@ -18,7 +18,7 @@ export const DiagnosticsHUD: React.FC<DiagnosticsHUDProps> = ({
   isMatrixActive,
   activeSection
 }) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const [scrollPos, setScrollPos] = useState(0);
   const [scrollPercent, setScrollPercent] = useState(0);
   const [velocityDisplay, setVelocityDisplay] = useState(0);
