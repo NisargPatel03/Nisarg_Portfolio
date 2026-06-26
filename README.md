@@ -19,27 +19,34 @@ A cutting-edge, ultra-premium developer portfolio designed with sleek futuristic
 *   **Immersive VFX**: Displays flashing red danger screens, screen-wide rumble/shaking transformations, alarms, and emergency hazard alerts.
 *   **Stabilizer Panel**: Launches a warning terminal overlay containing manual override stabilizers to cooling down reactor values and restore the portfolio state.
 
-### 🎛️ 3. Command Search Palette Shell
+### 🔐 3. Biometric Authorization Gateway Gatekeeper
+*   **Restricted Entry Terminal**: A sci-fi security gate screen displayed on boot to verify credentials before exposing the portfolio content.
+*   **Interactive Fingerprint Scanner**: Embedded SVG scanner with glowing laser sweep lines, pulse ring beacons, and audio confirmation cues.
+*   **Sequential Console Logging**: Displays simulated network routing logs, browser diagnostics, and resolution auditing.
+*   **Intrusion Alert & Lockdown**: Restricts password input attempts to 3. On failure, triggers flashing red hazard panels, sound FX alarm loops, and locks out inputs with a 30-second timer countdown.
+*   **Bypass Mode**: Offers a manual override shortcut to skip authorization.
+
+### 🎛️ 4. Command Search Palette Shell
 *   **Quick Action Console**: Toggled via shortcut keys (`Ctrl+K` or search icons) to execute terminal commands globally.
 *   **Dynamic System Controls**: Direct toggle commands for sound FX, ambient loops, cursor trails, Matrix rain canvas overlays, diagnostics panel visibility, and color theme modifications.
 
-### 📊 4. Diagnostics HUD Sidebar
+### 📊 5. Diagnostics HUD Sidebar
 *   **Real-time Diagnostics**: A sticky right-aligned telemetry dashboard containing active scrolling CPU/Memory logs, system uptime counters, live scrolling position metrics, and interactive stats dials.
 
-### 🌌 5. Interactive 3D Hero Section
+### 🌌 6. Interactive 3D Hero Section
 *   **Magnetic Portrait**: A centered profile avatar equipped with organic magnet physics that follows pointer movements dynamically.
 *   **Branded Favicon**: A custom-designed glassmorphic "NP" monogram glow set in neon purple and cyan.
 
-### ☔ 6. Matrix Digital Rain Easter Egg
+### ☔ 7. Matrix Digital Rain Easter Egg
 *   **Bioluminescent Canvas**: Cascades green glowing binary stream rain behind container cards when toggled, adding a retro cyber-hacker aesthetic layer.
 
-### 🔊 7. Immersive Audio Engine
+### 🔊 8. Immersive Audio Engine
 *   **Tactile Auditory Cues**: Integrated synthesizer clicks, menu navigation hover ticks, and persistent low-hum ambient telemetry loops.
 
-### 💼 8. Spring Experience Timeline
+### 💼 9. Spring Experience Timeline
 *   **Elastic Timeline Entries**: Timeline cards animate dynamically on scroll using customized springs. Even timeline cards slide in from the **LEFT** (`x: -100`), and odd cards slide in from the **RIGHT** (`x: 100`).
 
-### ✉️ 9. Secure Contact Portal
+### ✉️ 10. Secure Contact Portal
 *   **Web3Forms Integration**: Fully functional contact form forwarding inquiries straight to email.
 *   **Zero-Leak Secrets**: Fully protected access keys stored in a gitignored `.env` file, securing production keys from public version-control leaks.
 
