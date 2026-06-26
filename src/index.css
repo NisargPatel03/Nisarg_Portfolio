@@ -890,5 +890,15 @@ h1, h2, h3, h4, h5, h6, button, nav a, .nav-link, .card-title {
   box-shadow: none !important;
 }
 
+/* Fix Diagnostics HUD collapsing in Blueprint Mode */
+.blueprint-mode-active .diagnostics-hud-container {
+  transform: translateY(-50%) !important;
+}
+
+.blueprint-mode-active .diagnostics-hud-container.is-collapsed {
+  transform: translate3d(calc(100% + 22px), -50%, 0) !important;
+}
+
+
 
 
