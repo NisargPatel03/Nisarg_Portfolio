@@ -1,29 +1,45 @@
 # ✨ Nisarg Patel -- 3D Interactive Portfolio
 
-A cutting-edge, ultra-premium developer portfolio designed with sleek futuristic aesthetics, immersive animations, and robust mobile-first responsive architecture. Built utilizing React, TypeScript, Tailwind CSS, and Framer Motion.
+A cutting-edge, ultra-premium developer portfolio designed with sleek futuristic aesthetics, immersive animations, audio-reactive interfaces, and robust mobile-first responsive architecture. Built utilizing React, TypeScript, Tailwind CSS, and Framer Motion.
 
 ---
 
 ## 🎨 Design & Premium Features
 
-### 1. Immersive 3D Interactive Hero
-*   **Magnet headshot**: A centered 3D portrait rendering equipped with organic magnetic hover physics. The head reacts and follows mouse movement dynamically, creating a tactile depth effect.
-*   **Branded Favicon**: A custom-designed glassmorphic **"NP"** monogram logo glow set in neon purple and cyan, replacing standard generic icons.
-*   **Webkit-Optimized Title**: Features a dual-layer metallic typography banner with responsive safe clamps that scale perfectly across all phone viewports without horizontal clipping.
+### 📐 1. Holographic CAD "Blueprint Mode"
+*   **Heavy Metal Toggle**: An industrial brushed-metal toggle panel with corner rivets, functional status LEDs (Amber for Normal, Cyan for CAD override), and a 3D cylindrical lever that tilts dynamically on click.
+*   **Viewport Rulers Overlay**: Renders columns `A` to `H` and rows `1` to `8` ticks around the screen margins, complete with dotted cursor crosshair tracking and a coordinate HUD.
+*   **CAD Metadata Block**: A detailed technical blueprint title block displaying project metadata, system statuses, and real-time viewport resolution readouts.
+*   **Dynamic Database Schema Maps**: Dynamically parses the active project's database schema checklist to render custom vector ER diagrams (with tables, primary keys, and relational linkage paths) in place of standard project mockup images.
+*   **Vector Asset Overrides**: Replaced generic image elements with high-fidelity CAD drafting vectors (concentric targets, isometric chassis blocks, mechanical gears, linkages, and a detailed cybernetic face mesh for the portrait).
+*   **Monochrome Typography**: Enforces a strict monochrome cyan color palette, grid background, cards outline offset annotations (`[SYS_MODULE]`, `W: 100% | H: AUTO`), and monospace fonts.
 
-### 📱 2. Fluid Responsive Navbar Drawer
-*   **Hamburger Overlay**: Screen sizes under 768px auto-collapse into a neat hamburger toggle.
-*   **Backdrop Dismissal**: Tapping the icon launches an animated full-screen drawer modal, which can be dismissed instantly by tapping any blank space in the background.
+### 🚨 2. Emergency "Core Meltdown" Simulator
+*   **Gamified Emergency Protocol**: Toggled by entering terminal override codes or commands, simulating a system core destabilization.
+*   **Immersive VFX**: Displays flashing red danger screens, screen-wide rumble/shaking transformations, alarms, and emergency hazard alerts.
+*   **Stabilizer Panel**: Launches a warning terminal overlay containing manual override stabilizers to cooling down reactor values and restore the portfolio state.
 
-### 💼 3. Spring Experience Timeline
-*   **Left-and-Right Slide entries**: Timeline cards animate dynamically on scroll using customized springs. Even timeline cards slide in from the **LEFT** (`x: -100`), and odd cards slide in from the **RIGHT** (`x: 100`).
-*   **Relaxed Mobile Viewports**: Optimized viewports (`once: true`, `amount: 0.05`) ensure cards animate smoothly and stay visible permanently on short mobile screens.
+### 🎛️ 3. Command Search Palette Shell
+*   **Quick Action Console**: Toggled via shortcut keys (`Ctrl+K` or search icons) to execute terminal commands globally.
+*   **Dynamic System Controls**: Direct toggle commands for sound FX, ambient loops, cursor trails, Matrix rain canvas overlays, diagnostics panel visibility, and color theme modifications.
 
-### 🎈 4. Float Layered 3D Assets
-*   **Corner Elements**: Implements floating 3D icons (Moon, Lego block, Smiley face, Mouse Cursor) that scale responsively on mobile.
-*   **Depth Stacking**: Uses layered `z-index` properties so elements float smoothly behind text and cards without blocking readability.
+### 📊 4. Diagnostics HUD Sidebar
+*   **Real-time Diagnostics**: A sticky right-aligned telemetry dashboard containing active scrolling CPU/Memory logs, system uptime counters, live scrolling position metrics, and interactive stats dials.
 
-### ✉️ 5. Secure Contact Portal
+### 🌌 5. Interactive 3D Hero Section
+*   **Magnetic Portrait**: A centered profile avatar equipped with organic magnet physics that follows pointer movements dynamically.
+*   **Branded Favicon**: A custom-designed glassmorphic "NP" monogram glow set in neon purple and cyan.
+
+### ☔ 6. Matrix Digital Rain Easter Egg
+*   **Bioluminescent Canvas**: Cascades green glowing binary stream rain behind container cards when toggled, adding a retro cyber-hacker aesthetic layer.
+
+### 🔊 7. Immersive Audio Engine
+*   **Tactile Auditory Cues**: Integrated synthesizer clicks, menu navigation hover ticks, and persistent low-hum ambient telemetry loops.
+
+### 💼 8. Spring Experience Timeline
+*   **Elastic Timeline Entries**: Timeline cards animate dynamically on scroll using customized springs. Even timeline cards slide in from the **LEFT** (`x: -100`), and odd cards slide in from the **RIGHT** (`x: 100`).
+
+### ✉️ 9. Secure Contact Portal
 *   **Web3Forms Integration**: Fully functional contact form forwarding inquiries straight to email.
 *   **Zero-Leak Secrets**: Fully protected access keys stored in a gitignored `.env` file, securing production keys from public version-control leaks.
 
@@ -54,7 +70,17 @@ Here is a detailed breakdown of the featured projects showcased within the inter
 *   **Tech Stack**: Flutter, React, Supabase Cloud Database & Auth, PostgreSQL, Tailwind CSS
 *   **Repository**: [Survey_Form_HealthCare_App](https://github.com/NisargPatel03/Survey_Form_HealthCare_App)
 
-### 2. BharatBudget (Public Finance Command Center)
+### 2. CodeGraph (AI Code Visualization & Intelligence)
+*   **Purpose**: An AI-powered interactive codebase visualization and intelligence platform.
+*   **Key Features**:
+    *   **Bioluminescent Graph Layouts**: Dynamic 2D D3 and 3D Canvas visualizers showing call-graphs and dependencies.
+    *   **Semantic AI Audits**: Google Gemini-driven code smell audits, explanation layers, and unit test generation.
+    *   **REST API Playground**: Integrated client playground with schema extractors and request testers.
+    *   **Topological Sonification**: Interactive audio representation and code-weather visualizers.
+*   **Tech Stack**: React, TypeScript, D3.js, Gemini AI, Vanilla CSS
+*   **Repository**: [CodeGraph](https://github.com/NisargPatel03/CodeGraph)
+
+### 3. BharatBudget (Public Finance Command Center)
 *   **Purpose**: State-of-the-art public finance visualization dashboard decoding Indian Union Budget data.
 *   **Key Features**:
     *   **16th Finance Commission Sandbox**: Interactive math calculator adjusting weight parameters dynamically.
@@ -64,7 +90,7 @@ Here is a detailed breakdown of the featured projects showcased within the inter
 *   **Tech Stack**: React 19, TypeScript, Zustand, Recharts, Tailwind CSS, Google Gemini 1.5 Flash
 *   **Repository**: [BharatBudget](https://github.com/NisargPatel03/BharatBudget)
 
-### 3. DRHV Cricket Tournament (Sports Management Platform)
+### 4. DRHV Cricket Tournament (Sports Management Platform)
 *   **Purpose**: Real-time league organizer and fan soundboard built for local tournament campaigns.
 *   **Key Features**:
     *   **AI Voice Commentator**: Live delivery text-to-speech audio using Google Gemini 1.5.
@@ -74,7 +100,7 @@ Here is a detailed breakdown of the featured projects showcased within the inter
 *   **Tech Stack**: React, Supabase Realtime DB, Tailwind CSS, Google AI Studio REST API
 *   **Repository**: [DRHV_Cricket_Tournament](https://github.com/NisargPatel03/DRHV_Cricket_Tournament)
 
-### 4. Blaze Overseas LLP Portal (Commercial Business Platform)
+### 5. Blaze Overseas LLP Portal (Commercial Business Platform)
 *   **Purpose**: High-fidelity corporate product catalog for international spices, grains, and pulses trade.
 *   **Key Features**:
     *   **Dynamic Catalogue Directory**: Specs, MOQ, packaging sizes, and HS codes for 24+ commodities.
@@ -83,7 +109,7 @@ Here is a detailed breakdown of the featured projects showcased within the inter
 *   **Tech Stack**: Next.js 16 (App Router), React 19, Tailwind CSS 4, GSAP, Framer Motion, Three.js
 *   **Repository**: [Blaze_Overseas_LLP](https://github.com/NisargPatel03/Blaze_Overseas_LLP)
 
-### 5. EcoLearn Environmental Portal (Ecology Learning Platform)
+### 6. EcoLearn Environmental Portal (Ecology Learning Platform)
 *   **Purpose**: Gamified ecology education platform utilizing interactive modules and carbon calculators.
 *   **Key Features**:
     *   **Gamified System**: Quizzes, biodiversity milestones, and carbon footprint calculators.
@@ -92,16 +118,16 @@ Here is a detailed breakdown of the featured projects showcased within the inter
 *   **Tech Stack**: Next.js 16, React 19, Node.js, Express, MongoDB (Mongoose), Socket.io, Google Generative AI
 *   **Repository**: [SEM6-SGP-70-75](https://github.com/cs-cspit/SEM6-SGP-70-75)
 
-### 6. Savaliya Scoops POS System (Client Point of Sale)
+### 7. Savaliya Scoops POS System (Client Point of Sale)
 *   **Purpose**: Customized retail checkouts built for parlor chain locations.
 *   **Key Features**:
-    *   **Supabase Realtime Sync**: Active sync updating menu stock counts dynamically.
-    *   **GST Invoice Generator**: Renders compliant transaction files.
     *   **Hold & Recall Buffers**: Saves client orders during checkout rushes.
+    *   **GST Invoice Generator**: Renders compliant transaction files.
+    *   **Supabase Realtime Sync**: Active sync updating menu stock counts dynamically.
 *   **Tech Stack**: React, Supabase, Excel API, Tailwind CSS
 *   **Repository**: [savaliya-scoops-system](https://github.com/NisargPatel03/savaliya-scoops-system)
 
-### 7. NextGenSociety Portal (Smart Society Management)
+### 8. NextGenSociety Portal (Smart Society Management)
 *   **Purpose**: Multi-tenant residential management system automating payments, notice circulars, and complaints.
 *   **Key Features**:
     *   **Online Maintenance Portal**: Instant billing calculations and online Stripe transactions.
@@ -110,7 +136,7 @@ Here is a detailed breakdown of the featured projects showcased within the inter
 *   **Tech Stack**: React, Node.js, Express, MongoDB, Bootstrap
 *   **Repository**: [NextGenSociety](https://github.com/NisargPatel03/NextGenSociety)
 
-### 8. QuickStay Hotel Booking (MERN Reservation Suite)
+### 9. QuickStay Hotel Booking (MERN Reservation Suite)
 *   **Purpose**: Responsive full-stack reservation engine featuring admin rooms.
 *   **Key Features**:
     *   **Secure Redux Sessions**: Multi-role logins (Admin & Customer).
@@ -119,7 +145,7 @@ Here is a detailed breakdown of the featured projects showcased within the inter
 *   **Tech Stack**: MongoDB, Express, React, Node.js, Redux
 *   **Repository**: [MERN_Hotel_Booking](https://github.com/NisargPatel03/MERN_Hotel_Booking)
 
-### 9. Car Rental System (Personal MERN Project)
+### 10. Car Rental System (Personal MERN Project)
 *   **Purpose**: Car exploration, reservation, and rental management catalog.
 *   **Key Features**:
     *   **Fleet Catalog Listings**: Real-time CRUD management for vehicles.
@@ -127,7 +153,7 @@ Here is a detailed breakdown of the featured projects showcased within the inter
 *   **Tech Stack**: React, Node.js, Express, MongoDB, Tailwind CSS
 *   **Repository**: [CarRental_FullStack](https://github.com/NisargPatel03/CarRental_FullStack)
 
-### 10. Blood Testing Management (Backend Dashboard System)
+### 11. Blood Testing Management (Backend Dashboard System)
 *   **Purpose**: PHP-based clinical patient laboratory portal managing appointment slots.
 *   **Key Features**:
     *   **Patient Indexer DB**: Relational MySQL tables holding diagnostic histories.
@@ -135,7 +161,7 @@ Here is a detailed breakdown of the featured projects showcased within the inter
 *   **Tech Stack**: PHP, MySQL, XAMPP, Bootstrap, JavaScript
 *   **Repository**: [23CS-SEM4-CS210_70_75_106](https://github.com/cs-cspit/23CS-SEM4-CS210_70_75_106/tree/main)
 
-### 11. Sports Venue Booking System (Reservation Suite)
+### 12. Sports Venue Booking System (Reservation Suite)
 *   **Purpose**: Court scheduling and reservation portal.
 *   **Key Features**:
     *   **Court Availability Calendar**: Prevents double-booking overlaps.
@@ -143,7 +169,7 @@ Here is a detailed breakdown of the featured projects showcased within the inter
 *   **Tech Stack**: React, Node.js, Express, MongoDB, Tailwind CSS
 *   **Repository**: [Sports_Venue_Booking_System](https://github.com/Meghpatel2810/Sports_Venue_Booking_System)
 
-### 12. Skill Swap Platform (MERN Web App)
+### 13. Skill Swap Platform (MERN Web App)
 *   **Purpose**: Peer-to-peer exchange platform matching users based on professional skills.
 *   **Key Features**:
     *   **P2P Matcher Algorithm**: Connects learners with experts.
