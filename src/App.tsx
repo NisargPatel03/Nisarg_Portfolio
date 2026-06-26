@@ -21,6 +21,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { MeltdownOverlay } from './components/MeltdownOverlay';
 import { BlueprintToggle } from './components/BlueprintToggle';
 import { BlueprintOverlay } from './components/BlueprintOverlay';
+import { AiCloneTerminal } from './components/AiCloneTerminal';
 
 
 const SECTIONS = [
@@ -299,6 +300,9 @@ function App() {
 
           {/* 9. CONTACT & FOOTER */}
           <ContactSection />
+
+          {/* 10. AI CLONE TERMINAL */}
+          <AiCloneTerminal isBlueprintMode={isBlueprintMode} />
         </motion.div>
       </>
       )}
