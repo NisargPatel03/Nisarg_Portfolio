@@ -291,6 +291,7 @@ function App() {
           <ProjectsSection
             activeTheme={activeTheme}
             setActiveTheme={handleSetTheme}
+            isBlueprintMode={isBlueprintMode}
           />
 
           {/* 7. CERTIFICATIONS FILTER BROWSER */}

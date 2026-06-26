@@ -19,9 +19,10 @@ const logGap = () => sleep(60 + Math.random() * 80);
 interface ProjectsSectionProps {
   activeTheme: 'project' | 'toxic-radar' | 'vapor-matrix' | 'amber-console' | 'blueprint-arctic';
   setActiveTheme: (theme: 'project' | 'toxic-radar' | 'vapor-matrix' | 'amber-console' | 'blueprint-arctic') => void;
+  isBlueprintMode?: boolean;
 }
 
-export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ activeTheme, setActiveTheme }) => {
+export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ activeTheme, setActiveTheme, isBlueprintMode }) => {
   const sectionRef = useRef<HTMLElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
   const curRef = useRef(0);
@@ -385,6 +386,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ activeTheme, s
                   flickerActive={isActive && flickerActive}
                   activeTheme={activeTheme}
                   setActiveTheme={setActiveTheme}
+                  isBlueprintMode={isBlueprintMode}
                 />
               </div>
             );
@@ -392,6 +394,90 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ activeTheme, s
         </div>
       </div>
     </section>
+  );
+};
+
+const BlueprintProjectSchematic: React.FC<{ project: TerminalProject }> = ({ project }) => {
+  const tables = project.dbChecklist.map((item) => {
+    const parts = item.split(' (');
+    const tableName = parts[0];
+    const details = parts[1] ? parts[1].replace(')', '') : '';
+    return { name: tableName, details };
+  });
+
+  return (
+    <svg
+      viewBox="0 0 350 210"
+      className="w-full h-full"
+      style={{ background: 'rgba(4, 13, 26, 0.95)' }}
+    >
+      <defs>
+        <pattern id="schematic-grid" width="12" height="12" patternUnits="userSpaceOnUse">
+          <path d="M 12 0 L 0 0 0 12" fill="none" stroke="#00f3ff" strokeWidth="0.5" strokeOpacity="0.1" />
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#schematic-grid)" />
+
+      <rect x="15" y="10" width="320" height="22" fill="none" stroke="#00f3ff" strokeWidth="0.75" strokeOpacity="0.8" />
+      <line x1="85" y1="10" x2="85" y2="32" stroke="#00f3ff" strokeWidth="0.75" strokeOpacity="0.8" />
+      <text x="22" y="24" fill="#00f3ff" fontFamily="monospace" fontSize="7" fontWeight="bold">SCHEMA_MAP</text>
+      <text x="92" y="24" fill="#00f3ff" fontFamily="monospace" fontSize="7" opacity="0.9">DB: {project.dbName}</text>
+
+      <path
+        d="M 155 74 L 175 74 L 175 132 L 155 132"
+        fill="none"
+        stroke="#00f3ff"
+        strokeWidth="1"
+        strokeDasharray="3 3"
+      />
+      <circle cx="155" cy="74" r="2.5" fill="none" stroke="#00f3ff" strokeWidth="1" />
+      <circle cx="155" cy="132" r="2.5" fill="none" stroke="#00f3ff" strokeWidth="1" />
+
+      <path
+        d="M 195 74 L 175 74 M 195 132 L 175 132"
+        fill="none"
+        stroke="#00f3ff"
+        strokeWidth="1"
+        strokeDasharray="3 3"
+      />
+      <circle cx="195" cy="74" r="2.5" fill="none" stroke="#00f3ff" strokeWidth="1" />
+      <circle cx="195" cy="132" r="2.5" fill="none" stroke="#00f3ff" strokeWidth="1" />
+
+      {tables.map((table, idx) => {
+        let x = 15;
+        let y = 45 + idx * 58;
+        if (idx >= 2) {
+          x = 195;
+          y = 45 + (idx - 2) * 58;
+        }
+
+        return (
+          <g key={idx}>
+            <rect x={x} y={y} width="140" height="15" fill="rgba(0, 243, 255, 0.08)" stroke="#00f3ff" strokeWidth="1" />
+            <text x={x + 5} y={y + 10} fill="#00f3ff" fontFamily="monospace" fontSize="6.5" fontWeight="bold">
+              {table.name}
+            </text>
+
+            <rect x={x} y={y + 15} width="140" height="28" fill="none" stroke="#00f3ff" strokeWidth="0.75" strokeOpacity="0.6" />
+            
+            <text x={x + 5} y={y + 24} fill="#00f3ff" fontFamily="monospace" fontSize="6" opacity="0.8">
+              🔑 id: UUID
+            </text>
+            <text x={x + 5} y={y + 35} fill="#00f3ff" fontFamily="monospace" fontSize="5.5" opacity="0.5">
+              * {table.details || 'data_payload'}
+            </text>
+
+            <line x1={x - 3} y1={y} x2={x - 3} y2={y + 43} stroke="#00f3ff" strokeWidth="0.5" strokeOpacity="0.4" />
+            <line x1={x - 5} y1={y} x2={x - 1} y2={y} stroke="#00f3ff" strokeWidth="0.5" strokeOpacity="0.4" />
+            <line x1={x - 5} y1={y + 43} x2={x - 1} y2={y + 43} stroke="#00f3ff" strokeWidth="0.5" strokeOpacity="0.4" />
+          </g>
+        );
+      })}
+
+      <text x="175" y="195" fill="#00f3ff" fontFamily="monospace" fontSize="6" textAnchor="middle" opacity="0.7">
+        [SYSTEM_SCHEMA_AUDIT: OK | RELATIONAL_LINKS: ACTIVE]
+      </text>
+    </svg>
   );
 };
 
@@ -419,6 +505,7 @@ interface TerminalPanelProps {
   flickerActive: boolean;
   activeTheme: 'project' | 'toxic-radar' | 'vapor-matrix' | 'amber-console' | 'blueprint-arctic';
   setActiveTheme: (theme: 'project' | 'toxic-radar' | 'vapor-matrix' | 'amber-console' | 'blueprint-arctic') => void;
+  isBlueprintMode?: boolean;
 }
 
 const TerminalPanel: React.FC<TerminalPanelProps> = ({
@@ -445,6 +532,7 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
   flickerActive,
   activeTheme,
   setActiveTheme,
+  isBlueprintMode,
 }) => {
   const [activeTab, setActiveTab] = useState<'overview' | 'features' | 'tech' | 'sysinfo'>('overview');
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
@@ -783,13 +871,17 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
           </div>
           <div className="preview-drawer-content">
             <div className="preview-mockup-frame">
-              {project.image && (
-                <img
-                  src={project.image}
-                  alt={`${project.title} Interface Mockup`}
-                  className="preview-mockup-img"
-                  loading="lazy"
-                />
+              {isBlueprintMode ? (
+                <BlueprintProjectSchematic project={project} />
+              ) : (
+                project.image && (
+                  <img
+                    src={project.image}
+                    alt={`${project.title} Interface Mockup`}
+                    className="preview-mockup-img"
+                    loading="lazy"
+                  />
+                )
               )}
               <div className="preview-mockup-scanlines" />
             </div>
