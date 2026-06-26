@@ -229,6 +229,7 @@ function App() {
           {isMeltdownActive && <MeltdownOverlay />}
           {isBlueprintMode && <BlueprintOverlay />}
           <BlueprintToggle isActive={isBlueprintMode} onToggle={setIsBlueprintMode} />
+          <AiCloneTerminal isBlueprintMode={isBlueprintMode} />
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -300,9 +301,6 @@ function App() {
 
           {/* 9. CONTACT & FOOTER */}
           <ContactSection />
-
-          {/* 10. AI CLONE TERMINAL */}
-          <AiCloneTerminal isBlueprintMode={isBlueprintMode} />
         </motion.div>
       </>
       )}

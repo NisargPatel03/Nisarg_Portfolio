@@ -232,7 +232,7 @@ export const AiCloneTerminal: React.FC<AiCloneTerminalProps> = ({ isBlueprintMod
   return (
     <>
       {/* Floating launcher trigger */}
-      <div className="fixed bottom-20 right-6 z-[40]">
+      <div className="fixed bottom-20 right-6 md:bottom-24 md:right-8 z-[50]">
         <button
           type="button"
           onClick={handleToggleOpen}
@@ -266,7 +266,7 @@ export const AiCloneTerminal: React.FC<AiCloneTerminalProps> = ({ isBlueprintMod
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
             data-lenis-prevent
-            className={`fixed bottom-36 right-6 z-[45] w-[90vw] max-w-md border rounded-xl flex flex-col overflow-hidden backdrop-blur-md bg-black/90 font-mono ${shadowClass}`}
+            className={`fixed bottom-36 right-6 md:right-8 z-[55] w-[90vw] max-w-md border rounded-xl flex flex-col overflow-hidden backdrop-blur-md bg-black/90 font-mono ${shadowClass}`}
           >
             {/* Header section */}
             <div className={`flex items-center justify-between border-b px-4 py-2.5 bg-black/40 text-[9px] tracking-widest transition-all ${accentBorderClass} ${accentTextClass}`}>
