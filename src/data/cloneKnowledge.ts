@@ -250,7 +250,7 @@ Behavior Guidelines:
 
 export const OFFLINE_FAQS = [
   {
-    keywords: ["skills", "tech", "languages", "frontend", "backend", "frameworks", "databases"],
+    keywords: ["skills", "tech", "languages", "frontend", "backend", "frameworks", "databases", "stack", "technologies", "programming"],
     answer: `Here is my technology configuration:
 - **Frontend Stack**: React (18/19), TypeScript, Tailwind CSS, Next.js, Zustand, Framer Motion, D3.js.
 - **Backend & APIs**: Node.js, Express, Socket.io, PHP (XAMPP).
@@ -258,7 +258,7 @@ export const OFFLINE_FAQS = [
 - **AI Integrations**: Gemini API prompting, RAG setups, and speech synthesis.`
   },
   {
-    keywords: ["project", "projects", "repositories", "codebase", "github"],
+    keywords: ["project", "projects", "repositories", "codebase", "github", "demo"],
     answer: `I have built multiple interactive platforms:
 1. **CodeGraph**: Visualizes codebase structures using dynamic D3/Canvas graphs and triggers AI code audits.
 2. **BharatBudget**: An interactive Union Budget sandbox tracker equipped with Gemini voice commentary.
@@ -266,25 +266,26 @@ export const OFFLINE_FAQS = [
 For the complete catalog, check out my **GitHub**: ${CLONE_PROFILE.github}`
   },
   {
-    keywords: ["contact", "hire", "email", "job", "recruiter", "linkedin", "social"],
+    keywords: ["contact", "hire", "email", "job", "recruiter", "linkedin", "social", "resume", "cv", "work", "experience"],
     answer: `Let's sync up! You can reach out directly via:
 - **Email**: ${CLONE_PROFILE.email}
 - **LinkedIn**: ${CLONE_PROFILE.linkedin}
 - **GitHub**: ${CLONE_PROFILE.github}
+- **Resume/CV**: The latest copy is available in the main system shell.
 I'm always open to new full-time software engineering roles and collaborations.`
   },
   {
-    keywords: ["education", "college", "cgpa", "university", "academic", "study"],
+    keywords: ["education", "college", "cgpa", "university", "academic", "study", "gpa", "btech", "degree"],
     answer: `I am pursuing my B.Tech in Computer Science & Engineering at **CSPIT, CHARUSAT University** (Gujarat, India). I maintain a **9.2 CGPA** average and actively participate in internal coding hackathons.`
   },
   {
-    keywords: ["research", "paper", "publications", "sgp"],
+    keywords: ["research", "paper", "publications", "sgp", "thesis", "write", "writing"],
     answer: `I have written two major research/SGP projects:
 1. **Design of an Offline-First Clinical Survey Platform** (focuses on SharedPreferences caching and gestural Touch canvas).
 2. **Interactive Codebase Dependency Mapping via Graph Topologies** (focused on D3 force layouts for import checking).`
   },
   {
-    keywords: ["certificate", "certificates", "credentials", "course"],
+    keywords: ["certificate", "certificates", "certification", "certifications", "credentials", "course", "courses"],
     answer: `My core verified credentials include:
 - **Google Cloud** Generative AI Fundamentals.
 - **Supabase Academy** Realtime Database developer.
@@ -292,7 +293,7 @@ I'm always open to new full-time software engineering roles and collaborations.`
 - **TypeScript Core Concepts** and Design Patterns.`
   },
   {
-    keywords: ["achievements", "hackathon", "winner", "award"],
+    keywords: ["achievements", "hackathon", "winner", "award", "awards", "achievement", "competition", "compete"],
     answer: `My key milestones:
 - **1st Place** at the CHARUSAT Internal Hackathon (2025) for my BharatBudget budget sandbox project.
 - **Academic Excellence Award** at CSPIT, CHARUSAT for top academic rankings (9.2 CGPA).`
