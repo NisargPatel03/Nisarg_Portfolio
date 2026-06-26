@@ -20,7 +20,7 @@ export const BlueprintToggle: React.FC<BlueprintToggleProps> = ({ isActive, onTo
 
   return (
     <div 
-      className="fixed top-24 right-6 z-[999] md:top-28 md:right-8 select-none"
+      className="fixed top-24 left-6 z-[999] md:top-28 md:left-8 select-none"
       onClick={handleToggle}
       title="Toggle CAD Blueprint Wireframe Mode"
     >

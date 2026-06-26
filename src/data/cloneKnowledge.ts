@@ -43,7 +43,7 @@ export const CLONE_PROFILE: CloneProfile = {
   location: "Gujarat, India",
   education: "B.Tech in Computer Science & Engineering, CSPIT, CHARUSAT (Charotar University of Science and Technology)",
   cgpa: "9.2 CGPA",
-  email: "nisargpatel.dev@gmail.com",
+  email: "kbnisargpatel001454@gmail.com",
   github: "https://github.com/NisargPatel03",
   linkedin: "https://www.linkedin.com/in/nisarg-patel-9003b8256/",
   summary: "A passionate full-stack developer and CSE student specializing in high-fidelity React architectures, AI/ML integrations, serverless databases (Supabase, PostgreSQL), and interactive data visualization (D3.js, Canvas). Built multiple academic and commercial platforms focusing on offline-first capabilities and responsive designs.",
