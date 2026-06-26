@@ -242,7 +242,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         }}
         className={`fixed bottom-6 z-[999] flex items-center gap-2 bg-[#121212]/90 border border-white/10 px-4 py-2.5 rounded-full backdrop-blur-md text-[11px] font-mono text-[#D7E2EA] hover:text-white hover:border-emerald-500/40 hover:shadow-[0_0_15px_rgba(16,185,129,0.25)] active:scale-95 transition-all cursor-pointer select-none group shadow-lg ${
           isBlueprintMode 
-            ? 'right-[190px] md:right-[200px]' 
+            ? 'right-[215px] md:right-[230px]' 
             : 'right-6 md:right-8'
         }`}
       >
