@@ -170,6 +170,18 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         setIsOpen(false);
       }
     },
+    { 
+      id: 'toggle-aiclone', 
+      name: 'Toggle: Holographic AI Digital Clone Link', 
+      category: 'Preferences', 
+      shortcut: 'S C', 
+      action: () => {
+        if ((window as any).toggleAiClone) {
+          (window as any).toggleAiClone();
+        }
+        setIsOpen(false);
+      }
+    },
   ];
 
   // Filter commands by search term

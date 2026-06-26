@@ -94,6 +94,17 @@ export const AiCloneTerminal: React.FC<AiCloneTerminalProps> = ({ isBlueprintMod
     }
   }, []);
 
+  // Expose global window toggler
+  useEffect(() => {
+    (window as any).toggleAiClone = () => {
+      soundFX.playClick();
+      setIsOpen(prev => !prev);
+    };
+    return () => {
+      delete (window as any).toggleAiClone;
+    };
+  }, []);
+
   // Scroll to bottom on new messages
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
