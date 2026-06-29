@@ -3,14 +3,18 @@ import { motion } from 'framer-motion';
 import { soundFX } from '../utils/terminalAudio';
 
 interface PreloaderProps {
+  onStart: () => void;
   onComplete: () => void;
 }
 
-export const Preloader: React.FC<PreloaderProps> = ({ onComplete }) => {
+export const Preloader: React.FC<PreloaderProps> = ({ onStart, onComplete }) => {
+  const [started, setStarted] = useState(false);
   const [loadingPercent, setLoadingPercent] = useState(0);
 
   // Fast coordinate stream & percentage ticker
   useEffect(() => {
+    if (!started) return;
+
     soundFX.startPreloaderHum();
 
     // Sound clicks for grid assembly
@@ -47,10 +51,33 @@ export const Preloader: React.FC<PreloaderProps> = ({ onComplete }) => {
       clearTimeout(drawingTimer);
       clearTimeout(exitTimer);
     };
-  }, [onComplete]);
+  }, [started, onComplete]);
+
+  const handleInit = () => {
+    if (started) return;
+    setStarted(true);
+    onStart();
+  };
 
   return (
-    <div className="fixed inset-0 z-[10000] bg-[#0C0C0C] flex flex-col justify-center items-center font-mono select-none overflow-hidden text-[#D7E2EA]">
+    <div 
+      onClick={handleInit}
+      className={`fixed inset-0 z-[10000] bg-[#0C0C0C] flex flex-col justify-center items-center font-mono select-none overflow-hidden text-[#D7E2EA] ${
+        !started ? 'cursor-pointer' : ''
+      }`}
+    >
+      {/* Click anywhere activation overlay */}
+      {!started && (
+        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none">
+          <div className="px-8 py-5 border border-[#00f3ff]/20 bg-black/50 backdrop-blur-md text-[#00f3ff] rounded-xl font-orbitron tracking-widest text-xs shadow-[0_0_40px_rgba(0,243,255,0.08)] flex flex-col items-center gap-3">
+            <span className="animate-pulse">ENGAGE NEURAL LINK</span>
+            <span className="text-[9px] opacity-60 tracking-normal font-mono uppercase">
+              Click anywhere to initialize system audio
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* Visual background lines & axes */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:30px_30px]" />
       
@@ -63,7 +90,7 @@ export const Preloader: React.FC<PreloaderProps> = ({ onComplete }) => {
         {/* Animated Target Outer Reticle */}
         <motion.div
           initial={{ rotate: 0, opacity: 0 }}
-          animate={{ rotate: 360, opacity: 0.15 }}
+          animate={{ rotate: 360, opacity: started ? 0.15 : 0.05 }}
           transition={{ duration: 10, ease: 'linear', repeat: Infinity }}
           className="absolute w-[460px] h-[460px] border border-dashed border-[#00f3ff] rounded-full pointer-events-none"
         />
