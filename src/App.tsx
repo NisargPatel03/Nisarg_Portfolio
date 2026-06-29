@@ -260,8 +260,8 @@ function App() {
           top: '50%',
           x: '-50%',
           y: '-50%',
-          width: '320px',
-          height: '240px',
+          width: '380px',
+          height: '280px',
           zIndex: 10005,
         } : {
           position: 'fixed' as const,
@@ -302,11 +302,10 @@ function App() {
           <motion.path
             d="M 70 180 L 70 60 L 150 180 L 150 60"
             stroke="var(--accent-color, #00f3ff)"
-            strokeWidth="15"
+            initial={{ pathLength: 0, strokeWidth: showPreloader ? 23 : 13 }}
+            animate={{ pathLength: 1, strokeWidth: showPreloader ? 23 : 13 }}
             strokeLinecap="round"
             strokeLinejoin="round"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
             transition={{ duration: 2.2, ease: 'easeInOut', delay: 0.2 }}
             style={isDrawingComplete ? {
               fill: 'rgba(0, 243, 255, 0.08)',
@@ -316,11 +315,10 @@ function App() {
           <motion.path
             d="M 190 180 L 190 60 L 250 60 C 270 60 270 120 250 120 L 190 120"
             stroke={isBlueprintMode ? "var(--accent-color, #00f3ff)" : "#ff00c7"}
-            strokeWidth="15"
+            initial={{ pathLength: 0, strokeWidth: showPreloader ? 23 : 13 }}
+            animate={{ pathLength: 1, strokeWidth: showPreloader ? 23 : 13 }}
             strokeLinecap="round"
             strokeLinejoin="round"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
             transition={{ duration: 2.2, ease: 'easeInOut', delay: 0.2 }}
             style={isDrawingComplete ? {
               fill: 'rgba(255, 0, 199, 0.08)',

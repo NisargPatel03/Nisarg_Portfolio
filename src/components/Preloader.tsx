@@ -68,8 +68,6 @@ export const Preloader: React.FC<PreloaderProps> = ({ onComplete }) => {
       <div className="absolute bottom-4 left-6 right-6 flex justify-between text-[0.65rem] opacity-35 tracking-widest pointer-events-none">
         <span>SYS_CORE: ONLINE</span>
         <span>MEM_ALLOC: OK</span>
-        <span>SYS_SPEED: 4.80GHz</span>
-        <span>BOOT_MODULE: ACTIVE</span>
       </div>
 
       <div className="absolute top-20 bottom-20 right-6 flex flex-col justify-between text-[0.65rem] opacity-35 text-right pointer-events-none">
@@ -90,10 +88,10 @@ export const Preloader: React.FC<PreloaderProps> = ({ onComplete }) => {
           initial={{ rotate: 0, opacity: 0 }}
           animate={{ rotate: 360, opacity: 0.15 }}
           transition={{ duration: 10, ease: 'linear', repeat: Infinity }}
-          className="absolute w-[400px] h-[400px] border border-dashed border-[#00f3ff] rounded-full pointer-events-none"
+          className="absolute w-[460px] h-[460px] border border-dashed border-[#00f3ff] rounded-full pointer-events-none"
         />
 
-        <div className="w-[340px] h-[260px] pointer-events-none" />
+        <div className="w-[380px] h-[280px] pointer-events-none" />
       </div>
 
       {/* Loading Progress Bar & percentage */}
