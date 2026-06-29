@@ -44,6 +44,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const isKeyboardActionRef = useRef(false);
 
   // Keyboard shortcut listener to open command palette
   useEffect(() => {
@@ -198,10 +199,12 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     } else if (e.key === 'ArrowDown') {
       e.preventDefault();
       soundFX.playClick();
+      isKeyboardActionRef.current = true;
       setSelectedIndex((prev) => (prev + 1) % filteredCommands.length);
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       soundFX.playClick();
+      isKeyboardActionRef.current = true;
       setSelectedIndex((prev) => (prev - 1 + filteredCommands.length) % filteredCommands.length);
     } else if (e.key === 'Enter') {
       e.preventDefault();
@@ -214,6 +217,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
 
   // Scroll item into view
   useEffect(() => {
+    if (!isKeyboardActionRef.current) return;
     const listEl = listRef.current;
     if (!listEl) return;
     const selectedEl = listEl.children[selectedIndex] as HTMLElement;
@@ -323,6 +327,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                           cmd.action();
                         }}
                         onMouseEnter={() => {
+                          isKeyboardActionRef.current = false;
                           setSelectedIndex(idx);
                         }}
                         style={isSelected ? {
