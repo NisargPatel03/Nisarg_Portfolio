@@ -7,6 +7,8 @@ class TerminalSoundFX {
   private ambientNodes: AudioNode[] = [];
   private oscillators: OscillatorNode[] = [];
   private filterNode: BiquadFilterNode | null = null;
+  private preloaderHumNode: OscillatorNode | null = null;
+  private preloaderHumGain: GainNode | null = null;
 
   private init() {
     if (!this.ctx) {
@@ -357,6 +359,113 @@ class TerminalSoundFX {
           this.filterNode.frequency.linearRampToValueAtTime(filterCutoff, now + 2.0);
         } catch (err) {}
       }
+    }
+  }
+
+  startPreloaderHum() {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+
+    try {
+      const now = this.ctx.currentTime;
+      this.preloaderHumNode = this.ctx.createOscillator();
+      this.preloaderHumGain = this.ctx.createGain();
+
+      this.preloaderHumNode.type = 'sine';
+      this.preloaderHumNode.frequency.setValueAtTime(55, now); // Low A1 note
+
+      // Low pass filter to make it a deep, industrial bass hum
+      const filter = this.ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(120, now);
+
+      this.preloaderHumGain.gain.setValueAtTime(0.0, now);
+      this.preloaderHumGain.gain.linearRampToValueAtTime(0.15, now + 1.0); // Smooth fade in
+
+      this.preloaderHumNode.connect(filter);
+      filter.connect(this.preloaderHumGain);
+      this.preloaderHumGain.connect(this.analyser || this.ctx.destination);
+
+      this.preloaderHumNode.start(now);
+    } catch (e) {
+      console.warn('Error starting preloader hum:', e);
+    }
+  }
+
+  stopPreloaderHum() {
+    if (!this.ctx) return;
+    try {
+      const now = this.ctx.currentTime;
+      if (this.preloaderHumGain && this.preloaderHumNode) {
+        this.preloaderHumGain.gain.setValueAtTime(this.preloaderHumGain.gain.value, now);
+        this.preloaderHumGain.gain.linearRampToValueAtTime(0.0, now + 0.5); // Smooth fade out
+        
+        const nodeToStop = this.preloaderHumNode;
+        setTimeout(() => {
+          try {
+            nodeToStop.stop();
+          } catch (err) {}
+        }, 600);
+      }
+    } catch (e) {
+      console.warn('Error stopping preloader hum:', e);
+    }
+  }
+
+  playGridSnap() {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+
+    try {
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(1200 + Math.random() * 400, now);
+
+      gain.gain.setValueAtTime(0.04, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.03);
+
+      osc.connect(gain);
+      gain.connect(this.analyser || this.ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.04);
+    } catch (e) {
+      console.warn('Error playing grid snap sound:', e);
+    }
+  }
+
+  playMetallicLock() {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+
+    try {
+      const now = this.ctx.currentTime;
+      const gain = this.ctx.createGain();
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.6);
+      gain.connect(this.analyser || this.ctx.destination);
+
+      // Create multiple frequencies to simulate metal resonance
+      const freqs = [180, 290, 430, 680];
+      freqs.forEach((freq) => {
+        if (!this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, now);
+        osc.frequency.linearRampToValueAtTime(freq * 0.9, now + 0.6); // Pitch drop
+        
+        osc.connect(gain);
+        osc.start(now);
+        osc.stop(now + 0.6);
+      });
+    } catch (e) {
+      console.warn('Error playing metallic lock sound:', e);
     }
   }
 }

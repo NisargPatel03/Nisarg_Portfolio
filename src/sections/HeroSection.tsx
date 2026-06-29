@@ -177,13 +177,8 @@ export const HeroSection: React.FC = () => {
       {/* 1. NAVBAR */}
       <FadeIn as="nav" y={-20} delay={0} duration={0.8} className="w-full z-30">
         <div className="flex justify-between items-center px-6 md:px-10 pt-6 md:pt-8">
-          {/* Logo / Initials */}
-          <div 
-            onClick={() => handleNavClick('hero')} 
-            className="text-[#D7E2EA] font-black tracking-widest text-lg md:text-xl lg:text-2xl cursor-pointer hover:opacity-75 transition-opacity"
-          >
-            N.P
-          </div>
+          {/* Logo Placeholder (Global Floating Monogram lands here) */}
+          <div className="w-[50px] h-[40px] pointer-events-none" />
           
           {/* Desktop links */}
           <div className="hidden md:flex items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10">

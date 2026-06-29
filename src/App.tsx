@@ -22,6 +22,7 @@ import { MeltdownOverlay } from './components/MeltdownOverlay';
 import { BlueprintToggle } from './components/BlueprintToggle';
 import { BlueprintOverlay } from './components/BlueprintOverlay';
 import { AiCloneTerminal } from './components/AiCloneTerminal';
+import { Preloader } from './components/Preloader';
 
 
 const SECTIONS = [
@@ -37,6 +38,7 @@ const SECTIONS = [
 ];
 
 function App() {
+  const [showPreloader, setShowPreloader] = useState(true);
   const [isMatrixActive, setIsMatrixActive] = useState(false);
   const [isSoundActive, setIsSoundActive] = useState(false);
   const [isAmbientActive, setIsAmbientActive] = useState(false);
@@ -211,9 +213,16 @@ function App() {
 
   return (
     <div className="w-full min-h-screen bg-[#0C0C0C] text-[#D7E2EA] overflow-x-clip select-none relative">
+      {/* Boot Preloader Sequence */}
+      <AnimatePresence>
+        {showPreloader && (
+          <Preloader onComplete={() => setShowPreloader(false)} />
+        )}
+      </AnimatePresence>
+
       {/* Onboarding Biometric Auth Scan Screen */}
       <AnimatePresence>
-        {showAuthScreen && (
+        {!showPreloader && showAuthScreen && (
           <BiometricAuthScreen
             onBypass={() => setShowAuthScreen(false)}
             onUnlock={() => {
@@ -225,6 +234,43 @@ function App() {
           />
         )}
       </AnimatePresence>
+
+      {/* Floating Global Logo (drifts from center preloader using layoutId) */}
+      {!showPreloader && (
+        <motion.div
+          layoutId="np-logo"
+          className="fixed top-6 left-6 md:top-8 md:left-8 z-[999] cursor-pointer hover:opacity-75 transition-opacity"
+          onClick={() => {
+            if (!showAuthScreen && (window as any).triggerWarpScroll) {
+              (window as any).triggerWarpScroll('hero');
+            }
+          }}
+        >
+          <svg
+            width="50"
+            height="40"
+            viewBox="0 0 160 120"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="filter drop-shadow-[0_0_12px_rgba(0,243,255,0.45)]"
+          >
+            <path
+              d="M 35 90 L 35 30 L 75 90 L 75 30"
+              stroke="var(--accent-color, #00f3ff)"
+              strokeWidth="3.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M 95 90 L 95 30 L 125 30 C 135 30 135 60 125 60 L 95 60"
+              stroke={isBlueprintMode ? "var(--accent-color, #00f3ff)" : "#ff00c7"}
+              strokeWidth="3.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </motion.div>
+      )}
 
       {!showAuthScreen && (
         <>
