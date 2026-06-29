@@ -275,7 +275,7 @@ export const AiCloneTerminal: React.FC<AiCloneTerminalProps> = ({ isBlueprintMod
           <img 
             src="/aether_avatar.png" 
             alt="Nisarg Aether Avatar" 
-            className="w-full h-full rounded-full object-cover p-[2px] transition-transform duration-300 group-hover:scale-105"
+            className="w-full h-full rounded-full object-cover p-[2px] transition-transform duration-300 group-hover:scale-105 no-blueprint-override"
           />
 
           {/* Tooltip */}
