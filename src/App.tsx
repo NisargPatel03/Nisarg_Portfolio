@@ -114,6 +114,7 @@ function App() {
       if (currentActive !== activeSectionRef.current) {
         activeSectionRef.current = currentActive;
         setActiveSection(currentActive);
+        soundFX.setAmbientThemeForSection(currentActive);
       }
     };
 
@@ -131,6 +132,7 @@ function App() {
   useEffect(() => {
     if (isAmbientActive) {
       soundFX.startAmbient();
+      soundFX.setAmbientThemeForSection(activeSectionRef.current);
     } else {
       soundFX.stopAmbient();
     }

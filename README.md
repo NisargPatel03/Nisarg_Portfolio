@@ -42,7 +42,8 @@ A cutting-edge, ultra-premium developer portfolio designed with sleek futuristic
 *   **Bioluminescent Canvas**: Cascades green glowing binary stream rain behind container cards when toggled, adding a retro cyber-hacker aesthetic layer.
 
 ### 🔊 8. Immersive Audio Engine
-*   **Tactile Auditory Cues**: Integrated synthesizer clicks, menu navigation hover ticks, and persistent low-hum ambient telemetry loops.
+*   **Tactile Auditory Cues**: Integrated synthesizer clicks and menu navigation hover ticks.
+*   **Dynamic Section-Based Ambient Soundtrack**: Synthesizes a real-time synthwave soundtrack using the Web Audio API. As the visitor scrolls, the soundtrack dynamically shifts chord progressions (D minor for Hero, E minor for Skills, C minor for Projects, F major for About, and G major for Contact) via a smooth, 2-second frequency pitch-glide transition.
 
 ### 💼 9. Spring Experience Timeline
 *   **Elastic Timeline Entries**: Timeline cards animate dynamically on scroll using customized springs. Even timeline cards slide in from the **LEFT** (`x: -100`), and odd cards slide in from the **RIGHT** (`x: 100`).

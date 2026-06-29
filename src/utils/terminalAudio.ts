@@ -5,6 +5,8 @@ class TerminalSoundFX {
   public isAmbientPlaying = false;
   private ambientGain: GainNode | null = null;
   private ambientNodes: AudioNode[] = [];
+  private oscillators: OscillatorNode[] = [];
+  private filterNode: BiquadFilterNode | null = null;
 
   private init() {
     if (!this.ctx) {
@@ -214,11 +216,11 @@ class TerminalSoundFX {
       filter.frequency.setValueAtTime(500, now); // Set higher cutoff for mid-range audibility
       filter.Q.setValueAtTime(2.0, now);
       filter.connect(masterGain);
+      this.filterNode = filter;
 
       // Shifted frequencies up one octave for laptop/phone speaker audibility:
-      // D3 (146.8Hz), Detuned D3 (147.3Hz), A3 (220Hz), D4 (293.6Hz), F4 (349.2Hz), A4 (440Hz)
       const freqs = [146.83, 147.33, 220.00, 293.66, 349.23, 440.00];
-      const oscillators: OscillatorNode[] = [];
+      this.oscillators = [];
 
       freqs.forEach((freq, idx) => {
         const osc = this.ctx!.createOscillator();
@@ -232,7 +234,7 @@ class TerminalSoundFX {
         osc.connect(oscGain);
         oscGain.connect(filter);
         osc.start(now);
-        oscillators.push(osc);
+        this.oscillators.push(osc);
       });
 
       // Create LFO (Low Frequency Oscillator) to modulate filter frequency
@@ -249,7 +251,7 @@ class TerminalSoundFX {
       lfo.start(now);
 
       // Store references for cleanup
-      this.ambientNodes = [...oscillators, lfo, lfoGain, filter];
+      this.ambientNodes = [...this.oscillators, lfo, lfoGain, filter];
     } catch (e) {
       console.warn('Error playing ambient notes:', e);
       this.isAmbientPlaying = false;
@@ -288,7 +290,74 @@ class TerminalSoundFX {
       }
     }
     this.ambientNodes = [];
+    this.oscillators = [];
+    this.filterNode = null;
     this.ambientGain = null;
+  }
+
+  public setAmbientThemeForSection(label: string) {
+    if (!this.isAmbientPlaying || !this.ctx || this.oscillators.length === 0) return;
+
+    const now = this.ctx.currentTime;
+
+    // Define chord frequencies and low-pass filter base cutoffs for each section label
+    let freqs = [146.83, 147.33, 220.00, 293.66, 349.23, 440.00]; // Default: D minor (SYS_BOOT)
+    let filterCutoff = 500;
+
+    switch (label) {
+      case 'SYS_BOOT': // Hero
+        freqs = [146.83, 147.33, 220.00, 293.66, 349.23, 440.00]; // D minor
+        filterCutoff = 500;
+        break;
+      case 'BIO_NET': // Skills
+      case 'CERT_VER': // Certifications
+        freqs = [164.81, 165.31, 246.94, 329.63, 392.00, 493.88]; // E minor (bright, clean tech sound)
+        filterCutoff = 650;
+        break;
+      case 'SYS_ARCH': // Architecture
+      case '3D_DECK': // Projects
+        freqs = [130.81, 131.31, 196.00, 261.63, 311.13, 392.00]; // C minor (moody, structured blueprint sound)
+        filterCutoff = 450;
+        break;
+      case 'BIO_CORE': // About
+      case 'GIT_TREE': // Work
+      case 'SANDBOX': // Services
+        freqs = [174.61, 175.11, 261.63, 349.23, 440.00, 523.25]; // F major (warm, harmonious chord)
+        filterCutoff = 550;
+        break;
+      case 'COM_UPLINK': // Contact
+        freqs = [196.00, 196.50, 293.66, 392.00, 493.88, 587.33]; // G major (hopeful, high-frequency resolution)
+        filterCutoff = 700;
+        break;
+      default:
+        return;
+    }
+
+    // Exponentially transition active oscillators to the new chord!
+    this.oscillators.forEach((osc, idx) => {
+      if (idx < freqs.length) {
+        try {
+          osc.frequency.setValueAtTime(osc.frequency.value, now);
+          osc.frequency.exponentialRampToValueAtTime(freqs[idx], now + 2.0); // 2-second glide
+        } catch (e) {
+          try {
+            osc.frequency.linearRampToValueAtTime(freqs[idx], now + 2.0);
+          } catch (err) {}
+        }
+      }
+    });
+
+    // Modulate filter cutoff frequency smoothly
+    if (this.filterNode) {
+      try {
+        this.filterNode.frequency.setValueAtTime(this.filterNode.frequency.value, now);
+        this.filterNode.frequency.exponentialRampToValueAtTime(filterCutoff, now + 2.0);
+      } catch (e) {
+        try {
+          this.filterNode.frequency.linearRampToValueAtTime(filterCutoff, now + 2.0);
+        } catch (err) {}
+      }
+    }
   }
 }
 
