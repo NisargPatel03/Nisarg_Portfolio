@@ -49,11 +49,8 @@ function App() {
   const [activeTheme, setActiveTheme] = useState<'project' | 'toxic-radar' | 'vapor-matrix' | 'amber-console' | 'blueprint-arctic'>('project');
   const [isBlueprintMode, setIsBlueprintMode] = useState(false);
   const [isDrawingComplete, setIsDrawingComplete] = useState(false);
-  const [preloaderStarted, setPreloaderStarted] = useState(false);
 
   useEffect(() => {
-    if (!preloaderStarted) return;
-
     const drawingTimer = setTimeout(() => {
       setIsDrawingComplete(true);
     }, 2800);
@@ -66,7 +63,7 @@ function App() {
       clearTimeout(drawingTimer);
       clearTimeout(completeTimer);
     };
-  }, [preloaderStarted]);
+  }, []);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -235,10 +232,7 @@ function App() {
       {/* Boot Preloader Sequence */}
       <AnimatePresence>
         {showPreloader && (
-          <Preloader 
-            onStart={() => setPreloaderStarted(true)} 
-            onComplete={() => setShowPreloader(false)} 
-          />
+          <Preloader onComplete={() => setShowPreloader(false)} />
         )}
       </AnimatePresence>
 
@@ -309,7 +303,7 @@ function App() {
             d="M 70 180 L 70 60 L 150 180 L 150 60"
             stroke="var(--accent-color, #00f3ff)"
             initial={{ pathLength: 0, strokeWidth: showPreloader ? 23 : 13 }}
-            animate={{ pathLength: preloaderStarted ? 1 : 0, strokeWidth: showPreloader ? 23 : 13 }}
+            animate={{ pathLength: 1, strokeWidth: showPreloader ? 23 : 13 }}
             strokeLinecap="round"
             strokeLinejoin="round"
             transition={{ duration: 2.2, ease: 'easeInOut', delay: 0.2 }}
@@ -322,7 +316,7 @@ function App() {
             d="M 190 180 L 190 60 L 250 60 C 270 60 270 120 250 120 L 190 120"
             stroke={isBlueprintMode ? "var(--accent-color, #00f3ff)" : "#ff00c7"}
             initial={{ pathLength: 0, strokeWidth: showPreloader ? 23 : 13 }}
-            animate={{ pathLength: preloaderStarted ? 1 : 0, strokeWidth: showPreloader ? 23 : 13 }}
+            animate={{ pathLength: 1, strokeWidth: showPreloader ? 23 : 13 }}
             strokeLinecap="round"
             strokeLinejoin="round"
             transition={{ duration: 2.2, ease: 'easeInOut', delay: 0.2 }}
