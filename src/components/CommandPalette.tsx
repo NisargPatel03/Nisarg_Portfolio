@@ -172,7 +172,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     },
     { 
       id: 'toggle-aiclone', 
-      name: 'Toggle: Holographic AI Digital Clone Link', 
+      name: 'Toggle: Holographic AI Nisarg Aether', 
       category: 'Preferences', 
       shortcut: 'S C', 
       action: () => {

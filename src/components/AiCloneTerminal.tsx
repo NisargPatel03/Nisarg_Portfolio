@@ -67,7 +67,7 @@ export const AiCloneTerminal: React.FC<AiCloneTerminalProps> = ({ isBlueprintMod
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'model',
-      content: `System check: Neural connection established. Welcome to my Digital Clone. I am trained on Nisarg Patel's complete developer profile, research, and certificates. Ask me anything, or select a telemetry chip below!`
+      content: `System check: Neural connection established. Welcome to Nisarg Aether, my Digital Clone. I am trained on Nisarg Patel's complete developer profile, research, and certificates. Ask me anything, or select a telemetry chip below!`
     }
   ]);
   const [inputText, setInputText] = useState('');
@@ -272,13 +272,15 @@ export const AiCloneTerminal: React.FC<AiCloneTerminalProps> = ({ isBlueprintMod
           {/* Animated beacon ring */}
           <span className={`absolute inset-0 rounded-full animate-ping opacity-25 border ${isBlueprintMode ? 'border-[#00f3ff]' : 'border-[#00ff41]'}`} style={{ animationDuration: '3s' }} />
           
-          <svg className={`w-6 h-6 ${accentTextClass}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-          </svg>
+          <img 
+            src="/aether_avatar.png" 
+            alt="Nisarg Aether Avatar" 
+            className="w-full h-full rounded-full object-cover p-[2px] transition-transform duration-300 group-hover:scale-105"
+          />
 
           {/* Tooltip */}
           <span className={`absolute right-14 text-[9px] font-mono tracking-widest px-2 py-1 rounded border backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 select-none pointer-events-none whitespace-nowrap bg-black/90 ${accentTextClass} ${accentBorderClass}`}>
-            [SYSTEM_AI_CLONE: LINK]
+            [NISARG_AETHER: ONLINE]
           </span>
         </button>
       </div>
@@ -328,7 +330,7 @@ export const AiCloneTerminal: React.FC<AiCloneTerminalProps> = ({ isBlueprintMod
                     className={`flex flex-col max-w-[85%] ${isModel ? 'self-start' : 'self-end items-end'}`}
                   >
                     <span className={`text-[7px] mb-1 opacity-55 tracking-wider uppercase ${accentTextClass}`}>
-                      {isModel ? '❯ NP_CLONE' : '❯ VISITOR'}
+                      {isModel ? '❯ NISARG_AETHER' : '❯ VISITOR'}
                     </span>
                     <div className={`border rounded-lg px-3 py-2 text-xs transition-all ${
                       isModel 
@@ -348,7 +350,7 @@ export const AiCloneTerminal: React.FC<AiCloneTerminalProps> = ({ isBlueprintMod
               {isGenerating && (
                 <div className="self-start flex flex-col max-w-[85%]">
                   <span className={`text-[7px] mb-1 opacity-55 tracking-wider uppercase ${accentTextClass}`}>
-                    ❯ NP_CLONE
+                    ❯ NISARG_AETHER
                   </span>
                   <div className={`border rounded-lg px-3 py-2 text-xs animate-pulse ${
                     isBlueprintMode ? 'border-[#00f3ff] text-[#00f3ff]' : 'border-[#00ff41]/20 text-[#00ff41]/75'
