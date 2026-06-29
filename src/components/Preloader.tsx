@@ -7,7 +7,6 @@ interface PreloaderProps {
 }
 
 export const Preloader: React.FC<PreloaderProps> = ({ onComplete }) => {
-  const [coordinates, setCoordinates] = useState({ x: 0.15, y: 0.82 });
   const [loadingPercent, setLoadingPercent] = useState(0);
 
   // Fast coordinate stream & percentage ticker
@@ -18,14 +17,6 @@ export const Preloader: React.FC<PreloaderProps> = ({ onComplete }) => {
     const clickInterval = setInterval(() => {
       soundFX.playGridSnap();
     }, 150);
-
-    // Dynamic coordinates change
-    const coordInterval = setInterval(() => {
-      setCoordinates({
-        x: Number((Math.random() * 0.99).toFixed(2)),
-        y: Number((Math.random() * 0.99).toFixed(2)),
-      });
-    }, 100);
 
     // Percentage loading ticker
     const pctInterval = setInterval(() => {
@@ -47,13 +38,11 @@ export const Preloader: React.FC<PreloaderProps> = ({ onComplete }) => {
     // Final drift/complete phase
     const exitTimer = setTimeout(() => {
       soundFX.stopPreloaderHum();
-      clearInterval(coordInterval);
       onComplete();
     }, 3800);
 
     return () => {
       clearInterval(clickInterval);
-      clearInterval(coordInterval);
       clearInterval(pctInterval);
       clearTimeout(drawingTimer);
       clearTimeout(exitTimer);
@@ -65,18 +54,6 @@ export const Preloader: React.FC<PreloaderProps> = ({ onComplete }) => {
       {/* Visual background lines & axes */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:30px_30px]" />
       
-      <div className="absolute bottom-4 left-6 right-6 flex justify-between text-[0.65rem] opacity-35 tracking-widest pointer-events-none">
-        <span>SYS_CORE: ONLINE</span>
-        <span>MEM_ALLOC: OK</span>
-      </div>
-
-      <div className="absolute top-20 bottom-20 right-6 flex flex-col justify-between text-[0.65rem] opacity-35 text-right pointer-events-none">
-        <span>NODE_X: {coordinates.x}</span>
-        <span>NODE_Y: {coordinates.y}</span>
-        <span>CLOCK_REF: {Date.now() % 10000}</span>
-        <span>SEC_GATE: LOCK</span>
-      </div>
-
       {/* Drawing and coordinate crosshairs */}
       <div className="absolute w-full h-[1px] bg-white/[0.03] top-1/2 left-0 pointer-events-none" />
       <div className="absolute h-full w-[1px] bg-white/[0.03] left-1/2 top-0 pointer-events-none" />
