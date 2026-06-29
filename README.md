@@ -72,9 +72,22 @@ A cutting-edge, ultra-premium developer portfolio designed with sleek futuristic
 *   **Telemetry Quick-Chips**: Features quick-click diagnostic chips that auto-inject inquiries into the terminal input for instant developer info lookup.
 *   **Vocal TTS Stream**: Synthesizes speech outputs of AI responses using browser Web Speech APIs, paired with a dynamic SVG audio visualizer.
 ### 🎬 13. Cinematic Monogram Preloader (System Boot Sequence)
-*   **Vector Build Animation**: Traces geometric letters `N` and `P` using Framer Motion SVG pathLength properties over a coordinate grid.
-*   **Real-time Audio Synthesis**: Synthesizes a deep 55Hz console mains hum, plotter snap ticks, and a metallic lock latch chime using the browser's Web Audio API context.
-*   **Shared Element Logo Drift**: Seamlessly transitions the centered completed monogram logo to the top-left navigation corner as the preloader terminates, using Framer Motion's shared `layoutId` layout physics.
+*   **Vector Build Animation**: Traces geometric letters `N` and `P` using Framer Motion SVG `pathLength` properties in the center of the coordinate grid axes.
+*   **Cleaned Telemetry**: Removed secondary technical noise tags (`SYS_SPEED`, `BOOT_MODULE`, `SEC_GATE`, `CLOCK_REF`, `NODE_X`, `NODE_Y`, `SYS_CORE`, `MEM_ALLOC`) to keep the intro sequence visually focused and uncluttered.
+*   **Bold Monogram Path Weight**: Configured the vector "NP" drawing path to render with a heavy, premium `23px` stroke width during the centered layout build.
+*   **Drift Stroke Interpolation**: The path automatically scales down dynamically from a heavy `23px` line weight in the center to a clean `13px` width at the final top-left header position.
+*   **Centered Reticle Grid**: Configured the coordinate grid alignment and expanded the monogram's bounding box size to `380px x 280px` in the center of a `460px` diameter dashed circular target reticle for a striking, balanced visual.
+*   **Spring-Based Shared Layout Transition**: Replaced component switching with a unified, persistent floating container. Utilizes physical spring properties (`stiffness: 50, damping: 13`) to seamlessly drift from the preloader center coordinates to the navigation header without flickering.
+
+### 🛠️ 14. Infinite Skills Marquee & Telemetry Registry
+*   **Three-Tier Multidirectional Tracks**: Renders three independent horizontal scrolling marquee skill rows animating at variable speed thresholds (Row 1: left-fast, Row 2: right-medium, Row 3: left-slow).
+*   **Tactile 3D Hover Tilt**: The badges tilt dynamically in 3D perspective space following the user's cursor vector offsets (`--x`, `--y` variables), paired with glowing drop shadows of their respective brand colors.
+*   **Detailed Telemetry Modals**: Clicking any skill suspends the tracks and reveals a premium glassmorphic registry modal detailing the item's Proficiency, Exp Level, Core Competencies (tags), and specific Portfolio Integrations (linked projects) over a retro CRT scanline raster backdrop.
+
+### 🕸️ 15. Technical Architecture Simulation (Force-Directed Node Graph)
+*   **Custom Physics Solver Canvas**: Implements a HTML5 Canvas-based 2D force-directed node graph mapping Nisarg's development toolchains (Client, Backend, AI, Data, Languages) with custom attraction/repulsion coefficients and drag-and-drop node physics.
+*   **Data Routing Flow Pipeline**: Features live animated simulation scenarios (such as AI Inference pipelines, Web Services request cycles, and Supabase Database synchronizations) which dispatch electrical packet sparks traveling along connection pathways in real-time.
+*   **Topological Web Audio Synth**: Synthesizes real-time sound effects (spark sweeps and detonation bursts) mapped to visual event coordinates using Web Audio API nodes.
 
 ---
 
