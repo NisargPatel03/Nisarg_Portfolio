@@ -8,8 +8,9 @@ A cutting-edge, ultra-premium developer portfolio designed with sleek futuristic
 
 ### 📐 1. Holographic CAD "Blueprint Mode"
 *   **Heavy Metal Toggle**: An industrial brushed-metal toggle panel with corner rivets, functional status LEDs (Amber for Normal, Cyan for CAD override), and a 3D cylindrical lever that tilts dynamically on click.
+*   **Responsive Mobile Switch**: On mobile viewports, the large industrial 3D lever collapses into a space-saving glassmorphic pill button displaying "CAD MODE" / "NORM MODE" alongside a layering wireframe icon.
 *   **Viewport Rulers Overlay**: Renders columns `A` to `H` and rows `1` to `8` ticks around the screen margins, complete with dotted cursor crosshair tracking and a coordinate HUD.
-*   **CAD Metadata Block**: A detailed technical blueprint title block displaying project metadata, system statuses, and real-time viewport resolution readouts.
+*   **Clean Blueprint Layout**: The layout has been optimized by removing the bottom-right CAD Title Block, ensuring floating triggers (Command Palette, AI Chat, and footer buttons) remain fully accessible and visible on all viewports without overlaps.
 *   **Dynamic Database Schema Maps**: Dynamically parses the active project's database schema checklist to render custom vector ER diagrams (with tables, primary keys, and relational linkage paths) in place of standard project mockup images.
 *   **Vector Asset Overrides**: Replaced generic image elements with high-fidelity CAD drafting vectors (concentric targets, isometric chassis blocks, mechanical gears, linkages, and a detailed cybernetic face mesh for the portrait).
 *   **Monochrome Typography**: Enforces a strict monochrome cyan color palette, grid background, cards outline offset annotations (`[SYS_MODULE]`, `W: 100% | H: AUTO`), and monospace fonts.
@@ -49,6 +50,14 @@ A cutting-edge, ultra-premium developer portfolio designed with sleek futuristic
 ### ✉️ 10. Secure Contact Portal
 *   **Web3Forms Integration**: Fully functional contact form forwarding inquiries straight to email.
 *   **Zero-Leak Secrets**: Fully protected access keys stored in a gitignored `.env` file, securing production keys from public version-control leaks.
+
+### 🤖 11. Nisarg Aether: Holographic AI Twin
+*   **Gemini 1.5 Flash Integration**: A fully functional conversation terminal powered by Gemini 1.5 Flash, acting as a real-time digital clone of Nisarg.
+*   **Dual Mode Operations (Online & Offline)**: Supports online querying via Gemini API, and automatically falls back to an offline FAQs local matching engine if the system key is missing or offline.
+*   **Custom Glassmorphic Avatar**: Features a custom-generated futuristic neural network avatar (`aether_avatar.png`) that preserves its styling even in Blueprint CAD mode.
+*   **Advanced Markdown Link Parsing**: Detects raw emails, social links (LinkedIn/GitHub), and web URLs in AI responses, automatically parsing them into interactive glassmorphic anchors (`target="_blank"`).
+*   **Telemetry Quick-Chips**: Features quick-click diagnostic chips that auto-inject inquiries into the terminal input for instant developer info lookup.
+*   **Vocal TTS Stream**: Synthesizes speech outputs of AI responses using browser Web Speech APIs, paired with a dynamic SVG audio visualizer.
 
 ---
 
@@ -200,6 +209,7 @@ npm install
 Create a local `.env` file in the root directory:
 ```env
 VITE_WEB3FORMS_KEY=your_web3forms_access_key_here
+VITE_GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
 ### 3. Local Development
