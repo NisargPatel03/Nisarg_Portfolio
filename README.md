@@ -22,6 +22,7 @@ A cutting-edge, ultra-premium developer portfolio designed with sleek futuristic
 
 ### 🔐 3. Biometric Authorization Gateway Gatekeeper
 *   **Restricted Entry Terminal**: A sci-fi security gate screen displayed on boot to verify credentials before exposing the portfolio content.
+*   **Premium Glassmorphic Layout**: Upgraded card interfaces, log readout containers, and input panels with frosted glass blurs (`backdrop-blur-md` and `.cyber-glass-card`) and custom-designed high-fidelity vector wireframe coordinate grids and vignette backdrops.
 *   **Interactive Fingerprint Scanner**: Embedded SVG scanner with glowing laser sweep lines, pulse ring beacons, and audio confirmation cues.
 *   **Sequential Console Logging**: Displays simulated network routing logs, browser diagnostics, and resolution auditing.
 *   **Intrusion Alert & Lockdown**: Restricts password input attempts to 3. On failure, triggers flashing red hazard panels, sound FX alarm loops, and locks out inputs with a 30-second timer countdown.
@@ -29,6 +30,7 @@ A cutting-edge, ultra-premium developer portfolio designed with sleek futuristic
 
 ### 🎛️ 4. Command Search Palette Shell
 *   **Quick Action Console**: Toggled via shortcut keys (`Ctrl+K` or search icons) to execute terminal commands globally.
+*   **Isolated Navigation Flow**: Separated mouse hover event scopes and keyboard event arrows so hovering over items does not trigger jarring auto-scrolling behaviors.
 *   **Dynamic System Controls**: Direct toggle commands for sound FX, ambient loops, cursor trails, Matrix rain canvas overlays, diagnostics panel visibility, and color theme modifications.
 
 ### 📊 5. Diagnostics HUD Sidebar
@@ -48,11 +50,21 @@ A cutting-edge, ultra-premium developer portfolio designed with sleek futuristic
 ### 💼 9. Spring Experience Timeline
 *   **Elastic Timeline Entries**: Timeline cards animate dynamically on scroll using customized springs. Even timeline cards slide in from the **LEFT** (`x: -100`), and odd cards slide in from the **RIGHT** (`x: 100`).
 
-### ✉️ 10. Secure Contact Portal
+### 💎 10. Cyber-Glassmorphic HUD & Design System
+*   **Liquid Glass Aesthetic**: Utilizes custom frosted panel styling with `backdrop-filter: blur(28px)` and transparent background blends (`bg-black/45`).
+*   **Reflective Bezels**: Integrates a dynamic reflected border highlight using custom CSS masks and linear gradients (`.cyber-glass-bezel`), rendering premium highlights on all card elements.
+*   **Dynamic Theme Sync**: Automatically synchronizes all glowing accents and border variables across the whole portfolio with the selected color theme:
+    *   **Toxic Radar** (Neon Green)
+    *   **Vapor Matrix** (Cyberpunk Pink)
+    *   **Amber Console** (Retro Gold)
+    *   **Blueprint Arctic** (Drafting Blue)
+*   **Universal Card Adapters**: Applied uniformly across the entire portfolio—affecting Hero tiles, Skills cards, Projects, Services, Timeline blocks, Diagnostics HUD, and the AI Terminal.
+
+### ✉️ 11. Secure Contact Portal
 *   **Web3Forms Integration**: Fully functional contact form forwarding inquiries straight to email.
 *   **Zero-Leak Secrets**: Fully protected access keys stored in a gitignored `.env` file, securing production keys from public version-control leaks.
 
-### 🤖 11. Nisarg Aether: Holographic AI Twin
+### 🤖 12. Nisarg Aether: Holographic AI Twin
 *   **Gemini 1.5 Flash Integration**: A fully functional conversation terminal powered by Gemini 1.5 Flash, acting as a real-time digital clone of Nisarg.
 *   **Dual Mode Operations (Online & Offline)**: Supports online querying via Gemini API, and automatically falls back to an offline FAQs local matching engine if the system key is missing or offline.
 *   **Custom Glassmorphic Avatar**: Features a custom-generated futuristic neural network avatar (`aether_avatar.png`) that preserves its styling even in Blueprint CAD mode.
