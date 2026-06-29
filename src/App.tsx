@@ -48,6 +48,22 @@ function App() {
   const [isMeltdownActive, setIsMeltdownActive] = useState(false);
   const [activeTheme, setActiveTheme] = useState<'project' | 'toxic-radar' | 'vapor-matrix' | 'amber-console' | 'blueprint-arctic'>('project');
   const [isBlueprintMode, setIsBlueprintMode] = useState(false);
+  const [isDrawingComplete, setIsDrawingComplete] = useState(false);
+
+  useEffect(() => {
+    const drawingTimer = setTimeout(() => {
+      setIsDrawingComplete(true);
+    }, 2800);
+
+    const completeTimer = setTimeout(() => {
+      setShowPreloader(false);
+    }, 3800);
+
+    return () => {
+      clearTimeout(drawingTimer);
+      clearTimeout(completeTimer);
+    };
+  }, []);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -235,42 +251,84 @@ function App() {
         )}
       </AnimatePresence>
 
-      {/* Floating Global Logo (drifts from center preloader using layoutId) */}
-      {!showPreloader && (
-        <motion.div
-          layoutId="np-logo"
-          className="fixed top-6 left-6 md:top-8 md:left-8 z-[999] cursor-pointer hover:opacity-75 transition-opacity"
-          onClick={() => {
-            if (!showAuthScreen && (window as any).triggerWarpScroll) {
+      {/* Floating Global Logo (drifts from center preloader using layout physics) */}
+      <motion.div
+        layout
+        style={showPreloader ? {
+          position: 'fixed' as const,
+          left: '50%',
+          top: '50%',
+          x: '-50%',
+          y: '-50%',
+          width: '320px',
+          height: '240px',
+          zIndex: 10005,
+        } : {
+          position: 'fixed' as const,
+          left: '24px',
+          top: '24px',
+          x: '0%',
+          y: '0%',
+          width: '55px',
+          height: '42px',
+          zIndex: 10005,
+        }}
+        transition={{ type: 'spring', stiffness: 50, damping: 13 }}
+        className={`cursor-pointer hover:opacity-75 transition-opacity flex items-center justify-center ${
+          showPreloader ? 'pointer-events-none' : ''
+        }`}
+        onClick={() => {
+          if (!showPreloader && !showAuthScreen) {
+            if ((window as any).triggerWarpScroll) {
               (window as any).triggerWarpScroll('hero');
             }
-          }}
+          }
+        }}
+      >
+        <svg
+          width="100%"
+          height="100%"
+          viewBox="0 0 320 240"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="filter drop-shadow-[0_0_16px_rgba(0,243,255,0.45)]"
         >
-          <svg
-            width="55"
-            height="42"
-            viewBox="0 0 240 180"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="filter drop-shadow-[0_0_12px_rgba(0,243,255,0.45)]"
-          >
-            <path
-              d="M 52.5 135 L 52.5 45 L 112.5 135 L 112.5 45"
-              stroke="var(--accent-color, #00f3ff)"
-              strokeWidth="9.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M 142.5 135 L 142.5 45 L 187.5 45 C 202.5 45 202.5 90 187.5 90 L 142.5 90"
-              stroke={isBlueprintMode ? "var(--accent-color, #00f3ff)" : "#ff00c7"}
-              strokeWidth="9.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </motion.div>
-      )}
+          {showPreloader && (
+            <>
+              <line x1="40" y1="120" x2="280" y2="120" stroke="rgba(255,255,255,0.05)" strokeDasharray="3 3" />
+              <line x1="170" y1="30" x2="170" y2="210" stroke="rgba(255,255,255,0.05)" strokeDasharray="3 3" />
+            </>
+          )}
+          <motion.path
+            d="M 70 180 L 70 60 L 150 180 L 150 60"
+            stroke="var(--accent-color, #00f3ff)"
+            strokeWidth="15"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 2.2, ease: 'easeInOut', delay: 0.2 }}
+            style={isDrawingComplete ? {
+              fill: 'rgba(0, 243, 255, 0.08)',
+              transition: 'fill 0.8s ease-in-out',
+            } : undefined}
+          />
+          <motion.path
+            d="M 190 180 L 190 60 L 250 60 C 270 60 270 120 250 120 L 190 120"
+            stroke={isBlueprintMode ? "var(--accent-color, #00f3ff)" : "#ff00c7"}
+            strokeWidth="15"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 2.2, ease: 'easeInOut', delay: 0.2 }}
+            style={isDrawingComplete ? {
+              fill: 'rgba(255, 0, 199, 0.08)',
+              transition: 'fill 0.8s ease-in-out',
+            } : undefined}
+          />
+        </svg>
+      </motion.div>
 
       {!showAuthScreen && (
         <>

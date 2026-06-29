@@ -7,7 +7,6 @@ interface PreloaderProps {
 }
 
 export const Preloader: React.FC<PreloaderProps> = ({ onComplete }) => {
-  const [isDrawingComplete, setIsDrawingComplete] = useState(false);
   const [coordinates, setCoordinates] = useState({ x: 0.15, y: 0.82 });
   const [loadingPercent, setLoadingPercent] = useState(0);
 
@@ -42,7 +41,6 @@ export const Preloader: React.FC<PreloaderProps> = ({ onComplete }) => {
     // End drawing phase
     const drawingTimer = setTimeout(() => {
       clearInterval(clickInterval);
-      setIsDrawingComplete(true);
       soundFX.playMetallicLock();
     }, 2800);
 
@@ -92,61 +90,10 @@ export const Preloader: React.FC<PreloaderProps> = ({ onComplete }) => {
           initial={{ rotate: 0, opacity: 0 }}
           animate={{ rotate: 360, opacity: 0.15 }}
           transition={{ duration: 10, ease: 'linear', repeat: Infinity }}
-          className="absolute w-[320px] h-[320px] border border-dashed border-[#00f3ff] rounded-full pointer-events-none"
+          className="absolute w-[400px] h-[400px] border border-dashed border-[#00f3ff] rounded-full pointer-events-none"
         />
 
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
-          className="relative w-[260px] h-[200px] flex items-center justify-center"
-        >
-          {/* Custom drawing SVG Monogram */}
-          <svg
-            width="240"
-            height="180"
-            viewBox="0 0 240 180"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="filter drop-shadow-[0_0_16px_rgba(0,243,255,0.45)]"
-          >
-            {/* Grid references inside SVG */}
-            <line x1="30" y1="90" x2="210" y2="90" stroke="rgba(255,255,255,0.05)" strokeDasharray="3 3" />
-            <line x1="127.5" y1="20" x2="127.5" y2="160" stroke="rgba(255,255,255,0.05)" strokeDasharray="3 3" />
-
-            {/* Letter 'N' vector path */}
-            <motion.path
-              d="M 52.5 135 L 52.5 45 L 112.5 135 L 112.5 45"
-              stroke="#00f3ff"
-              strokeWidth="7.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={{ duration: 2.2, ease: 'easeInOut', delay: 0.2 }}
-              style={isDrawingComplete ? {
-                fill: 'rgba(0, 243, 255, 0.08)',
-                transition: 'fill 0.8s ease-in-out',
-              } : undefined}
-            />
-
-            {/* Letter 'P' vector path */}
-            <motion.path
-              d="M 142.5 135 L 142.5 45 L 187.5 45 C 202.5 45 202.5 90 187.5 90 L 142.5 90"
-              stroke="#ff00c7"
-              strokeWidth="7.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={{ duration: 2.2, ease: 'easeInOut', delay: 0.2 }}
-              style={isDrawingComplete ? {
-                fill: 'rgba(255, 0, 199, 0.08)',
-                transition: 'fill 0.8s ease-in-out',
-              } : undefined}
-            />
-          </svg>
-        </motion.div>
+        <div className="w-[340px] h-[260px] pointer-events-none" />
       </div>
 
       {/* Loading Progress Bar & percentage */}
