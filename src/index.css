@@ -207,6 +207,50 @@
   }
 }
 
+/* --- Cyber-Glassmorphic (Liquid Glass) Design System --- */
+.cyber-glass-panel {
+  background: rgba(8, 8, 8, 0.48) !important;
+  backdrop-filter: blur(28px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+  box-shadow: 
+    0 20px 50px rgba(0, 0, 0, 0.65),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 0 15px rgba(var(--accent-rgb, 0, 255, 65), 0.05) !important;
+}
+
+.cyber-glass-card {
+  background: rgba(255, 255, 255, 0.015) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.02),
+    0 4px 12px rgba(0, 0, 0, 0.25) !important;
+}
+
+.cyber-glass-bezel {
+  position: relative;
+}
+
+.cyber-glass-bezel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.16) 0%,
+    rgba(255, 255, 255, 0.03) 40%,
+    rgba(var(--accent-rgb, 0, 255, 65), 0.02) 60%,
+    rgba(var(--accent-rgb, 0, 255, 65), 0.28) 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 2;
+}
+
 /* --- Feature-7: Real-Time Sidebar Diagnostics HUD --- */
 .diagnostics-hud-container {
   position: fixed;
@@ -214,11 +258,11 @@
   top: 50%;
   transform: translateY(-50%);
   width: 240px;
-  background: rgba(8, 8, 8, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(8, 8, 8, 0.45);
+  border: 1px solid rgba(var(--accent-rgb, 0, 255, 65), 0.15);
   border-radius: 12px;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
   z-index: 100;
   padding: 16px;
   display: flex;
@@ -227,8 +271,9 @@
   font-family: monospace;
   transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1), 
               opacity 0.6s cubic-bezier(0.19, 1, 0.22, 1);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7),
-              inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65),
+              inset 0 1px 0 rgba(255, 255, 255, 0.08),
+              0 0 15px rgba(var(--accent-rgb, 0, 255, 65), 0.05);
 }
 
 .diagnostics-hud-container.is-collapsed {
@@ -249,12 +294,12 @@
   transform: translateY(-50%);
   width: 24px;
   height: 64px;
-  background: rgba(8, 8, 8, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(8, 8, 8, 0.45);
+  border: 1px solid rgba(var(--accent-rgb, 0, 255, 65), 0.15);
   border-right: none;
   border-radius: 8px 0 0 8px;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -264,6 +309,7 @@
   font-weight: bold;
   font-size: 11px;
   transition: background-color 0.3s, color 0.3s;
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.2);
 }
 
 .hud-toggle-tab:hover {
@@ -297,11 +343,15 @@
 
 /* Sub-panels inside HUD */
 .hud-panel-card {
-  background: rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid rgba(var(--accent-rgb, 0, 255, 65), 0.08);
   border-radius: 8px;
   padding: 10px;
   position: relative;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02),
+              0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
 /* CRT-like glowing phosphor log flicker for telemetry readouts */
@@ -624,6 +674,35 @@ h1, h2, h3, h4, h5, h6, button, nav a, .nav-link, .card-title {
 .meltdown-active .contact-panel {
   animation: fall-straight 2.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards !important;
   pointer-events: none !important;
+}
+
+/* Apply Cyber-Glassmorphism to all portfolio cards globally */
+.crt-glitch-hover,
+.project-deck-card,
+.timeline-card,
+.service-card,
+.cert-card {
+  background: rgba(18, 18, 18, 0.45) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.02),
+    0 10px 30px rgba(0, 0, 0, 0.3) !important;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+}
+
+/* Hover effects for glassmorphic cards */
+.crt-glitch-hover:hover,
+.project-deck-card:hover,
+.timeline-card:hover,
+.service-card:hover,
+.cert-card:hover {
+  background: rgba(255, 255, 255, 0.02) !important;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 15px 40px rgba(0, 0, 0, 0.4),
+    0 0 15px rgba(var(--accent-rgb, 0, 255, 65), 0.1) !important;
 }
 
 /* ---------------------------------------------------- */
