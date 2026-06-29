@@ -247,24 +247,24 @@ function App() {
           }}
         >
           <svg
-            width="50"
-            height="40"
-            viewBox="0 0 160 120"
+            width="55"
+            height="42"
+            viewBox="0 0 240 180"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             className="filter drop-shadow-[0_0_12px_rgba(0,243,255,0.45)]"
           >
             <path
-              d="M 35 90 L 35 30 L 75 90 L 75 30"
+              d="M 52.5 135 L 52.5 45 L 112.5 135 L 112.5 45"
               stroke="var(--accent-color, #00f3ff)"
-              strokeWidth="3.5"
+              strokeWidth="9.5"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
             <path
-              d="M 95 90 L 95 30 L 125 30 C 135 30 135 60 125 60 L 95 60"
+              d="M 142.5 135 L 142.5 45 L 187.5 45 C 202.5 45 202.5 90 187.5 90 L 142.5 90"
               stroke={isBlueprintMode ? "var(--accent-color, #00f3ff)" : "#ff00c7"}
-              strokeWidth="3.5"
+              strokeWidth="9.5"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
