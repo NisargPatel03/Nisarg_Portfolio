@@ -71,6 +71,10 @@ A cutting-edge, ultra-premium developer portfolio designed with sleek futuristic
 *   **Advanced Markdown Link Parsing**: Detects raw emails, social links (LinkedIn/GitHub), and web URLs in AI responses, automatically parsing them into interactive glassmorphic anchors (`target="_blank"`).
 *   **Telemetry Quick-Chips**: Features quick-click diagnostic chips that auto-inject inquiries into the terminal input for instant developer info lookup.
 *   **Vocal TTS Stream**: Synthesizes speech outputs of AI responses using browser Web Speech APIs, paired with a dynamic SVG audio visualizer.
+### 🎬 13. Cinematic Monogram Preloader (System Boot Sequence)
+*   **Vector Build Animation**: Traces geometric letters `N` and `P` using Framer Motion SVG pathLength properties over a coordinate grid.
+*   **Real-time Audio Synthesis**: Synthesizes a deep 55Hz console mains hum, plotter snap ticks, and a metallic lock latch chime using the browser's Web Audio API context.
+*   **Shared Element Logo Drift**: Seamlessly transitions the centered completed monogram logo to the top-left navigation corner as the preloader terminates, using Framer Motion's shared `layoutId` layout physics.
 
 ---
 
