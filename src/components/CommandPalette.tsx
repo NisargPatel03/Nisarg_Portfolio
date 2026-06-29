@@ -238,10 +238,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
           setIsOpen(true);
           soundFX.playSuccess();
         }}
-        className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-[999] flex items-center gap-2 bg-[#121212]/90 border border-white/10 px-4 py-2.5 rounded-full backdrop-blur-md text-[11px] font-mono text-[#D7E2EA] hover:text-white hover:border-emerald-500/40 hover:shadow-[0_0_15px_rgba(16,185,129,0.25)] active:scale-95 transition-all cursor-pointer select-none group shadow-lg"
+        className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-[999] flex items-center gap-2 bg-black/45 border border-white/10 px-4 py-2.5 rounded-full backdrop-blur-md text-[11px] font-mono text-[#D7E2EA] hover:text-white active:scale-95 transition-all cursor-pointer select-none group shadow-lg cyber-glass-bezel"
       >
-        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-        <span className="font-bold tracking-wider uppercase group-hover:text-emerald-400 transition-colors">CMD Palette</span>
+        <span className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: 'var(--accent-color, #00ff41)' }} />
+        <span className="font-bold tracking-wider uppercase transition-colors" style={{ color: 'var(--accent-color, #00ff41)' }}>CMD Palette</span>
         <span className="hidden md:inline-flex items-center gap-1 text-[#D7E2EA]/40">
           <kbd className="bg-white/5 border border-white/10 px-1 py-0.5 rounded text-[9px]">Ctrl</kbd>
           <span>+</span>
@@ -271,7 +271,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
               exit={{ opacity: 0, scale: 0.95, y: -20 }}
               transition={{ duration: 0.2, ease: 'easeOut' }}
               data-lenis-prevent
-              className="relative w-full max-w-2xl bg-[#161616]/90 border border-white/10 rounded-3xl p-5 flex flex-col gap-4 shadow-[0_30px_70px_rgba(0,0,0,0.8)] backdrop-blur-xl bg-scanlines overflow-hidden max-h-[60vh]"
+              className="relative w-full max-w-2xl bg-black/45 border border-white/10 rounded-3xl p-5 flex flex-col gap-4 shadow-[0_30px_70px_rgba(0,0,0,0.8)] backdrop-blur-xl bg-scanlines overflow-hidden max-h-[60vh] cyber-glass-bezel"
               onKeyDown={handleKeyDown}
             >
               {/* Scanline CRT simulation */}
@@ -279,7 +279,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
 
               {/* Input wrapper */}
               <div className="flex items-center gap-3 border-b border-white/10 pb-3">
-                <span className="font-mono text-lg text-emerald-400 font-bold select-none animate-pulse">❯</span>
+                <span className="font-mono text-lg font-bold select-none animate-pulse" style={{ color: 'var(--accent-color, #00ff41)' }}>❯</span>
                 <input
                   ref={inputRef}
                   type="text"
@@ -325,9 +325,14 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                         onMouseEnter={() => {
                           setSelectedIndex(idx);
                         }}
+                        style={isSelected ? {
+                          backgroundColor: 'rgba(var(--accent-rgb, 0, 255, 65), 0.1)',
+                          borderColor: 'rgba(var(--accent-rgb, 0, 255, 65), 0.3)',
+                          color: 'var(--accent-color, #00ff41)',
+                        } : undefined}
                         className={`flex items-center justify-between px-4 py-3 rounded-2xl cursor-pointer transition-all duration-200 ${
                           isSelected
-                            ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-300'
+                            ? 'border text-white'
                             : 'border border-transparent text-[#D7E2EA]/75 hover:bg-white/[0.02]'
                         }`}
                       >
@@ -344,9 +349,14 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                             {cmd.shortcut.split(' ').map((char, cIdx) => (
                               <kbd
                                 key={cIdx}
+                                style={isSelected ? {
+                                  backgroundColor: 'rgba(var(--accent-rgb, 0, 255, 65), 0.2)',
+                                  borderColor: 'rgba(var(--accent-rgb, 0, 255, 65), 0.3)',
+                                  color: 'var(--accent-color, #00ff41)',
+                                } : undefined}
                                 className={`font-mono text-[9px] px-1.5 py-0.5 rounded border ${
                                   isSelected
-                                    ? 'bg-emerald-500/20 border-emerald-500/30 text-emerald-200'
+                                    ? 'text-white'
                                     : 'bg-white/5 border-white/10 text-[#D7E2EA]/40'
                                 }`}
                               >

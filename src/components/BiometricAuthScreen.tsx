@@ -207,10 +207,10 @@ export const BiometricAuthScreen: React.FC<BiometricAuthScreenProps> = ({
       {/* Scrollable Center Wrapper */}
       <div className="min-h-full w-full flex flex-col items-center justify-center p-4 md:p-6 z-10 relative">
         {/* Frame Container */}
-        <div className={`w-full max-w-lg border rounded-2xl p-5 md:p-6 bg-black/75 backdrop-blur-md relative flex flex-col gap-4 md:gap-5 transition-all duration-500 ${
+        <div className={`w-full max-w-lg border rounded-2xl p-5 md:p-6 bg-black/45 backdrop-blur-md relative flex flex-col gap-4 md:gap-5 transition-all duration-500 ${
           isLockedDown 
             ? 'border-red-500/40 shadow-[0_0_50px_rgba(239,68,68,0.15)]' 
-            : 'border-[#00ff41]/20 shadow-[0_0_40px_rgba(0,255,65,0.08)]'
+            : 'border-[#00ff41]/20 shadow-[0_0_40px_rgba(0,255,65,0.08)] cyber-glass-bezel'
         }`}>
           {/* Terminal Header */}
           <div className={`flex items-center justify-between border-b pb-3 text-[10px] tracking-wider font-orbitron transition-all duration-500 ${
