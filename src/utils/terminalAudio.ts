@@ -9,6 +9,22 @@ class TerminalSoundFX {
   private filterNode: BiquadFilterNode | null = null;
   private preloaderHumNode: OscillatorNode | null = null;
   private preloaderHumGain: GainNode | null = null;
+  constructor() {
+    if (typeof window !== 'undefined') {
+      const resumeAudio = () => {
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume().then(() => {
+            window.removeEventListener('click', resumeAudio);
+            window.removeEventListener('keydown', resumeAudio);
+          }).catch(err => console.warn(err));
+        } else if (!this.ctx) {
+          this.init();
+        }
+      };
+      window.addEventListener('click', resumeAudio, { passive: true });
+      window.addEventListener('keydown', resumeAudio, { passive: true });
+    }
+  }
 
   private init() {
     if (!this.ctx) {
