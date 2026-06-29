@@ -186,6 +186,10 @@ export const BiometricAuthScreen: React.FC<BiometricAuthScreenProps> = ({
         isLockedDown ? 'bg-[#0c0202] text-red-500' : 'bg-[#030603] text-[#00ff41]'
       }`}
     >
+      {/* High tech background layers */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#00ff41_1px,transparent_1px),linear-gradient(to_bottom,#00ff41_1px,transparent_1px)] bg-[size:32px_32px] opacity-[0.03] z-0 pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.15)_0%,rgba(0,0,0,0.9)_100%)] z-0 pointer-events-none" />
+
       {/* Background Matrix Rain Simulation when Authorized */}
       {isExploding && (
         <div className="fixed inset-0 bg-[#000]/95 z-[10000] flex flex-col justify-center items-center text-center">
@@ -262,10 +266,10 @@ export const BiometricAuthScreen: React.FC<BiometricAuthScreenProps> = ({
           {/* Live Diagnostics Log output */}
           <div 
             data-lenis-prevent
-            className={`border rounded-xl p-4 text-[11px] leading-relaxed flex flex-col gap-1.5 h-28 md:h-36 overflow-y-auto transition-all duration-500 ${
+            className={`border rounded-xl p-4 text-[11px] leading-relaxed flex flex-col gap-1.5 h-28 md:h-36 overflow-y-auto backdrop-blur-md transition-all duration-500 ${
               isLockedDown 
-                ? 'bg-[#040202] border-red-500/25 text-red-500/85' 
-                : 'bg-[#020402] border-[#00ff41]/15 text-[#00ff41]/85'
+                ? 'bg-red-950/10 border-red-500/25 text-red-500/85' 
+                : 'bg-black/30 border-[#00ff41]/15 text-[#00ff41]/85 cyber-glass-card'
             }`}
           >
             {logs.map((log, idx) => (
@@ -278,10 +282,10 @@ export const BiometricAuthScreen: React.FC<BiometricAuthScreenProps> = ({
 
           {/* Console Input and Actions */}
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <div className={`flex items-center gap-3 bg-black/60 border rounded-xl px-4 py-3 transition-all duration-500 ${
+            <div className={`flex items-center gap-3 border rounded-xl px-4 py-3 backdrop-blur-md transition-all duration-500 ${
               isLockedDown 
-                ? 'border-red-500/40 shadow-[0_0_15px_rgba(239,68,68,0.06)]' 
-                : 'border-[#00ff41]/30 shadow-[0_0_15px_rgba(0,255,65,0.04)]'
+                ? 'bg-red-950/10 border-red-500/40 shadow-[0_0_15px_rgba(239,68,68,0.06)]' 
+                : 'bg-black/30 border-[#00ff41]/30 shadow-[0_0_15px_rgba(0,255,65,0.04)] cyber-glass-card'
             }`}>
               <span className={`font-bold select-none animate-pulse ${isLockedDown ? 'text-red-500/50' : 'text-[#00ff41]/50'}`}>❯</span>
               <input
