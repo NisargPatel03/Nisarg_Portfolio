@@ -10,7 +10,11 @@ interface MatrixColumn {
   blur: number;
 }
 
-export const MatrixRain: React.FC = () => {
+interface MatrixRainProps {
+  isGlActive?: boolean;
+}
+
+export const MatrixRain: React.FC<MatrixRainProps> = ({ isGlActive = false }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -138,8 +142,12 @@ export const MatrixRain: React.FC = () => {
     <canvas
       ref={canvasRef}
       id="matrix-rain-canvas"
-      className="fixed inset-0 w-full h-full pointer-events-none z-[1]"
-      style={{ display: 'none' }}
+      className={
+        isGlActive
+          ? "fixed inset-0 w-full h-full pointer-events-none z-[1]"
+          : "fixed inset-0 w-full h-full pointer-events-none z-[1] opacity-[0.25]"
+      }
+      style={isGlActive ? { display: 'none' } : { mixBlendMode: 'screen' }}
     />
   );
 };

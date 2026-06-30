@@ -21,6 +21,8 @@ interface CommandPaletteProps {
   isCursorTrailActive: boolean;
   isHudActive: boolean;
   onToggleHud: () => void;
+  isGlShaderActive: boolean;
+  onToggleGlShader: () => void;
   activeTheme: 'project' | 'toxic-radar' | 'vapor-matrix' | 'amber-console' | 'blueprint-arctic';
   onChangeTheme: (theme: 'project' | 'toxic-radar' | 'vapor-matrix' | 'amber-console' | 'blueprint-arctic') => void;
 }
@@ -36,6 +38,8 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   isCursorTrailActive,
   isHudActive,
   onToggleHud,
+  isGlShaderActive,
+  onToggleGlShader,
   activeTheme,
   onChangeTheme,
 }) => {
@@ -180,6 +184,16 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         if ((window as any).toggleAiClone) {
           (window as any).toggleAiClone();
         }
+        setIsOpen(false);
+      }
+    },
+    { 
+      id: 'toggle-webgl-shader', 
+      name: isGlShaderActive ? 'Preferences: Disable WebGL Refraction (Switch to CSS Grid)' : 'Preferences: Enable WebGL Refraction (Switch to Liquid Glass)', 
+      category: 'Preferences', 
+      shortcut: 'W G', 
+      action: () => {
+        onToggleGlShader();
         setIsOpen(false);
       }
     },
