@@ -452,7 +452,7 @@
   background-image: radial-gradient(circle at 50% 50%, #081229 0%, #010206 100%) !important;
 }
 
-/* Custom glow text-shadows with dark backing outline for high legibility */
+/* Custom glow text-shadows for high legibility */
 .theme-toxic-radar h1,
 .theme-toxic-radar h2,
 .theme-toxic-radar h3,
@@ -462,19 +462,7 @@
 .theme-toxic-radar button,
 .theme-toxic-radar a,
 .theme-toxic-radar .font-bold {
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9), 0 0 12px rgba(0, 255, 65, 0.5) !important;
-}
-
-.theme-vapor-matrix h1,
-.theme-vapor-matrix h2,
-.theme-vapor-matrix h3,
-.theme-vapor-matrix h4,
-.theme-vapor-matrix h5,
-.theme-vapor-matrix h6,
-.theme-vapor-matrix button,
-.theme-vapor-matrix a,
-.theme-vapor-matrix .font-bold {
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9), 0 0 12px rgba(255, 0, 199, 0.5) !important;
+  text-shadow: 0 0 10px rgba(0, 255, 65, 0.5) !important;
 }
 
 .theme-amber-console h1,
@@ -486,29 +474,7 @@
 .theme-amber-console button,
 .theme-amber-console a,
 .theme-amber-console .font-bold {
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9), 0 0 12px rgba(255, 176, 0, 0.5) !important;
-}
-
-.theme-blueprint-arctic h1,
-.theme-blueprint-arctic h2,
-.theme-blueprint-arctic h3,
-.theme-blueprint-arctic h4,
-.theme-blueprint-arctic h5,
-.theme-blueprint-arctic h6,
-.theme-blueprint-arctic button,
-.theme-blueprint-arctic a,
-.theme-blueprint-arctic .font-bold {
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9), 0 0 12px rgba(0, 136, 255, 0.5) !important;
-}
-
-/* Default project theme high legibility shadow */
-h1, h2, h3, h4, h5, h6, button, a, .font-bold {
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9), 0 0 10px rgba(0, 243, 255, 0.25);
-}
-
-/* Base text contrast outline shadows for paragraphs, labels, and spans */
-p, span, li, label, input, textarea, code {
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.95) !important;
+  text-shadow: 0 0 10px rgba(255, 176, 0, 0.5) !important;
 }
 
 /* Custom Webkit scrollbar overrides mapping theme accent colors */
