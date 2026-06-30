@@ -61,12 +61,14 @@ void main() {
   to_mouse.x *= aspect;
   float dist_to_mouse = length(to_mouse);
   
+  /*
   float lens_radius = 0.18;
   if (dist_to_mouse < lens_radius) {
     float lens_factor = smoothstep(lens_radius, 0.0, dist_to_mouse);
     float refract_strength = sin(lens_factor * 3.14159) * 0.025;
     displacement += normalize(to_mouse) * refract_strength;
   }
+  */
   
   // B. Speed-induced wave ripples
   for (int i = 0; i < 6; i++) {
@@ -135,8 +137,10 @@ void main() {
   }
   
   // 4. Subtle ambient backlight glow centered on mouse
+  /*
   float cursor_glow = smoothstep(0.25, 0.0, dist_to_mouse);
   final_color += u_theme_color * cursor_glow * 0.08;
+  */
   
   outColor = vec4(final_color, 0.20 + u_audio_intensity * 0.10);
 }

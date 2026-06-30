@@ -50,7 +50,7 @@ function App() {
   const [activeTheme, setActiveTheme] = useState<'project' | 'toxic-radar' | 'vapor-matrix' | 'amber-console' | 'blueprint-arctic'>('project');
   const [isBlueprintMode, setIsBlueprintMode] = useState(false);
   const [isDrawingComplete, setIsDrawingComplete] = useState(false);
-  const [isGlShaderActive, setIsGlShaderActive] = useState(true);
+  const [isGlShaderActive, setIsGlShaderActive] = useState(false);
 
   useEffect(() => {
     const drawingTimer = setTimeout(() => {
@@ -76,42 +76,7 @@ function App() {
     }
   }, [isBlueprintMode]);
 
-  const lensRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    const lens = lensRef.current;
-    if (!lens) return;
-
-    if (!isGlShaderActive) {
-      lens.style.opacity = '0';
-      return;
-    }
-
-    let fadeTimeout: any;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      lens.style.opacity = '1';
-      lens.style.transform = `translate3d(${e.clientX - 88}px, ${e.clientY - 88}px, 0)`;
-      
-      clearTimeout(fadeTimeout);
-      fadeTimeout = setTimeout(() => {
-        lens.style.opacity = '0';
-      }, 1500);
-    };
-
-    const handleMouseLeave = () => {
-      lens.style.opacity = '0';
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseleave', handleMouseLeave);
-    
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseleave', handleMouseLeave);
-      clearTimeout(fadeTimeout);
-    };
-  }, [isGlShaderActive]);
 
 
   const handleSetTheme = (theme: 'project' | 'toxic-radar' | 'vapor-matrix' | 'amber-console' | 'blueprint-arctic') => {
@@ -385,15 +350,7 @@ function App() {
                 <LiquidGlassCanvas activeTheme={activeTheme} isMatrixActive={isMatrixActive} />
                 {/* Easter Egg Matrix digital rain layer (rendered hidden for WebGL sampling) */}
                 <MatrixRain isGlActive={true} />
-                {/* Glassmorphic cursor warp lens overlay */}
-                <div
-                  ref={lensRef}
-                  className="fixed left-0 top-0 w-44 h-44 rounded-full border border-white/[0.12] shadow-[inset_0_0_30px_rgba(255,255,255,0.08),0_20px_40px_rgba(0,0,0,0.55)] pointer-events-none z-[10006] backdrop-blur-[3px] transition-opacity duration-500"
-                  style={{
-                    opacity: 0,
-                    transform: 'translate3d(-999px, -999px, 0)',
-                  }}
-                />
+
               </>
             ) : (
               <>

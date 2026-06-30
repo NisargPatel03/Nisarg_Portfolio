@@ -459,7 +459,7 @@ const BlueprintProjectSchematic: React.FC<{ project: TerminalProject }> = ({ pro
             </text>
 
             <rect x={x} y={y + 15} width="140" height="28" fill="none" stroke="#00f3ff" strokeWidth="0.75" strokeOpacity="0.6" />
-            
+
             <text x={x + 5} y={y + 24} fill="#00f3ff" fontFamily="monospace" fontSize="6" opacity="0.8">
               🔑 id: UUID
             </text>
@@ -573,13 +573,12 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
       <div className="terminal-bezel-bracket top-right">[+]</div>
       <div className="terminal-bezel-bracket bottom-left">[+]</div>
       <div className="terminal-bezel-bracket bottom-right">[+]</div>
-      
+
       <div className="terminal-screw top-left-screw" />
       <div className="terminal-screw top-right-screw" />
       <div className="terminal-screw bottom-left-screw" />
       <div className="terminal-screw bottom-right-screw" />
-      
-      <div className="terminal-serial-number">SYS_DECK: NP-9000-REV3 | S/N: 00{project.num}-NP</div>
+
       <div className="terminal-copper-line-left" />
       <div className="terminal-copper-line-right" />
 
@@ -694,287 +693,287 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
           ref={bodyRef}
           className="terminal-body select-text"
         >
-        <div className="terminal-cmd-line">
-          <span className="prompt">❯</span>
-          <span className="cmd-text cmd-text-full">{cmdText}</span>
-          <span className="cmd-text cmd-text-mobile">
-            {cmdText.length > 0 ? ` deploying ${project.slug}...` : ''}
-          </span>
-          {isActive && cmdText.length > 0 && cmdText.length < project.cmd.length && (
-            <span className="terminal-cursor-blink" style={{ marginLeft: 2 }} />
-          )}
-        </div>
-
-        {isActive && (
-          <div className={`terminal-progress-wrap ${progressVisible ? 'is-visible' : ''}`}>
-            <span className="terminal-progress-label">{progress}%</span>
-            <div className="terminal-progress-track">
-              <div
-                className="terminal-progress-fill"
-                style={{ width: `${progress}%`, background: themeColor }}
-              />
-            </div>
+          <div className="terminal-cmd-line">
+            <span className="prompt">❯</span>
+            <span className="cmd-text cmd-text-full">{cmdText}</span>
+            <span className="cmd-text cmd-text-mobile">
+              {cmdText.length > 0 ? ` deploying ${project.slug}...` : ''}
+            </span>
+            {isActive && cmdText.length > 0 && cmdText.length < project.cmd.length && (
+              <span className="terminal-cursor-blink" style={{ marginLeft: 2 }} />
+            )}
           </div>
-        )}
-
-        {isActive && logs.length > 0 && (
-          <div className="terminal-logs">
-            {logs.map((log, i) => (
-              <div key={i} className={`terminal-log-line log-${log.type} ${log.isBanner ? 'log-banner' : ''}`}>
-                {log.text}
-              </div>
-            ))}
-          </div>
-        )}
-
-        <div className={`terminal-project-card ${cardVisible ? 'is-visible' : ''}`}>
-          <div className="terminal-card-meta">
-            <span className="terminal-card-num">{project.num}</span>
-            <span className="terminal-card-category">// {project.category}</span>
-          </div>
-          <h3 className={`terminal-card-title ${glitching ? 'is-glitching' : ''} ${flickerActive ? 'phosphor-flicker' : ''}`}>
-            {project.title}
-          </h3>
 
           {isActive && (
-            <div className="terminal-card-tabs-nav">
-              <button
-                type="button"
-                className={`terminal-tab-btn ${activeTab === 'overview' ? 'is-active' : ''}`}
-                onClick={() => {
-                  soundFX.playClick();
-                  setActiveTab('overview');
-                }}
-              >
-                Overview
-              </button>
-              <button
-                type="button"
-                className={`terminal-tab-btn ${activeTab === 'features' ? 'is-active' : ''}`}
-                onClick={() => {
-                  soundFX.playClick();
-                  setActiveTab('features');
-                }}
-              >
-                Features
-              </button>
-              <button
-                type="button"
-                className={`terminal-tab-btn ${activeTab === 'tech' ? 'is-active' : ''}`}
-                onClick={() => {
-                  soundFX.playClick();
-                  setActiveTab('tech');
-                }}
-              >
-                Tech Stack
-              </button>
-              <button
-                type="button"
-                className={`terminal-tab-btn ${activeTab === 'sysinfo' ? 'is-active' : ''}`}
-                onClick={() => {
-                  soundFX.playClick();
-                  setActiveTab('sysinfo');
-                }}
-              >
-                Sys Info
-              </button>
+            <div className={`terminal-progress-wrap ${progressVisible ? 'is-visible' : ''}`}>
+              <span className="terminal-progress-label">{progress}%</span>
+              <div className="terminal-progress-track">
+                <div
+                  className="terminal-progress-fill"
+                  style={{ width: `${progress}%`, background: themeColor }}
+                />
+              </div>
             </div>
           )}
 
-          <div className="terminal-card-tab-content">
-            {(!isActive || activeTab === 'overview') && (
-              <>
-                <p className={`terminal-card-sub ${flickerActive ? 'phosphor-flicker' : ''}`}>{project.sub}</p>
-                <p className={`terminal-card-desc ${flickerActive ? 'phosphor-flicker' : ''}`}>{project.desc}</p>
-              </>
-            )}
-            {isActive && activeTab === 'features' && (
-              <ul className="terminal-features-list">
-                {project.features.map((feature, i) => (
-                  <li key={i} className="terminal-feature-item">
-                    <span className="terminal-feature-bullet">❯</span>
-                    <span className="terminal-feature-text">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-            {isActive && activeTab === 'tech' && (
-              <div className="terminal-card-tags">
-                {project.tags.map((tag) => (
-                  <span key={tag} className="terminal-tag-pill">
-                    {tag}
-                  </span>
-                ))}
+          {isActive && logs.length > 0 && (
+            <div className="terminal-logs">
+              {logs.map((log, i) => (
+                <div key={i} className={`terminal-log-line log-${log.type} ${log.isBanner ? 'log-banner' : ''}`}>
+                  {log.text}
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className={`terminal-project-card ${cardVisible ? 'is-visible' : ''}`}>
+            <div className="terminal-card-meta">
+              <span className="terminal-card-num">{project.num}</span>
+              <span className="terminal-card-category">// {project.category}</span>
+            </div>
+            <h3 className={`terminal-card-title ${glitching ? 'is-glitching' : ''} ${flickerActive ? 'phosphor-flicker' : ''}`}>
+              {project.title}
+            </h3>
+
+            {isActive && (
+              <div className="terminal-card-tabs-nav">
+                <button
+                  type="button"
+                  className={`terminal-tab-btn ${activeTab === 'overview' ? 'is-active' : ''}`}
+                  onClick={() => {
+                    soundFX.playClick();
+                    setActiveTab('overview');
+                  }}
+                >
+                  Overview
+                </button>
+                <button
+                  type="button"
+                  className={`terminal-tab-btn ${activeTab === 'features' ? 'is-active' : ''}`}
+                  onClick={() => {
+                    soundFX.playClick();
+                    setActiveTab('features');
+                  }}
+                >
+                  Features
+                </button>
+                <button
+                  type="button"
+                  className={`terminal-tab-btn ${activeTab === 'tech' ? 'is-active' : ''}`}
+                  onClick={() => {
+                    soundFX.playClick();
+                    setActiveTab('tech');
+                  }}
+                >
+                  Tech Stack
+                </button>
+                <button
+                  type="button"
+                  className={`terminal-tab-btn ${activeTab === 'sysinfo' ? 'is-active' : ''}`}
+                  onClick={() => {
+                    soundFX.playClick();
+                    setActiveTab('sysinfo');
+                  }}
+                >
+                  Sys Info
+                </button>
               </div>
             )}
-            {isActive && activeTab === 'sysinfo' && (
-              <div className="terminal-sysinfo-wrap">
-                <pre className="terminal-sysinfo-ascii">
-{` _  _   ___ 
+
+            <div className="terminal-card-tab-content">
+              {(!isActive || activeTab === 'overview') && (
+                <>
+                  <p className={`terminal-card-sub ${flickerActive ? 'phosphor-flicker' : ''}`}>{project.sub}</p>
+                  <p className={`terminal-card-desc ${flickerActive ? 'phosphor-flicker' : ''}`}>{project.desc}</p>
+                </>
+              )}
+              {isActive && activeTab === 'features' && (
+                <ul className="terminal-features-list">
+                  {project.features.map((feature, i) => (
+                    <li key={i} className="terminal-feature-item">
+                      <span className="terminal-feature-bullet">❯</span>
+                      <span className="terminal-feature-text">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {isActive && activeTab === 'tech' && (
+                <div className="terminal-card-tags">
+                  {project.tags.map((tag) => (
+                    <span key={tag} className="terminal-tag-pill">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+              {isActive && activeTab === 'sysinfo' && (
+                <div className="terminal-sysinfo-wrap">
+                  <pre className="terminal-sysinfo-ascii">
+                    {` _  _   ___ 
 | \\| | |  _\\
 | |\\ | |  _/
 |_|\\_| |_|  `}
-                </pre>
-                <div className="terminal-sysinfo-details">
-                  <div className="sysinfo-line">
-                    <span className="sysinfo-key">OS</span>: <span className="sysinfo-val">NisargOS v1.0</span>
-                  </div>
-                  <div className="sysinfo-line">
-                    <span className="sysinfo-key">Host</span>: <span className="sysinfo-val">Portfolio Terminal</span>
-                  </div>
-                  <div className="sysinfo-line">
-                    <span className="sysinfo-key">Kernel</span>: <span className="sysinfo-val">React 19 / Vite 8</span>
-                  </div>
-                  <div className="sysinfo-line">
-                    <span className="sysinfo-key">Uptime</span>: <span className="sysinfo-val">4+ Years of Code</span>
-                  </div>
-                  <div className="sysinfo-line">
-                    <span className="sysinfo-key">Shell</span>: <span className="sysinfo-val">zsh (Interactive Panel)</span>
-                  </div>
-                  <div className="sysinfo-line">
-                    <span className="sysinfo-key">CPU</span>: <span className="sysinfo-val">Full-Stack (MERN/Next)</span>
-                  </div>
-                  <div className="sysinfo-line">
-                    <span className="sysinfo-key">Theme</span>: <span className="sysinfo-val">{formatThemeName(activeTheme)}</span>
-                  </div>
-                  <div className="sysinfo-line">
-                    <span className="sysinfo-key">Repos</span>: <span className="sysinfo-val">12 Deployed Repos</span>
+                  </pre>
+                  <div className="terminal-sysinfo-details">
+                    <div className="sysinfo-line">
+                      <span className="sysinfo-key">OS</span>: <span className="sysinfo-val">NisargOS v1.0</span>
+                    </div>
+                    <div className="sysinfo-line">
+                      <span className="sysinfo-key">Host</span>: <span className="sysinfo-val">Portfolio Terminal</span>
+                    </div>
+                    <div className="sysinfo-line">
+                      <span className="sysinfo-key">Kernel</span>: <span className="sysinfo-val">React 19 / Vite 8</span>
+                    </div>
+                    <div className="sysinfo-line">
+                      <span className="sysinfo-key">Uptime</span>: <span className="sysinfo-val">4+ Years of Code</span>
+                    </div>
+                    <div className="sysinfo-line">
+                      <span className="sysinfo-key">Shell</span>: <span className="sysinfo-val">zsh (Interactive Panel)</span>
+                    </div>
+                    <div className="sysinfo-line">
+                      <span className="sysinfo-key">CPU</span>: <span className="sysinfo-val">Full-Stack (MERN/Next)</span>
+                    </div>
+                    <div className="sysinfo-line">
+                      <span className="sysinfo-key">Theme</span>: <span className="sysinfo-val">{formatThemeName(activeTheme)}</span>
+                    </div>
+                    <div className="sysinfo-line">
+                      <span className="sysinfo-key">Repos</span>: <span className="sysinfo-val">12 Deployed Repos</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
+
+          {isActive && (
+            <div className="terminal-cursor-line">
+              <span className="prompt">❯</span>
+              <span className="terminal-cursor-blink" />
+            </div>
+          )}
         </div>
 
         {isActive && (
-          <div className="terminal-cursor-line">
-            <span className="prompt">❯</span>
-            <span className="terminal-cursor-blink" />
+          <div className={`terminal-preview-drawer ${cardVisible ? 'is-visible' : ''} ${mobileDrawerOpen ? 'mobile-open' : ''}`}>
+            <div className="preview-drawer-header">
+              <span className="preview-drawer-title">// VISUAL MOCKUP</span>
+              <button
+                type="button"
+                className="preview-drawer-close"
+                onClick={() => {
+                  soundFX.playClick();
+                  setMobileDrawerOpen(false);
+                }}
+              >
+                ×
+              </button>
+            </div>
+            <div className="preview-drawer-content">
+              <div className="preview-mockup-frame">
+                {isBlueprintMode ? (
+                  <BlueprintProjectSchematic project={project} />
+                ) : (
+                  project.image && (
+                    <img
+                      src={project.image}
+                      alt={`${project.title} Interface Mockup`}
+                      className="preview-mockup-img"
+                      loading="lazy"
+                    />
+                  )
+                )}
+                <div className="preview-mockup-scanlines" />
+              </div>
+
+              <div className="preview-db-section">
+                <div className="preview-db-badge-wrap">
+                  <span className="preview-db-label">Database Layer:</span>
+                  <span className="preview-db-badge">{project.dbName}</span>
+                </div>
+                <ul className="preview-db-checklist">
+                  {project.dbChecklist.map((item, idx) => {
+                    const parts = item.split(' (');
+                    const modelName = parts[0];
+                    const details = parts[1] ? ` (${parts[1]}` : '';
+                    return (
+                      <li key={idx} className="preview-db-item">
+                        <span className="preview-db-checkbox">[x]</span>
+                        <div className="preview-db-text">
+                          <span className="preview-db-model">{modelName}</span>
+                          {details && <span className="preview-db-details">{details}</span>}
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </div>
           </div>
         )}
       </div>
 
       {isActive && (
-        <div className={`terminal-preview-drawer ${cardVisible ? 'is-visible' : ''} ${mobileDrawerOpen ? 'mobile-open' : ''}`}>
-          <div className="preview-drawer-header">
-            <span className="preview-drawer-title">// VISUAL MOCKUP</span>
-            <button
-              type="button"
-              className="preview-drawer-close"
-              onClick={() => {
-                soundFX.playClick();
-                setMobileDrawerOpen(false);
-              }}
-            >
-              ×
-            </button>
-          </div>
-          <div className="preview-drawer-content">
-            <div className="preview-mockup-frame">
-              {isBlueprintMode ? (
-                <BlueprintProjectSchematic project={project} />
-              ) : (
-                project.image && (
-                  <img
-                    src={project.image}
-                    alt={`${project.title} Interface Mockup`}
-                    className="preview-mockup-img"
-                    loading="lazy"
-                  />
-                )
-              )}
-              <div className="preview-mockup-scanlines" />
-            </div>
-
-            <div className="preview-db-section">
-              <div className="preview-db-badge-wrap">
-                <span className="preview-db-label">Database Layer:</span>
-                <span className="preview-db-badge">{project.dbName}</span>
-              </div>
-              <ul className="preview-db-checklist">
-                {project.dbChecklist.map((item, idx) => {
-                  const parts = item.split(' (');
-                  const modelName = parts[0];
-                  const details = parts[1] ? ` (${parts[1]}` : '';
-                  return (
-                    <li key={idx} className="preview-db-item">
-                      <span className="preview-db-checkbox">[x]</span>
-                      <div className="preview-db-text">
-                        <span className="preview-db-model">{modelName}</span>
-                        {details && <span className="preview-db-details">{details}</span>}
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-
-    {isActive && (
-      <nav className="terminal-nav" style={style}>
-        <span className="terminal-status-badge">{project.status}</span>
-        <a
-          href={project.gh}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="terminal-nav-btn"
-        >
-          GitHub repo
-        </a>
-        {project.live ? (
+        <nav className="terminal-nav" style={style}>
+          <span className="terminal-status-badge">{project.status}</span>
           <a
-            href={project.live}
+            href={project.gh}
             target="_blank"
             rel="noopener noreferrer"
             className="terminal-nav-btn"
           >
-            Live
+            GitHub repo
           </a>
-        ) : (
-          <button type="button" className="terminal-nav-btn" disabled>
-            Live
+          {project.live ? (
+            <a
+              href={project.live}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="terminal-nav-btn"
+            >
+              Live
+            </a>
+          ) : (
+            <button type="button" className="terminal-nav-btn" disabled>
+              Live
+            </button>
+          )}
+          <span className="terminal-counter">
+            {String(currentIndex + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
+          </span>
+          <div className="terminal-dots-nav" aria-label="Project navigation">
+            {PROJECTS_TERMINAL.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                className={`terminal-dot ${i === currentIndex ? 'is-active' : ''}`}
+                style={i === currentIndex ? style : undefined}
+                onClick={() => {
+                  soundFX.playClick();
+                  onDotClick(i);
+                }}
+                aria-label={`Project ${i + 1}`}
+              />
+            ))}
+          </div>
+          <button
+            type="button"
+            className="terminal-nav-btn is-accent"
+            onClick={onPrev}
+            disabled={currentIndex === 0}
+            aria-label="Previous project"
+          >
+            prev()
           </button>
-        )}
-        <span className="terminal-counter">
-          {String(currentIndex + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
-        </span>
-        <div className="terminal-dots-nav" aria-label="Project navigation">
-          {PROJECTS_TERMINAL.map((_, i) => (
-            <button
-              key={i}
-              type="button"
-              className={`terminal-dot ${i === currentIndex ? 'is-active' : ''}`}
-              style={i === currentIndex ? style : undefined}
-              onClick={() => {
-                soundFX.playClick();
-                onDotClick(i);
-              }}
-              aria-label={`Project ${i + 1}`}
-            />
-          ))}
-        </div>
-        <button
-          type="button"
-          className="terminal-nav-btn is-accent"
-          onClick={onPrev}
-          disabled={currentIndex === 0}
-          aria-label="Previous project"
-        >
-          prev()
-        </button>
-        <button
-          type="button"
-          className="terminal-nav-btn is-accent"
-          onClick={onNext}
-          disabled={currentIndex >= total - 1}
-        >
-          next_project() →
-        </button>
-      </nav>
-    )}
+          <button
+            type="button"
+            className="terminal-nav-btn is-accent"
+            onClick={onNext}
+            disabled={currentIndex >= total - 1}
+          >
+            next_project() →
+          </button>
+        </nav>
+      )}
     </div>
   );
 };
