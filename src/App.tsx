@@ -336,7 +336,7 @@ function App() {
         transition={{ type: 'spring', stiffness: 50, damping: 13 }}
         className={`cursor-pointer hover:opacity-75 transition-opacity flex items-center justify-center ${
           showPreloader ? 'pointer-events-none' : ''
-        }`}
+        } ${isMeltdownActive ? 'opacity-0 pointer-events-none' : ''}`}
         onClick={() => {
           if (!showPreloader && !showAuthScreen) {
             if ((window as any).triggerWarpScroll) {
