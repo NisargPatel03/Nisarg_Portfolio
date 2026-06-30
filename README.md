@@ -39,9 +39,10 @@ A cutting-edge, ultra-premium developer portfolio designed with sleek futuristic
 *   **Oscilloscope Sparkline**: A canvas-based wave visualizer that plots live sound frequencies using Web Audio API nodes or defaults to scroll-velocity-controlled superposed sine equations.
 
 ### 🔮 6. WebGL Liquified Glass Refraction Canvas
+*   **Command Palette Toggle (Default Off)**: Set to disabled by default to guarantee maximum rendering performance across all devices. Can be dynamically toggled on/off in real-time from the Command Palette (`Ctrl+K` -> `W G`).
+*   **Clean Pointer Aesthetics**: Removed the large distracting cursor-following liquid circle to maintain a clean, ultra-professional cyber-grid design.
 *   **Interactive WebGL Shaders**: A background canvas powered by WebGL 2 running custom vertex and fragment shaders. High-performance rendering is capped at a pixel ratio of 1.5 to prevent GPU bottlenecking.
 *   **Cursor Refraction Lens**: A dynamic, aspect-ratio corrected magnifying glass lens that tracks pointer coordinates, warping background grids and rain streams under a hovering blur.
-*   **Click & Drag Ripples**: Mouse clicks or fast cursor sweeps dispatch wave ripples across the viewport using velocity-dampened physics equations.
 *   **3D Perspective Warp**: Physical scroll triggers or command palette skips tilt the canvas grid along a 3D Z-axis perspective projection, creating depth during transit.
 
 ### 🌌 7. Interactive 3D Hero Section
@@ -87,13 +88,17 @@ A cutting-edge, ultra-premium developer portfolio designed with sleek futuristic
 *   **Web3Forms Integration**: Fully functional contact form forwarding inquiries straight to email.
 *   **Zero-Leak Secrets**: Fully protected access keys stored in a gitignored `.env` file, securing production keys from public version-control leaks.
 
-### 🤖 16. Nisarg Aether: Holographic AI Twin
+### 🤖 16. Nisarg Aether: Holographic AI Twin & Living Digital Twin Tour Guide
+*   **Living Digital Twin Tour Guide (Proactive Agency)**: The AI is no longer a passive chatbot; it has full agency to guide visitors. It outputs custom execution brackets `[TOUR: scroll=section, project=slug, blueprint=true/false]` that programmatically steer the UI.
+*   **Decoupled Custom Event Pipeline**: Communicates with the site's layouts via custom browser events (`aiTourCommand`) to run automated scrolls, deploy specific projects in the terminal, compile codebases, and toggle CAD blueprint mode.
+*   **Tour Bypass Toggle**: A custom `🌐 tour: active` / `🔒 tour: off` toggle button is integrated in the console footer. When turned off, the AI twin functions strictly as a text-based chatbot, keeping the screen static.
+*   **Adaptive suggestion chips**: Automatically switches text labels from Tour triggers (`🧬 Tour CodeGraph`) to static information queries (`🧬 Info CodeGraph`) depending on the tour toggle state.
+*   **Sanitized Vocal Streams & Output**: The terminal regex-filters all machine command brackets from user-visible chat logs and the Web Speech Synthesis voice engine, keeping raw code instructions invisible to visitors.
+*   **Telemetry Status Indicator**: Features a pulsing `[SYSTEM_CONTROL: ACTIVE]` alert in the header telemetry bar during automated tours to inform the user of system control status.
 *   **Gemini 1.5 Flash Integration**: A fully functional conversation terminal powered by Gemini 1.5 Flash, acting as a real-time digital clone of Nisarg.
-*   **Dual Mode Operations (Online & Offline)**: Supports online querying via Gemini API, and automatically falls back to an offline FAQs local matching engine if the system key is missing or offline.
+*   **Dual Mode Operations (Online & Offline)**: Supports online querying via Gemini API, and automatically falls back to an offline FAQs local matching engine with rich project schemas if the system key is missing or offline.
 *   **Custom Glassmorphic Avatar**: Features a custom-generated futuristic neural network avatar (`aether_avatar.png`) that preserves its styling even in Blueprint CAD mode.
 *   **Advanced Markdown Link Parsing**: Detects raw emails, social links (LinkedIn/GitHub), and web URLs in AI responses, automatically parsing them into interactive glassmorphic anchors (`target="_blank"`).
-*   **Telemetry Quick-Chips**: Features quick-click diagnostic chips that auto-inject inquiries (e.g., "Hire Nisarg", "Publications", "Tech Stack") into the terminal input for instant developer info lookup.
-*   **Vocal TTS Stream**: Synthesizes speech outputs of AI responses using browser Web Speech APIs, paired with a dynamic SVG audio visualizer and manual voice system mute/unmute controls.
 
 ### 🎬 17. Cinematic Monogram Preloader (System Boot Sequence)
 *   **Vector Build Animation**: Traces geometric letters `N` and `P` using Framer Motion SVG `pathLength` properties in the center of the coordinate grid axes.
