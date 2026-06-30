@@ -24,6 +24,7 @@ import { BlueprintToggle } from './components/BlueprintToggle';
 import { BlueprintOverlay } from './components/BlueprintOverlay';
 import { AiCloneTerminal } from './components/AiCloneTerminal';
 import { Preloader } from './components/Preloader';
+import { KatanaWipe } from './components/KatanaWipe';
 
 
 const SECTIONS = [
@@ -234,17 +235,29 @@ function App() {
     (window as any).triggerWarpScroll = (id: string) => {
       const element = document.getElementById(id);
       if (element) {
+        window.dispatchEvent(new CustomEvent('katana-cut-start'));
         window.dispatchEvent(new CustomEvent('grid-warp-start'));
-        const lenisInstance = (window as any).lenis;
-        if (lenisInstance) {
-          lenisInstance.scrollTo(element);
-        } else {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }
         soundFX.playClick();
+        
+        // Wait 300ms for panels to close and fully cover the screen
         setTimeout(() => {
-          window.dispatchEvent(new CustomEvent('grid-warp-end'));
-        }, 1200);
+          const lenisInstance = (window as any).lenis;
+          if (lenisInstance) {
+            lenisInstance.scrollTo(element, { immediate: true });
+          } else {
+            element.scrollIntoView();
+          }
+
+          // Wait briefly while in closed state, then trigger opening phase
+          setTimeout(() => {
+            window.dispatchEvent(new CustomEvent('katana-cut-open'));
+
+            // After panels open, trigger end events to normalize particle speed
+            setTimeout(() => {
+              window.dispatchEvent(new CustomEvent('grid-warp-end'));
+            }, 500);
+          }, 200);
+        }, 300);
       }
     };
 
@@ -381,6 +394,7 @@ function App() {
           {isBlueprintMode && <BlueprintOverlay />}
           <BlueprintToggle isActive={isBlueprintMode} onToggle={setIsBlueprintMode} />
           <AiCloneTerminal isBlueprintMode={isBlueprintMode} />
+          <KatanaWipe />
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
