@@ -137,8 +137,9 @@ export const MatrixRain: React.FC = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 w-full h-full pointer-events-none z-[1] opacity-[0.25]"
-      style={{ mixBlendMode: 'screen' }}
+      id="matrix-rain-canvas"
+      className="fixed inset-0 w-full h-full pointer-events-none z-[1]"
+      style={{ display: 'none' }}
     />
   );
 };
