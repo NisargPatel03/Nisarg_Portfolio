@@ -119,7 +119,7 @@ void main() {
   float edge_fade = smoothstep(0.0, 0.15, uv.x) * smoothstep(1.0, 0.85, uv.x) *
                     smoothstep(0.0, 0.15, uv.y) * smoothstep(1.0, 0.85, uv.y);
   
-  vec3 grid_color = u_theme_color * grid_strength * (0.15 + u_audio_intensity * 0.15) * edge_fade;
+  vec3 grid_color = u_theme_color * grid_strength * (0.07 + u_audio_intensity * 0.08) * edge_fade;
   
   // 3. Sample distorted Matrix Rain texture
   vec3 final_color = grid_color;
@@ -131,14 +131,14 @@ void main() {
       float luminance = dot(rain.rgb, vec3(0.299, 0.587, 0.114));
       rain_tinted = u_theme_color * luminance * 1.5;
     }
-    final_color += rain_tinted * 0.55;
+    final_color += rain_tinted * 0.22;
   }
   
   // 4. Subtle ambient backlight glow centered on mouse
   float cursor_glow = smoothstep(0.25, 0.0, dist_to_mouse);
   final_color += u_theme_color * cursor_glow * 0.08;
   
-  outColor = vec4(final_color, 0.35 + u_audio_intensity * 0.15);
+  outColor = vec4(final_color, 0.20 + u_audio_intensity * 0.10);
 }
 `;
 
