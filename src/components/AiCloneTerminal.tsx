@@ -162,6 +162,7 @@ export const AiCloneTerminal: React.FC<AiCloneTerminalProps> = ({ isBlueprintMod
   }, []);
 
   const [isTourActive, setIsTourActive] = useState(false);
+  const [tourEnabled, setTourEnabled] = useState(true);
 
   // Handle queries
   const handleSend = async (text: string) => {
@@ -228,8 +229,8 @@ export const AiCloneTerminal: React.FC<AiCloneTerminalProps> = ({ isBlueprintMod
       speak(cleanReply);
     }
 
-    // Execute tour commands sequentially with smooth delays
-    if (tourCommands.length > 0) {
+    // Execute tour commands sequentially with smooth delays only if tourEnabled is true
+    if (tourCommands.length > 0 && tourEnabled) {
       const runTour = async () => {
         setIsTourActive(true);
         for (const cmd of tourCommands) {
@@ -416,9 +417,9 @@ export const AiCloneTerminal: React.FC<AiCloneTerminalProps> = ({ isBlueprintMod
                 { label: 'Hire Nisarg', text: 'How can I hire Nisarg and what are his contact details?' },
                 { label: 'Technical Stack', text: 'Give me a summary of Nisarg\'s technical skills and frameworks.' },
                 { label: 'Academic Papers', text: 'Tell me about Nisarg\'s academic research papers.' },
-                { label: '🧬 Tour CodeGraph', text: 'Tell me about CodeGraph and show it to me.' },
-                { label: '📊 Tour BharatBudget', text: 'Tell me about BharatBudget and show it to me.' },
-                { label: '🏥 Tour Clinical Survey', text: 'Tell me about the Survey Health Care Form App and show it to me.' }
+                { label: tourEnabled ? '🧬 Tour CodeGraph' : '🧬 Info CodeGraph', text: 'Tell me about CodeGraph and show it to me.' },
+                { label: tourEnabled ? '📊 Tour BharatBudget' : '📊 Info BharatBudget', text: 'Tell me about BharatBudget and show it to me.' },
+                { label: tourEnabled ? '🏥 Tour Clinical Survey' : '🏥 Info Clinical Survey', text: 'Tell me about the Survey Health Care Form App and show it to me.' }
               ].map((chip, idx) => (
                 <button
                   key={idx}
@@ -440,22 +441,40 @@ export const AiCloneTerminal: React.FC<AiCloneTerminalProps> = ({ isBlueprintMod
             <div className={`border-t p-3 flex flex-col gap-2 bg-black/40 ${accentBorderClass}`}>
               <div className="flex items-center justify-between text-[9px] uppercase px-1">
                 <span className={accentTextClass}>SYS_CONTROLS</span>
-                <button
-                  type="button"
-                  onClick={() => {
-                    soundFX.playClick();
-                    setTtsEnabled(!ttsEnabled);
-                  }}
-                  className={`flex items-center gap-1 border px-2 py-0.5 rounded transition-colors ${
-                    ttsEnabled 
-                      ? isBlueprintMode 
-                        ? 'border-[#00f3ff] bg-[#00f3ff]/15 text-[#00f3ff]'
-                        : 'border-[#00ff41] bg-[#00ff41]/10 text-[#00ff41]'
-                      : 'border-white/10 text-white/50 hover:bg-white/5'
-                  }`}
-                >
-                  <span>{ttsEnabled ? '🔊 voice: on' : '🔇 voice: off'}</span>
-                </button>
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      soundFX.playClick();
+                      setTtsEnabled(!ttsEnabled);
+                    }}
+                    className={`flex items-center gap-1 border px-2 py-0.5 rounded transition-colors ${
+                      ttsEnabled 
+                        ? isBlueprintMode 
+                          ? 'border-[#00f3ff] bg-[#00f3ff]/15 text-[#00f3ff]'
+                          : 'border-[#00ff41] bg-[#00ff41]/10 text-[#00ff41]'
+                        : 'border-white/10 text-white/50 hover:bg-white/5'
+                    }`}
+                  >
+                    <span>{ttsEnabled ? '🔊 voice: on' : '🔇 voice: off'}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      soundFX.playClick();
+                      setTourEnabled(!tourEnabled);
+                    }}
+                    className={`flex items-center gap-1 border px-2 py-0.5 rounded transition-colors ${
+                      tourEnabled 
+                        ? isBlueprintMode 
+                          ? 'border-[#00f3ff] bg-[#00f3ff]/15 text-[#00f3ff]'
+                          : 'border-[#00ff41] bg-[#00ff41]/10 text-[#00ff41]'
+                        : 'border-white/10 text-white/50 hover:bg-white/5'
+                    }`}
+                  >
+                    <span>{tourEnabled ? '🌐 tour: active' : '🔒 tour: off'}</span>
+                  </button>
+                </div>
               </div>
 
               <form
