@@ -29,28 +29,36 @@ A cutting-edge, ultra-premium developer portfolio designed with sleek futuristic
 *   **Bypass Mode**: Offers a manual override shortcut to skip authorization.
 
 ### 🎛️ 4. Command Search Palette Shell
-*   **Quick Action Console**: Toggled via shortcut keys (`Ctrl+K` or search icons) to execute terminal commands globally.
+*   **Quick Action Console**: Toggled via shortcut keys (`Ctrl+K` or search icons) or by pressing `/` globally. Executes commands and navigation triggers from a unified window.
 *   **Isolated Navigation Flow**: Separated mouse hover event scopes and keyboard event arrows so hovering over items does not trigger jarring auto-scrolling behaviors.
-*   **Dynamic System Controls**: Direct toggle commands for sound FX, ambient loops, cursor trails, Matrix rain canvas overlays, diagnostics panel visibility, and color theme modifications.
+*   **Dynamic System Controls**: Direct toggle commands for sound FX (`S K`), ambient loops (`S A`), cursor trails (`C T`), Matrix rain canvas overlays (`M R`), diagnostics panel visibility (`S H`), WebGL refraction shaders (`W G`), and color theme modifications.
 
 ### 📊 5. Diagnostics HUD Sidebar
-*   **Real-time Diagnostics**: A sticky right-aligned telemetry dashboard containing active scrolling CPU/Memory logs, system uptime counters, live scrolling position metrics, and interactive stats dials.
+*   **Real-time Diagnostics**: A sticky, collapsible right-aligned telemetry dashboard containing active scrolling CPU/Memory logs, system uptime counters, live scrolling position metrics, and interactive stats dials.
+*   **Radial Progress Gauge**: An SVG-driven circular tracking beacon showing the exact scroll depth percentage down the portfolio.
+*   **Oscilloscope Sparkline**: A canvas-based wave visualizer that plots live sound frequencies using Web Audio API nodes or defaults to scroll-velocity-controlled superposed sine equations.
 
-### 🌌 6. Interactive 3D Hero Section
+### 🔮 6. WebGL Liquified Glass Refraction Canvas
+*   **Interactive WebGL Shaders**: A background canvas powered by WebGL 2 running custom vertex and fragment shaders. High-performance rendering is capped at a pixel ratio of 1.5 to prevent GPU bottlenecking.
+*   **Cursor Refraction Lens**: A dynamic, aspect-ratio corrected magnifying glass lens that tracks pointer coordinates, warping background grids and rain streams under a hovering blur.
+*   **Click & Drag Ripples**: Mouse clicks or fast cursor sweeps dispatch wave ripples across the viewport using velocity-dampened physics equations.
+*   **3D Perspective Warp**: Physical scroll triggers or command palette skips tilt the canvas grid along a 3D Z-axis perspective projection, creating depth during transit.
+
+### 🌌 7. Interactive 3D Hero Section
 *   **Magnetic Portrait**: A centered profile avatar equipped with organic magnet physics that follows pointer movements dynamically.
 *   **Branded Favicon**: A custom-designed glassmorphic "NP" monogram glow set in neon purple and cyan.
 
-### ☔ 7. Matrix Digital Rain Easter Egg
-*   **Bioluminescent Canvas**: Cascades green glowing binary stream rain behind container cards when toggled, adding a retro cyber-hacker aesthetic layer.
+### ☔ 8. Matrix Digital Rain Easter Egg
+*   **Bioluminescent Canvas**: Cascades green glowing binary stream rain behind container cards when toggled. When WebGL is active, the rain is sampled as a texture and displaced realistically by cursor refractions.
 
-### 🔊 8. Immersive Audio Engine
+### 🔊 9. Immersive Audio Engine
 *   **Tactile Auditory Cues**: Integrated synthesizer clicks and menu navigation hover ticks.
 *   **Dynamic Section-Based Ambient Soundtrack**: Synthesizes a real-time synthwave soundtrack using the Web Audio API. As the visitor scrolls, the soundtrack dynamically shifts chord progressions (D minor for Hero, E minor for Skills, C minor for Projects, F major for About, and G major for Contact) via a smooth, 2-second frequency pitch-glide transition.
 
-### 💼 9. Spring Experience Timeline
+### 💼 10. Spring Experience Timeline
 *   **Elastic Timeline Entries**: Timeline cards animate dynamically on scroll using customized springs. Even timeline cards slide in from the **LEFT** (`x: -100`), and odd cards slide in from the **RIGHT** (`x: 100`).
 
-### 💎 10. Cyber-Glassmorphic HUD & Design System
+### 💎 11. Cyber-Glassmorphic HUD & Design System
 *   **Liquid Glass Aesthetic**: Utilizes custom frosted panel styling with `backdrop-filter: blur(28px)` and transparent background blends (`bg-black/45`).
 *   **Reflective Bezels**: Integrates a dynamic reflected border highlight using custom CSS masks and linear gradients (`.cyber-glass-bezel`), rendering premium highlights on all card elements.
 *   **Dynamic Theme Sync**: Automatically synchronizes all glowing accents and border variables across the whole portfolio with the selected color theme:
@@ -60,43 +68,67 @@ A cutting-edge, ultra-premium developer portfolio designed with sleek futuristic
     *   **Blueprint Arctic** (Drafting Blue)
 *   **Universal Card Adapters**: Applied uniformly across the entire portfolio—affecting Hero tiles, Skills cards, Projects, Services, Timeline blocks, Diagnostics HUD, and the AI Terminal.
 
-### ✉️ 11. Secure Contact Portal
+### 🏆 12. Validated Accolades & Certifications Filter Browser
+*   **Dynamic Category Tabs**: Filters credentials on-the-fly between "All Credentials", "Academic & National", "NPTEL Topper", and "Professional Tech".
+*   **Premium Badge Integration**: Highlights elite titles including the **Devang Mehta IT Award (First Rank Across IT/CS)**, **GATE 2026 Scorecard (Ministry of Education)**, and **NPTEL National Topper Status (Top 1-2%)** in DSA, DBMS, and DAA.
+*   **Direct Verification Pipeline**: Embedded validation buttons linking directly to academic transcripts and PDF files stored securely within the local directory structure.
+
+### 🤝 13. Commercial Engagements & Client Projects Slide Deck
+*   **Interactive Contract Slides**: A commercial projects section detailing contracted deliverables and organizational engagements:
+    *   **Blaze Overseas LLP Portal**: A lead developer engagement (₹30,000 INR) detailing commodities catalogs, automated lead generation scheduling, and serverless mail SMTP integration.
+    *   **Savaliya Ice Cream POS System**: An official CSE CSPIT collaboration for a retail point-of-sale checkout system deployed at the Nadiad Welcome Plazza outlet. Features multi-mode settlement (cash, Paytm ledger), hold/recall order queues, pre-order alerts, and local Excel database vaults.
+
+### 👤 14. Interactive 3D About Me Cards & Assets
+*   **Animated Text bio**: A scroll-driven typography mask that reveals bio details dynamically based on viewport intersection.
+*   **Floating 3D Ornaments**: Corner-positioned graphic elements (3D Spike, Moon, Lego block, Composition mesh) performing physical bounce and pulse oscillations.
+*   **Glitch-Hover Tilt Cards**: Responsive grid cards utilizing 3D perspective mouse tilt coordinates paired with visual CRT scanline glitches.
+
+### ✉️ 15. Secure Contact Portal
 *   **Web3Forms Integration**: Fully functional contact form forwarding inquiries straight to email.
 *   **Zero-Leak Secrets**: Fully protected access keys stored in a gitignored `.env` file, securing production keys from public version-control leaks.
 
-### 🤖 12. Nisarg Aether: Holographic AI Twin
+### 🤖 16. Nisarg Aether: Holographic AI Twin
 *   **Gemini 1.5 Flash Integration**: A fully functional conversation terminal powered by Gemini 1.5 Flash, acting as a real-time digital clone of Nisarg.
 *   **Dual Mode Operations (Online & Offline)**: Supports online querying via Gemini API, and automatically falls back to an offline FAQs local matching engine if the system key is missing or offline.
 *   **Custom Glassmorphic Avatar**: Features a custom-generated futuristic neural network avatar (`aether_avatar.png`) that preserves its styling even in Blueprint CAD mode.
 *   **Advanced Markdown Link Parsing**: Detects raw emails, social links (LinkedIn/GitHub), and web URLs in AI responses, automatically parsing them into interactive glassmorphic anchors (`target="_blank"`).
-*   **Telemetry Quick-Chips**: Features quick-click diagnostic chips that auto-inject inquiries into the terminal input for instant developer info lookup.
-*   **Vocal TTS Stream**: Synthesizes speech outputs of AI responses using browser Web Speech APIs, paired with a dynamic SVG audio visualizer.
-### 🎬 13. Cinematic Monogram Preloader (System Boot Sequence)
+*   **Telemetry Quick-Chips**: Features quick-click diagnostic chips that auto-inject inquiries (e.g., "Hire Nisarg", "Publications", "Tech Stack") into the terminal input for instant developer info lookup.
+*   **Vocal TTS Stream**: Synthesizes speech outputs of AI responses using browser Web Speech APIs, paired with a dynamic SVG audio visualizer and manual voice system mute/unmute controls.
+
+### 🎬 17. Cinematic Monogram Preloader (System Boot Sequence)
 *   **Vector Build Animation**: Traces geometric letters `N` and `P` using Framer Motion SVG `pathLength` properties in the center of the coordinate grid axes.
-*   **Cleaned Telemetry**: Removed secondary technical noise tags (`SYS_SPEED`, `BOOT_MODULE`, `SEC_GATE`, `CLOCK_REF`, `NODE_X`, `NODE_Y`, `SYS_CORE`, `MEM_ALLOC`) to keep the intro sequence visually focused and uncluttered.
+*   **Cleaned Telemetry**: Removed secondary technical noise tags to keep the intro sequence visually focused and uncluttered.
 *   **Bold Monogram Path Weight**: Configured the vector "NP" drawing path to render with a heavy, premium `23px` stroke width during the centered layout build.
 *   **Drift Stroke Interpolation**: The path automatically scales down dynamically from a heavy `23px` line weight in the center to a clean `13px` width at the final top-left header position.
 *   **Centered Reticle Grid**: Configured the coordinate grid alignment and expanded the monogram's bounding box size to `380px x 280px` in the center of a `460px` diameter dashed circular target reticle for a striking, balanced visual.
 *   **Spring-Based Shared Layout Transition**: Replaced component switching with a unified, persistent floating container. Utilizes physical spring properties (`stiffness: 50, damping: 13`) to seamlessly drift from the preloader center coordinates to the navigation header without flickering.
 
-### 🛠️ 14. Infinite Skills Marquee & Telemetry Registry
+### 🛠️ 18. Infinite Skills Marquee & Telemetry Registry
 *   **Three-Tier Multidirectional Tracks**: Renders three independent horizontal scrolling marquee skill rows animating at variable speed thresholds (Row 1: left-fast, Row 2: right-medium, Row 3: left-slow).
 *   **Tactile 3D Hover Tilt**: The badges tilt dynamically in 3D perspective space following the user's cursor vector offsets (`--x`, `--y` variables), paired with glowing drop shadows of their respective brand colors.
 *   **Detailed Telemetry Modals**: Clicking any skill suspends the tracks and reveals a premium glassmorphic registry modal detailing the item's Proficiency, Exp Level, Core Competencies (tags), and specific Portfolio Integrations (linked projects) over a retro CRT scanline raster backdrop.
 
-### 🕸️ 15. Technical Architecture Simulation (Force-Directed Node Graph)
+### 🕸️ 19. Technical Architecture Simulation (Force-Directed Node Graph)
 *   **Custom Physics Solver Canvas**: Implements a HTML5 Canvas-based 2D force-directed node graph mapping Nisarg's development toolchains (Client, Backend, AI, Data, Languages) with custom attraction/repulsion coefficients and drag-and-drop node physics.
 *   **Data Routing Flow Pipeline**: Features live animated simulation scenarios (such as AI Inference pipelines, Web Services request cycles, and Supabase Database synchronizations) which dispatch electrical packet sparks traveling along connection pathways in real-time.
 *   **Topological Web Audio Synth**: Synthesizes real-time sound effects (spark sweeps and detonation bursts) mapped to visual event coordinates using Web Audio API nodes.
+
+### 💻 20. Interactive Projects Terminal Deck UI
+*   **Boot & System Scan**: Automatically launches a terminal boot sequence simulation detailing diagnostics logs, RAM audits, and mounting protocols before revealing project cards.
+*   **Slide Gestures & Physics**: A swipe deck utilizing touch gestures, drag coordinates, and inertia vectors to navigate active projects.
+*   **Multi-Tab Info Cards**: An active project UI featuring sub-navigation tabs to audit project Overview (description), Features list, Tech Stack tags, and Sys Info host records.
+*   **System Controls**: Integrates controls to activate a CRT scanline monitor shader, toggle typewriting click SFX, and pull out preview drawers displaying full project screenshots.
 
 ---
 
 ## 🛠️ Tech Stack & Architecture
 
-*   **Core**: [React 18](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/) (Type-safe component design)
+*   **Core**: [React 19](https://react.dev/) + [TypeScript 6](https://www.typescriptlang.org/) (Type-safe component design)
 *   **Build Tool**: [Vite 8](https://vite.dev/) (Instant HMR & blazing-fast production builds)
-*   **Styles**: [Tailwind CSS](https://tailwindcss.com/) (Utility-first responsive styling)
-*   **Animations**: [Framer Motion](https://www.framer.com/motion/) (Hardware-accelerated physics and transitions)
+*   **Styles**: [Tailwind CSS 3](https://tailwindcss.com/) + [PostCSS](https://postcss.org/) (Utility-first responsive styling)
+*   **Animations**: [Framer Motion 12](https://www.framer.com/motion/) (Hardware-accelerated physics and transitions)
+*   **Smooth Scrolling**: [Lenis 1.3](https://lenis.darkroom.engineering/) (Exponential deceleration scrolling mechanics)
+*   **AI Integration**: [Google Generative AI](https://ai.google.dev/) (Powered by Gemini 1.5 Flash API)
 *   **Icons**: [Lucide React](https://lucide.dev/) (Modern minimalist vectors)
 *   **Forms**: [Web3Forms API](https://web3forms.com/) (Serverless secure form submissions)
 
@@ -130,7 +162,7 @@ Here is a detailed breakdown of the featured projects showcased within the inter
 *   **Purpose**: State-of-the-art public finance visualization dashboard decoding Indian Union Budget data.
 *   **Key Features**:
     *   **16th Finance Commission Sandbox**: Interactive math calculator adjusting weight parameters dynamically.
-    *   **Offline AI Assistant**: Client-side RAG engine with voice synthesizers.
+    *   **Offline AI Assistant**: Client-side RAG engine with Gujarati/Hindi TTS synthesizers.
     *   **Thematic Speech Miner**: Interactive word clouds paired with synonym parsing.
     *   **Macroeconomic Shock Simulator**: Stress-tests GDP, CPI, and outlays against global crises.
 *   **Tech Stack**: React 19, TypeScript, Zustand, Recharts, Tailwind CSS, Google Gemini 1.5 Flash
@@ -222,6 +254,55 @@ Here is a detailed breakdown of the featured projects showcased within the inter
     *   **Endorsement Matrices**: Multi-tier user ratings.
 *   **Tech Stack**: MongoDB, Express, React, Node.js, Redux
 *   **Repository**: [NisargPatel03 Profiles](https://github.com/NisargPatel03)
+
+---
+
+## 📂 Project Directory Structure
+
+```
+Nisarg_Portfolio/
+├── .vscode/                 # IDE workspace configuration
+├── Certificates/            # Local copy of academic & professional credentials
+├── NPTEL_Certi/             # Local copy of NPTEL topper certificates
+├── Research_Certi/          # Local copy of published research papers
+├── public/                  # Static assets (images, PDFs, SVGs)
+│   ├── certificates/        # Publicly accessible certificate documents
+│   ├── aether_avatar.png    # Neural AI twin avatar asset
+│   └── *_mockup.png         # Project screenshot mockups
+├── src/                     # Core application codebase
+│   ├── assets/              # Static styling assets
+│   ├── components/          # Reusable UI widgets & canvas overlays
+│   │   ├── AiCloneTerminal.tsx     # Gemini-powered Aether chatbot
+│   │   ├── BiometricAuthScreen.tsx # Multi-stage security gateway
+│   │   ├── CommandPalette.tsx      # Central command search palette
+│   │   ├── DiagnosticsHUD.tsx      # Sidebar telemetry oscilloscope
+│   │   ├── LiquidGlassCanvas.tsx   # WebGL 2 liquid glass shader
+│   │   ├── MatrixRain.tsx          # Bioluminescent digital rain canvas
+│   │   ├── MeltdownOverlay.tsx     # Nuclear reactor core meltdown overlay
+│   │   ├── Preloader.tsx           # Monogram vector boot-up sequence
+│   │   └── ...
+│   ├── data/                # Data structures & FAQ fallback registries
+│   │   ├── cloneKnowledge.ts       # AI system instructions & offline FAQs
+│   │   └── projectsTerminal.ts     # 13 featured projects & terminal logs
+│   ├── sections/            # Core sections of the page layout
+│   │   ├── HeroSection.tsx         # Center magnetic portrait & greetings
+│   │   ├── MarqueeSection.tsx      # Skills marquee row tracks
+│   │   ├── ArchitectureSection.tsx # Technical node graph simulation
+│   │   ├── AboutSection.tsx        # 3D about details & tilt cards
+│   │   ├── WorkExperience.tsx      # Spring-driven job timeline
+│   │   ├── ServicesSection.tsx     # Blaze & Savaliya commercial decks
+│   │   ├── ProjectsSection.tsx     # Drag-and-swipe interactive terminal
+│   │   ├── CertificationsSection.tsx # Tabbed accolades & PDF checkers
+│   │   └── ContactSection.tsx      # Web3Forms gateway & footer details
+│   ├── utils/               # Helper modules
+│   │   └── terminalAudio.ts        # Web Audio API ambient synth & sound FX
+│   ├── App.tsx              # Application layout root & global state hooks
+│   ├── main.tsx             # DOM mounting entrypoint
+│   └── index.css            # Custom glassmorphic styles & design system
+├── tailwind.config.js       # Tailwind style configurations
+├── vite.config.ts           # Vite compile parameters
+└── tsconfig.json            # TypeScript directives
+```
 
 ---
 
