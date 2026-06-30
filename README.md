@@ -124,6 +124,17 @@ A cutting-edge, ultra-premium developer portfolio designed with sleek futuristic
 *   **Multi-Tab Info Cards**: An active project UI featuring sub-navigation tabs to audit project Overview (description), Features list, Tech Stack tags, and Sys Info host records.
 *   **System Controls**: Integrates controls to activate a CRT scanline monitor shader, toggle typewriting click SFX, and pull out preview drawers displaying full project screenshots.
 
+### 💡 21. Dynamic Cursor-Tracking Border Reflections
+*   **Cursor Refraction Glow**: A high-performance hover border tracking highlight that lights up elements only at the point closest to the cursor.
+*   **Optimized Styling & Masks**: Implemented via a lightweight global pointer event listener in `App.tsx` updating CSS variables `--mouse-x` and `--mouse-y` dynamically without causing React re-renders. Uses custom CSS radial-gradient borders and dual mask configurations (`mask-composite: exclude`) for crisp border-only reflections.
+*   **Layout Safety Overrides**: Integrated with safety overrides preventing absolute/fixed cards (such as the AI Chat Clone) from losing their position and alignment on various viewport layouts.
+
+### ⚔️ 22. Cyberpunk Katana Cuts Section Transitions
+*   **Diagonal Shutter Wipe**: A premium transition effect triggered when navigating between page sections via header links, the Command Palette, or AI Clone tours.
+*   **Laser Slashes & Split Curtains**: Flashes dual animated SVG neon path laser slashes across the screen, followed by two dark glassmorphic panels sliding in diagonally at a 45-degree angle from opposite corners to meet in the center.
+*   **Topological Web Audio Sound FX**: Generates custom futuristic blade swoosh/slash sound effects dynamically in real-time using a white noise buffer swept through a BiquadFilterNode sweep.
+*   **Seamless Under-Curtain Scrolling**: Locks the scrolling experience while panels are closed and jumps instantly to the target section using `lenis.scrollTo(element, { immediate: true })` to prevent scroll-motion sickness and keep the navigation experience extremely snappy and responsive.
+
 ---
 
 ## 🛠️ Tech Stack & Architecture
@@ -281,6 +292,7 @@ Nisarg_Portfolio/
 │   │   ├── BiometricAuthScreen.tsx # Multi-stage security gateway
 │   │   ├── CommandPalette.tsx      # Central command search palette
 │   │   ├── DiagnosticsHUD.tsx      # Sidebar telemetry oscilloscope
+│   │   ├── KatanaWipe.tsx          # Diagonal SVG slice section transition
 │   │   ├── LiquidGlassCanvas.tsx   # WebGL 2 liquid glass shader
 │   │   ├── MatrixRain.tsx          # Bioluminescent digital rain canvas
 │   │   ├── MeltdownOverlay.tsx     # Nuclear reactor core meltdown overlay
