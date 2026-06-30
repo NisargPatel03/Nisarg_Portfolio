@@ -216,6 +216,33 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ activeTheme, s
     if (curRef.current > 0) goTo(curRef.current - 1, true);
   }, [goTo]);
 
+  useEffect(() => {
+    const handleTourCommand = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const { action, projectId, slug } = customEvent.detail;
+
+      if (action === 'openProject') {
+        let index = -1;
+        if (typeof projectId === 'number') {
+          index = projectId;
+        } else if (slug) {
+          index = PROJECTS_TERMINAL.findIndex((p) => p.slug === slug);
+        }
+        if (index !== -1) {
+          // If already running, cancel the previous one and start the new one
+          signalRef.current.cancelled = true;
+          runningRef.current = false;
+          goTo(index, true);
+        }
+      }
+    };
+
+    window.addEventListener('aiTourCommand', handleTourCommand);
+    return () => {
+      window.removeEventListener('aiTourCommand', handleTourCommand);
+    };
+  }, [goTo]);
+
   const runBootSequence = useCallback(async () => {
     runningRef.current = true;
     wipe();

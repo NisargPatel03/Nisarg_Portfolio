@@ -240,15 +240,48 @@ ${i + 1}. ${p.title}
    - Repository: ${p.repo}
 `).join("\n")}
 
-Behavior Guidelines:
+behavior guidelines:
 1. Act and speak in the first person ("I", "my") as if you are Nisarg Aether, Nisarg's digital twin or assistant.
 2. Keep your answers brief, clear, and focused on tech details. 
 3. Always suggest or hyperlink to relevant social accounts (GitHub: ${CLONE_PROFILE.github}, LinkedIn: ${CLONE_PROFILE.linkedin}) or projects.
 4. Integrate sci-fi keywords lightly (e.g. "initiating database lookup", "telemetry data indicates", "accessing project schematics").
 5. Do not hallucinate skills or achievements not listed above. If you don't know the answer, reply: "My memory banks do not contain that specific details. However, you can contact me directly at ${CLONE_PROFILE.email}."
+6. You have agency to control the portfolio website user interface in real-time. Whenever the visitor asks you to show or explain a specific project or section (e.g., CodeGraph, BharatBudget, Survey Health Care, Certifications, Contact, About), you MUST append a tour command bracket at the very end of your response text (after any explanation).
+The format of the command bracket is:
+[TOUR: scroll=section_id, project=slug, blueprint=true/false]
+Examples:
+- For CodeGraph: [TOUR: scroll=projects-section, project=codegraph, blueprint=true]
+- For BharatBudget: [TOUR: scroll=projects-section, project=bharatbudget, blueprint=false]
+- For Survey Health Care: [TOUR: scroll=projects-section, project=survey-health-care, blueprint=false]
+- For Blaze Overseas: [TOUR: scroll=projects-section, project=blaze-overseas, blueprint=false]
+- For Savaliya Scoops: [TOUR: scroll=projects-section, project=savaliya-scoops, blueprint=false]
+- For Certifications: [TOUR: scroll=certifications]
+- For Contact/Hire: [TOUR: scroll=contact]
+- For About: [TOUR: scroll=about]
+Only output this bracket if the user explicitly asks you to show, guide, or explain a project/section. Do not output it for general queries.
 `;
 
 export const OFFLINE_FAQS = [
+  {
+    keywords: ["codegraph", "code graph", "dependency mapping"],
+    answer: `Let me show you my CodeGraph project. CodeGraph is an interactive codebase visualization tool built using D3.js and Gemini AI. It maps dependencies and audits code quality. [TOUR: scroll=projects-section, project=codegraph, blueprint=true]`
+  },
+  {
+    keywords: ["survey health care", "healthcare survey", "nursing form"],
+    answer: `Let me show you my Survey Health Care Form App. It was built for CHARUSAT Nursing with offline-first local SQLite caching. [TOUR: scroll=projects-section, project=survey-health-care, blueprint=false]`
+  },
+  {
+    keywords: ["bharatbudget", "budget Commission", "finance commission"],
+    answer: `Let me show you BharatBudget. It's a public finance sandbox for Union Budget telemetry. [TOUR: scroll=projects-section, project=bharatbudget, blueprint=false]`
+  },
+  {
+    keywords: ["blaze overseas", "blaze portal", "spices"],
+    answer: `Let me show you Blaze Overseas. It is a commercial spice, pulse, and grain global trade catalog built with Next.js and Three.js. [TOUR: scroll=projects-section, project=blaze-overseas, blueprint=false]`
+  },
+  {
+    keywords: ["savaliya scoops", "savaliya scoops pos", "savaliya scoops system"],
+    answer: `Let me show you Savaliya Scoops. It's a retail MERN POS system for ice cream parlor chains with offline hold queues. [TOUR: scroll=projects-section, project=savaliya-scoops, blueprint=false]`
+  },
   {
     keywords: ["skills", "tech", "languages", "frontend", "backend", "frameworks", "databases", "stack", "technologies", "programming"],
     answer: `Here is my technology configuration:
@@ -272,17 +305,17 @@ For the complete catalog, check out my **GitHub**: ${CLONE_PROFILE.github}`
 - **LinkedIn**: ${CLONE_PROFILE.linkedin}
 - **GitHub**: ${CLONE_PROFILE.github}
 - **Resume/CV**: The latest copy is available in the main system shell.
-I'm always open to new full-time software engineering roles and collaborations.`
+I'm always open to new full-time software engineering roles and collaborations. [TOUR: scroll=contact]`
   },
   {
     keywords: ["education", "college", "cgpa", "university", "academic", "study", "gpa", "btech", "degree"],
-    answer: `I am pursuing my B.Tech in Computer Science & Engineering at **CSPIT, CHARUSAT University** (Gujarat, India). I maintain a **9.2 CGPA** average and actively participate in internal coding hackathons.`
+    answer: `I am pursuing my B.Tech in Computer Science & Engineering at **CSPIT, CHARUSAT University** (Gujarat, India). I maintain a **9.2 CGPA** average and actively participate in internal coding hackathons. [TOUR: scroll=about]`
   },
   {
     keywords: ["research", "paper", "publications", "sgp", "thesis", "write", "writing"],
     answer: `I have written two major research/SGP projects:
 1. **Design of an Offline-First Clinical Survey Platform** (focuses on SharedPreferences caching and gestural Touch canvas).
-2. **Interactive Codebase Dependency Mapping via Graph Topologies** (focused on D3 force layouts for import checking).`
+2. **Interactive Codebase Dependency Mapping via Graph Topologies** (focused on D3 force layouts for import checking). [TOUR: scroll=about]`
   },
   {
     keywords: ["certificate", "certificates", "certification", "certifications", "credentials", "course", "courses"],
@@ -290,13 +323,13 @@ I'm always open to new full-time software engineering roles and collaborations.`
 - **Google Cloud** Generative AI Fundamentals.
 - **Supabase Academy** Realtime Database developer.
 - **Advanced Full-Stack Developer** (MERN specialization).
-- **TypeScript Core Concepts** and Design Patterns.`
+- **TypeScript Core Concepts** and Design Patterns. [TOUR: scroll=certifications]`
   },
   {
     keywords: ["achievements", "hackathon", "winner", "award", "awards", "achievement", "competition", "compete"],
     answer: `My key milestones:
 - **1st Place** at the CHARUSAT Internal Hackathon (2025) for my BharatBudget budget sandbox project.
-- **Academic Excellence Award** at CSPIT, CHARUSAT for top academic rankings (9.2 CGPA).`
+- **Academic Excellence Award** at CSPIT, CHARUSAT for top academic rankings (9.2 CGPA). [TOUR: scroll=about]`
   }
 ];
 

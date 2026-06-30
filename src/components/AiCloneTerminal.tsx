@@ -161,6 +161,8 @@ export const AiCloneTerminal: React.FC<AiCloneTerminalProps> = ({ isBlueprintMod
     };
   }, []);
 
+  const [isTourActive, setIsTourActive] = useState(false);
+
   // Handle queries
   const handleSend = async (text: string) => {
     if (!text.trim() || isGenerating) return;
@@ -188,11 +190,55 @@ export const AiCloneTerminal: React.FC<AiCloneTerminalProps> = ({ isBlueprintMod
       reply = getOfflineAnswer(query);
     }
 
+    // Parse out any TOUR commands
+    const tourRegex = /\[TOUR:\s*([^\]]+)\]/g;
+    let cleanReply = reply;
+    const tourCommands: { action: string; [key: string]: any }[] = [];
+    
+    let match;
+    while ((match = tourRegex.exec(reply)) !== null) {
+      const commandStr = match[1]; // e.g. "scroll=projects-section, project=codegraph, blueprint=true"
+      const params: any = {};
+      commandStr.split(',').forEach(p => {
+        const [key, val] = p.split('=').map(s => s.trim());
+        if (key && val) {
+          if (val === 'true') params[key] = true;
+          else if (val === 'false') params[key] = false;
+          else params[key] = val;
+        }
+      });
+      
+      if (params.scroll) {
+        tourCommands.push({ action: 'scroll', target: params.scroll, delay: 1000 });
+      }
+      if (params.project) {
+        tourCommands.push({ action: 'openProject', slug: params.project, delay: 1800 });
+      }
+      if (params.blueprint !== undefined) {
+        tourCommands.push({ action: 'toggleBlueprint', value: params.blueprint, delay: 1000 });
+      }
+    }
+    
+    cleanReply = reply.replace(tourRegex, '').trim();
+
     setIsGenerating(false);
-    setMessages(prev => [...prev, { role: 'model', content: reply }]);
+    setMessages(prev => [...prev, { role: 'model', content: cleanReply }]);
     
     if (ttsEnabled) {
-      speak(reply);
+      speak(cleanReply);
+    }
+
+    // Execute tour commands sequentially with smooth delays
+    if (tourCommands.length > 0) {
+      const runTour = async () => {
+        setIsTourActive(true);
+        for (const cmd of tourCommands) {
+          window.dispatchEvent(new CustomEvent('aiTourCommand', { detail: cmd }));
+          await new Promise(r => setTimeout(r, cmd.delay || 1000));
+        }
+        setIsTourActive(false);
+      };
+      runTour();
     }
   };
 
@@ -299,8 +345,10 @@ export const AiCloneTerminal: React.FC<AiCloneTerminalProps> = ({ isBlueprintMod
             {/* Header section */}
             <div className={`flex items-center justify-between border-b px-4 py-2.5 bg-black/40 text-[9px] tracking-widest transition-all ${accentBorderClass} ${accentTextClass}`}>
               <div className="flex items-center gap-2">
-                <span className={`w-2 h-2 rounded-full ${isGenerating ? 'bg-amber-500 animate-pulse' : 'bg-red-500 animate-pulse'}`} />
-                <span className="font-glow">COGNITIVE_SYNC_PORT: {modelRef.current ? 'LIVE' : 'OFFLINE_FAQS'}</span>
+                <span className={`w-2 h-2 rounded-full ${isTourActive ? 'bg-amber-500 animate-ping' : isGenerating ? 'bg-amber-500 animate-pulse' : 'bg-[#00ff41] animate-pulse'}`} />
+                <span className="font-glow">
+                  {isTourActive ? 'SYSTEM_CONTROL: ACTIVE' : modelRef.current ? 'COGNITIVE_SYNC: LIVE' : 'COGNITIVE_SYNC: OFFLINE'}
+                </span>
               </div>
               <button
                 type="button"
@@ -315,7 +363,7 @@ export const AiCloneTerminal: React.FC<AiCloneTerminalProps> = ({ isBlueprintMod
             <div className={`flex items-center justify-between px-4 py-2 border-b bg-black/10 ${accentBorderClass}`}>
               <div className="flex flex-col gap-0.5">
                 <span className={`text-[8px] tracking-widest opacity-60 ${accentTextClass}`}>NEURAL_SPEECH_STREAM</span>
-                <span className={`text-[9px] font-bold ${accentTextClass}`}>{isSpeaking ? 'VOICING_ANSWER' : isGenerating ? 'AI_PROCESSING...' : 'STANDBY_READY'}</span>
+                <span className={`text-[9px] font-bold ${accentTextClass}`}>{isTourActive ? 'EXECUTING_AUTOTOUR...' : isSpeaking ? 'VOICING_ANSWER' : isGenerating ? 'AI_PROCESSING...' : 'STANDBY_READY'}</span>
               </div>
               <VisualizerWave active={isWaveActive} blueprint={isBlueprintMode} />
             </div>
@@ -367,8 +415,10 @@ export const AiCloneTerminal: React.FC<AiCloneTerminalProps> = ({ isBlueprintMod
               {[
                 { label: 'Hire Nisarg', text: 'How can I hire Nisarg and what are his contact details?' },
                 { label: 'Technical Stack', text: 'Give me a summary of Nisarg\'s technical skills and frameworks.' },
-                { label: 'Publications', text: 'Tell me about Nisarg\'s academic research papers.' },
-                { label: 'Core Projects', text: 'Highlight Nisarg\'s top featured development projects.' }
+                { label: 'Academic Papers', text: 'Tell me about Nisarg\'s academic research papers.' },
+                { label: '🧬 Tour CodeGraph', text: 'Tell me about CodeGraph and show it to me.' },
+                { label: '📊 Tour BharatBudget', text: 'Tell me about BharatBudget and show it to me.' },
+                { label: '🏥 Tour Clinical Survey', text: 'Tell me about the Survey Health Care Form App and show it to me.' }
               ].map((chip, idx) => (
                 <button
                   key={idx}

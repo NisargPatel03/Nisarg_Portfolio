@@ -76,6 +76,31 @@ function App() {
     }
   }, [isBlueprintMode]);
 
+  useEffect(() => {
+    const handleTourCommand = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const { action, target, value } = customEvent.detail;
+
+      if (action === 'scroll' && target) {
+        if ((window as any).triggerWarpScroll) {
+          (window as any).triggerWarpScroll(target);
+        } else {
+          const el = document.getElementById(target);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth' });
+          }
+        }
+      } else if (action === 'toggleBlueprint') {
+        setIsBlueprintMode(!!value);
+      }
+    };
+
+    window.addEventListener('aiTourCommand', handleTourCommand);
+    return () => {
+      window.removeEventListener('aiTourCommand', handleTourCommand);
+    };
+  }, []);
+
 
 
 
