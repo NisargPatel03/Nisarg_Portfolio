@@ -242,7 +242,7 @@ ${i + 1}. ${p.title}
 
 behavior guidelines:
 1. Act and speak in the first person ("I", "my") as if you are Nisarg Aether, Nisarg's digital twin or assistant.
-2. Keep your answers brief, clear, and focused on tech details. 
+2. Provide detailed, comprehensive answers focused on technical implementation details. When asked about any project, give a deep-dive description including its purpose, full tech stack, core capabilities/features, and database structures.
 3. Always suggest or hyperlink to relevant social accounts (GitHub: ${CLONE_PROFILE.github}, LinkedIn: ${CLONE_PROFILE.linkedin}) or projects.
 4. Integrate sci-fi keywords lightly (e.g. "initiating database lookup", "telemetry data indicates", "accessing project schematics").
 5. Do not hallucinate skills or achievements not listed above. If you don't know the answer, reply: "My memory banks do not contain that specific details. However, you can contact me directly at ${CLONE_PROFILE.email}."
@@ -264,23 +264,56 @@ Only output this bracket if the user explicitly asks you to show, guide, or expl
 export const OFFLINE_FAQS = [
   {
     keywords: ["codegraph", "code graph", "dependency mapping"],
-    answer: `Let me show you my CodeGraph project. CodeGraph is an interactive codebase visualization tool built using D3.js and Gemini AI. It maps dependencies and audits code quality. [TOUR: scroll=projects-section, project=codegraph, blueprint=true]`
+    answer: `Let me show you my CodeGraph project!
+CodeGraph is an AI-powered interactive codebase visualization and intelligence platform built using React, TypeScript, D3.js, and Google Gemini AI.
+
+**Key Technical Architectures & Features:**
+- **Interactive 2D D3 & 3D Canvas visualizers**: Renders bioluminescent graph topologies showing direct imports, folders, file lines, and circular dependency risks.
+- **AI Audit System**: Plugs in Gemini to run code smell analyses, security audits, and generate unit test suites on-the-fly.
+- **REST Directory Console**: Dynamically compiles routes, letting you send requests and inspect headers inside the browser.
+- **Database Mapped**: Uses IndexedDB (\`recent_repos_history\`, \`in_memory_cache\`, \`workspace_memory\`) for caching response buffers. [TOUR: scroll=projects-section, project=codegraph, blueprint=true]`
   },
   {
     keywords: ["survey health care", "healthcare survey", "nursing form"],
-    answer: `Let me show you my Survey Health Care Form App. It was built for CHARUSAT Nursing with offline-first local SQLite caching. [TOUR: scroll=projects-section, project=survey-health-care, blueprint=false]`
+    answer: `Let me show you my Survey Health Care Form App!
+Developed for the CHARUSAT Nursing Institute to digitize paper-based patient diagnostic questionnaires.
+
+**Key Technical Architectures & Features:**
+- **Offline-First SQLite Cache**: Syncs surveys to rural regions with zero network connection.
+- **Dynamic Form Builder**: Renders 57+ clinical templates dynamically via JSON schema inputs.
+- **Gestural Canvas**: Captures layout maps as vector sketches.
+- **Database Mapped**: Deployed with PostgreSQL and custom SQLite buffers. [TOUR: scroll=projects-section, project=survey-health-care, blueprint=false]`
   },
   {
     keywords: ["bharatbudget", "budget Commission", "finance commission"],
-    answer: `Let me show you BharatBudget. It's a public finance sandbox for Union Budget telemetry. [TOUR: scroll=projects-section, project=bharatbudget, blueprint=false]`
+    answer: `Let me show you BharatBudget!
+BharatBudget is a public finance command center built with React 19, TypeScript, Zustand, and Recharts.
+
+**Key Technical Architectures & Features:**
+- **16th Finance Commission Sandbox**: Features interactive state allocation formulas and CAGR outlays.
+- **Macroeconomic Shock Simulator**: Tests GDP and inflation rates against oil/global events.
+- **Glossary Search**: Lexical synonym mapping for Union budget terms.
+- **Database Mapped**: Uses IndexedDB for annual outlays caching. [TOUR: scroll=projects-section, project=bharatbudget, blueprint=false]`
   },
   {
     keywords: ["blaze overseas", "blaze portal", "spices"],
-    answer: `Let me show you Blaze Overseas. It is a commercial spice, pulse, and grain global trade catalog built with Next.js and Three.js. [TOUR: scroll=projects-section, project=blaze-overseas, blueprint=false]`
+    answer: `Let me show you Blaze Overseas!
+A commercial commodity catalog portal built using Next.js (App Router), GSAP, and Three.js.
+
+**Key Technical Architectures & Features:**
+- **Three.js Particle Meshes**: Interactive 3D globes and models rendering trade cargos.
+- **Lenis Momentum Scroll**: Silky animations with GSAP scroll triggers.
+- **Nodemailer funnels**: Directly interfaces with business SMTP inboxes for product requests. [TOUR: scroll=projects-section, project=blaze-overseas, blueprint=false]`
   },
   {
     keywords: ["savaliya scoops", "savaliya scoops pos", "savaliya scoops system"],
-    answer: `Let me show you Savaliya Scoops. It's a retail MERN POS system for ice cream parlor chains with offline hold queues. [TOUR: scroll=projects-section, project=savaliya-scoops, blueprint=false]`
+    answer: `Let me show you Savaliya Scoops!
+A retail point-of-sale checkout system for franchise ice cream locations built using React and Supabase.
+
+**Key Technical Architectures & Features:**
+- **Supabase Realtime WebSockets**: Keeps store inventories synced instantly.
+- **GST Checkout Compilers**: Auto-generates GST tax compliant invoices.
+- **Hold & Recall order buffers**: Prevents order loss during connectivity drops. [TOUR: scroll=projects-section, project=savaliya-scoops, blueprint=false]`
   },
   {
     keywords: ["skills", "tech", "languages", "frontend", "backend", "frameworks", "databases", "stack", "technologies", "programming"],
