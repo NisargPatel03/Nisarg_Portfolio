@@ -189,7 +189,7 @@ export const DiagnosticsHUD: React.FC<DiagnosticsHUDProps> = ({
 
   return (
     <div 
-      className={`diagnostics-hud-container hud-grid-bg hud-corner-brackets cyber-glass-bezel ${isCollapsed ? 'is-collapsed' : ''}`}
+      className={`diagnostics-hud-container hud-grid-bg hud-corner-brackets cyber-glass-bezel cyber-light-border ${isCollapsed ? 'is-collapsed' : ''}`}
       aria-label="Real-Time Telemetry HUD"
     >
       {/* Collapse Tab */}

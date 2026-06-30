@@ -249,6 +249,37 @@
   z-index: 2;
 }
 
+/* --- Premium Light-Tracking Refractive Border Overlay --- */
+.cyber-light-border:not(.fixed):not(.absolute):not(.sticky) {
+  position: relative;
+}
+
+.cyber-light-border::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: radial-gradient(
+    160px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
+    var(--accent-color, #00ff41) 0%,
+    rgba(var(--accent-rgb, 0, 255, 65), 0.4) 40%,
+    transparent 80%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.cyber-light-border:hover::after {
+  opacity: 1;
+}
+
 /* --- Feature-7: Real-Time Sidebar Diagnostics HUD --- */
 .diagnostics-hud-container {
   position: fixed;

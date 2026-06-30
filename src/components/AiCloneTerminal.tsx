@@ -341,7 +341,7 @@ export const AiCloneTerminal: React.FC<AiCloneTerminalProps> = ({ isBlueprintMod
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
             data-lenis-prevent
-            className={`fixed bottom-36 right-6 md:right-8 z-[1000] w-[90vw] max-w-md border rounded-xl flex flex-col overflow-hidden backdrop-blur-md bg-black/45 font-mono cyber-glass-bezel ${shadowClass}`}
+            className={`fixed bottom-36 right-6 md:right-8 z-[1000] w-[90vw] max-w-md border rounded-xl flex flex-col overflow-hidden backdrop-blur-md bg-black/45 font-mono cyber-glass-bezel cyber-light-border ${shadowClass}`}
           >
             {/* Header section */}
             <div className={`flex items-center justify-between border-b px-4 py-2.5 bg-black/40 text-[9px] tracking-widest transition-all ${accentBorderClass} ${accentTextClass}`}>

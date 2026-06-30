@@ -82,7 +82,7 @@ export const AboutSection: React.FC = () => {
 
         {/* Nisarg's Professional Details Cards Grid */}
         <FadeIn crtFlicker={true} delay={0.4} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl w-full mt-6">
-          <TiltCard className="bg-[#121212] border border-[#232323] rounded-3xl p-5 hover:border-[#B600A8]/45 transition-colors flex flex-col gap-3 crt-glitch-hover">
+          <TiltCard className="bg-[#121212] border border-[#232323] rounded-3xl p-5 hover:border-[#B600A8]/45 transition-colors flex flex-col gap-3 crt-glitch-hover cyber-light-border">
             <BookOpen className="w-8 h-8 text-[#B600A8]" />
             <h3 className="text-white font-bold text-lg uppercase tracking-wider">Education</h3>
             <p className="text-[#D7E2EA]/70 text-sm font-light leading-snug">
@@ -90,7 +90,7 @@ export const AboutSection: React.FC = () => {
             </p>
           </TiltCard>
 
-          <TiltCard className="bg-[#121212] border border-[#232323] rounded-3xl p-5 hover:border-[#7621B0]/45 transition-colors flex flex-col gap-3 crt-glitch-hover">
+          <TiltCard className="bg-[#121212] border border-[#232323] rounded-3xl p-5 hover:border-[#7621B0]/45 transition-colors flex flex-col gap-3 crt-glitch-hover cyber-light-border">
             <Award className="w-8 h-8 text-[#7621B0]" />
             <h3 className="text-white font-bold text-lg uppercase tracking-wider">Awards</h3>
             <p className="text-[#D7E2EA]/70 text-sm font-light leading-snug">
@@ -98,7 +98,7 @@ export const AboutSection: React.FC = () => {
             </p>
           </TiltCard>
 
-          <TiltCard className="bg-[#121212] border border-[#232323] rounded-3xl p-5 hover:border-[#BE4C00]/45 transition-colors flex flex-col gap-3 crt-glitch-hover">
+          <TiltCard className="bg-[#121212] border border-[#232323] rounded-3xl p-5 hover:border-[#BE4C00]/45 transition-colors flex flex-col gap-3 crt-glitch-hover cyber-light-border">
             <Code className="w-8 h-8 text-[#BE4C00]" />
             <h3 className="text-white font-bold text-lg uppercase tracking-wider">Coding</h3>
             <p className="text-[#D7E2EA]/70 text-sm font-light leading-snug">
@@ -106,7 +106,7 @@ export const AboutSection: React.FC = () => {
             </p>
           </TiltCard>
 
-          <TiltCard className="bg-[#121212] border border-[#232323] rounded-3xl p-5 hover:border-[#B600A8]/45 transition-colors flex flex-col gap-3 crt-glitch-hover">
+          <TiltCard className="bg-[#121212] border border-[#232323] rounded-3xl p-5 hover:border-[#B600A8]/45 transition-colors flex flex-col gap-3 crt-glitch-hover cyber-light-border">
             <Star className="w-8 h-8 text-[#B600A8]" />
             <h3 className="text-white font-bold text-lg uppercase tracking-wider">HackerRank</h3>
             <p className="text-[#D7E2EA]/70 text-sm font-light leading-snug">

@@ -594,7 +594,7 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({
   const style = { ['--accent' as string]: themeColor };
 
   return (
-    <div className={`terminal-window ${crtEnabled ? 'crt-active' : ''}`} style={style}>
+    <div className={`terminal-window cyber-light-border ${crtEnabled ? 'crt-active' : ''}`} style={style}>
       {/* Decorative Hardware Bezels & Details */}
       <div className="terminal-bezel-bracket top-left">[+]</div>
       <div className="terminal-bezel-bracket top-right">[+]</div>

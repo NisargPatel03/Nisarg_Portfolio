@@ -135,25 +135,25 @@ export const ServicesSection: React.FC = () => {
                   </p>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
-                    <div className="service-card p-6 rounded-3xl bg-slate-50 border border-slate-200/50 hover:border-slate-300 hover:bg-slate-100/50 transition-all duration-300 flex flex-col gap-3 shadow-sm">
+                    <div className="service-card cyber-light-border p-6 rounded-3xl bg-slate-50 border border-slate-200/50 hover:border-slate-300 hover:bg-slate-100/50 transition-all duration-300 flex flex-col gap-3 shadow-sm">
                       <span className="font-bold text-slate-950 text-sm uppercase tracking-wide flex items-center gap-2">
                         🌍 Global Cargo Directory
                       </span>
                       <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-light">Integrated commodities search engine with filters, helping international trade buyers explore products effortlessly.</p>
                     </div>
-                    <div className="service-card p-6 rounded-3xl bg-slate-50 border border-slate-200/50 hover:border-slate-300 hover:bg-slate-100/50 transition-all duration-300 flex flex-col gap-3 shadow-sm">
+                    <div className="service-card cyber-light-border p-6 rounded-3xl bg-slate-50 border border-slate-200/50 hover:border-slate-300 hover:bg-slate-100/50 transition-all duration-300 flex flex-col gap-3 shadow-sm">
                       <span className="font-bold text-slate-950 text-sm uppercase tracking-wide flex items-center gap-2">
                         📈 Automated Sales Funnel
                       </span>
                       <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-light">Lead generation dashboard with automated consultation scheduling forms and custom email notification triggers.</p>
                     </div>
-                    <div className="service-card p-6 rounded-3xl bg-slate-50 border border-slate-200/50 hover:border-slate-300 hover:bg-slate-100/50 transition-all duration-300 flex flex-col gap-3 shadow-sm">
+                    <div className="service-card cyber-light-border p-6 rounded-3xl bg-slate-50 border border-slate-200/50 hover:border-slate-300 hover:bg-slate-100/50 transition-all duration-300 flex flex-col gap-3 shadow-sm">
                       <span className="font-bold text-slate-950 text-sm uppercase tracking-wide flex items-center gap-2">
                         ⚡ Sub-Second Asset Loads
                       </span>
                       <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-light">Serverless build optimization using Vite and TypeScript configurations to guarantee instantaneous asset loading across global networks.</p>
                     </div>
-                    <div className="service-card p-6 rounded-3xl bg-slate-50 border border-slate-200/50 hover:border-slate-300 hover:bg-slate-100/50 transition-all duration-300 flex flex-col gap-3 shadow-sm">
+                    <div className="service-card cyber-light-border p-6 rounded-3xl bg-slate-50 border border-slate-200/50 hover:border-slate-300 hover:bg-slate-100/50 transition-all duration-300 flex flex-col gap-3 shadow-sm">
                       <span className="font-bold text-slate-950 text-sm uppercase tracking-wide flex items-center gap-2">
                         💎 Premium UX Directives
                       </span>
@@ -226,37 +226,37 @@ export const ServicesSection: React.FC = () => {
                   </p>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
-                    <div className="service-card p-6 rounded-3xl bg-slate-50 border border-slate-200/50 hover:border-slate-300 hover:bg-slate-100/50 transition-all duration-300 flex flex-col gap-3 shadow-sm">
+                    <div className="service-card cyber-light-border p-6 rounded-3xl bg-slate-50 border border-slate-200/50 hover:border-slate-300 hover:bg-slate-100/50 transition-all duration-300 flex flex-col gap-3 shadow-sm">
                       <span className="font-bold text-slate-950 text-sm uppercase tracking-wide flex items-center gap-2">
                         🚀 Lightning POS Interface
                       </span>
                       <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-light">Local-based, button-driven sales dashboard for sub-second catalog selection and cash register dispatching.</p>
                     </div>
-                    <div className="service-card p-6 rounded-3xl bg-slate-50 border border-slate-200/50 hover:border-slate-300 hover:bg-slate-100/50 transition-all duration-300 flex flex-col gap-3 shadow-sm">
+                    <div className="service-card cyber-light-border p-6 rounded-3xl bg-slate-50 border border-slate-200/50 hover:border-slate-300 hover:bg-slate-100/50 transition-all duration-300 flex flex-col gap-3 shadow-sm">
                       <span className="font-bold text-slate-950 text-sm uppercase tracking-wide flex items-center gap-2">
                         💰 Multi-Mode Settlement
                       </span>
                       <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-light">Integrated support for multiple flexible payment channels including cash, bank cheque, and digital Paytm ledger inputs.</p>
                     </div>
-                    <div className="service-card p-6 rounded-3xl bg-slate-50 border border-slate-200/50 hover:border-slate-300 hover:bg-slate-100/50 transition-all duration-300 flex flex-col gap-3 shadow-sm">
+                    <div className="service-card cyber-light-border p-6 rounded-3xl bg-slate-50 border border-slate-200/50 hover:border-slate-300 hover:bg-slate-100/50 transition-all duration-300 flex flex-col gap-3 shadow-sm">
                       <span className="font-bold text-slate-950 text-sm uppercase tracking-wide flex items-center gap-2">
                         📊 Local Excel Data Vault
                       </span>
                       <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-light">Transaction records, menus, and customer databases are compiled and securely structured directly in Excel formats.</p>
                     </div>
-                    <div className="service-card p-6 rounded-3xl bg-slate-50 border border-slate-200/50 hover:border-slate-300 hover:bg-slate-100/50 transition-all duration-300 flex flex-col gap-3 shadow-sm">
+                    <div className="service-card cyber-light-border p-6 rounded-3xl bg-slate-50 border border-slate-200/50 hover:border-slate-300 hover:bg-slate-100/50 transition-all duration-300 flex flex-col gap-3 shadow-sm">
                       <span className="font-bold text-slate-950 text-sm uppercase tracking-wide flex items-center gap-2">
                         ⚡ Hold & Recall Queue
                       </span>
                       <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-light">Built-in order queue hold/recall triggers, ideal for managing active dine-in groups and simultaneous parcel orders.</p>
                     </div>
-                    <div className="service-card p-6 rounded-3xl bg-slate-50 border border-slate-200/50 hover:border-slate-300 hover:bg-slate-100/50 transition-all duration-300 flex flex-col gap-3 shadow-sm">
+                    <div className="service-card cyber-light-border p-6 rounded-3xl bg-slate-50 border border-slate-200/50 hover:border-slate-300 hover:bg-slate-100/50 transition-all duration-300 flex flex-col gap-3 shadow-sm">
                       <span className="font-bold text-slate-950 text-sm uppercase tracking-wide flex items-center gap-2">
                         ⏰ Pre-Order Reminders
                       </span>
                       <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-light">Automatic alert system notifying operators 20 minutes prior to a due advance order, minimizing processing delays.</p>
                     </div>
-                    <div className="service-card p-6 rounded-3xl bg-slate-50 border border-slate-200/50 hover:border-slate-300 hover:bg-slate-100/50 transition-all duration-300 flex flex-col gap-3 shadow-sm">
+                    <div className="service-card cyber-light-border p-6 rounded-3xl bg-slate-50 border border-slate-200/50 hover:border-slate-300 hover:bg-slate-100/50 transition-all duration-300 flex flex-col gap-3 shadow-sm">
                       <span className="font-bold text-slate-950 text-sm uppercase tracking-wide flex items-center gap-2">
                         🖨️ Thermal Bill Printer
                       </span>
