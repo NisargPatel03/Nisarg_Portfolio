@@ -1007,6 +1007,13 @@ h1, h2, h3, h4, h5, h6, button, nav a, .nav-link, .card-title {
   transform: translate3d(calc(100% + 22px), -50%, 0) !important;
 }
 
+/* Custom Cursor Reticle Global Hiding rules */
+.custom-cursor-active,
+.custom-cursor-active * {
+  cursor: none !important;
+}
+
+
 
 
 

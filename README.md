@@ -146,6 +146,15 @@ A cutting-edge, ultra-premium developer portfolio designed with sleek futuristic
 *   **Stereoscopic Chromatic Aberration**: Layers three separate colored outlines (Cyan, Magenta, and Green) beneath the solid foreground text. On hover, these layers undergo high-frequency micro-oscillations in opposite directions, simulating a real-time analog lens/CRT chromatic glitch.
 *   **Adaptive Light Mode Rendering**: Built with a dynamic `lightMode` property to swap the foreground fill (white vs. dark gray) depending on the background section theme, ensuring perfect contrast and readability on both white and cyber-black backdrops.
 
+### 🎯 25. Morphing Custom Cursor Reticle
+*   **Automatic Element Scanner**: Integrates a dynamic pointer scanner that monitors target elements underneath the cursor coordinate trail to automatically categorize the hover state.
+*   **Dynamic SVG Path Morphing**: Hides the native system cursor and renders a custom vector reticle that animates between distinct configurations:
+    *   **Default**: A clean center dot inside a slowly rotating dashed ring.
+    *   **Over Buttons & Links**: Morphs into a calibrated target crosshair with ticking coordinates.
+    *   **Over Inputs & Textareas**: Morphs into vertical, coordinate brackets suited for text editing.
+    *   **Over Projects & Demos**: Morphs into a magnifying viewport lens highlighting the card area.
+*   **Real-time Telemetry Readout**: Displays local tracking status (SYS_PTR: ACTIVE/BUTTON/INPUT/PROJECT) and coordinate labels updating dynamically.
+
 ---
 
 ## 🛠️ Tech Stack & Architecture
