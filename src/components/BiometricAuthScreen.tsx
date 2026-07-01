@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { soundFX } from '../utils/terminalAudio';
 
@@ -7,45 +7,69 @@ interface BiometricAuthScreenProps {
   onUnlock: () => void;
 }
 
-const OUTER_LABELS = ["E2", "7B", "C9", "A5", "0F", "88", "9C", "D4"];
-const MIDDLE_LABELS = ["1010", "0111", "1100", "0011", "1001", "0110", "1111", "0000"];
-const INNER_LABELS = ["N", "I", "S", "A", "R", "G", "0", "3"];
-
 export const BiometricAuthScreen: React.FC<BiometricAuthScreenProps> = ({
   onBypass,
   onUnlock,
 }) => {
   const [logs, setLogs] = useState<string[]>([]);
+  const [code, setCode] = useState('');
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [isExploding, setIsExploding] = useState(false);
-  const [isSweeping, setIsSweeping] = useState(false);
-  
-  // Scrambled angles (offset by at least 45 deg + small random fraction to prevent initial alignment)
-  const [outerAngle, setOuterAngle] = useState(() => Math.floor(Math.random() * 6 + 1) * 45 + 15);
-  const [middleAngle, setMiddleAngle] = useState(() => Math.floor(Math.random() * 6 + 1) * 45 + 25);
-  const [innerAngle, setInnerAngle] = useState(() => Math.floor(Math.random() * 6 + 1) * 45 + 35);
-
-  const [outerLocked, setOuterLocked] = useState(false);
-  const [middleLocked, setMiddleLocked] = useState(false);
-  const [innerLocked, setInnerLocked] = useState(false);
-
+  const [attempts, setAttempts] = useState(0);
+  const [isLockedDown, setIsLockedDown] = useState(false);
+  const [lockdownSeconds, setLockdownSeconds] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
   const [sysSpecs, setSysSpecs] = useState({
     ip: '192.168.1.72',
     res: '1920x1080',
     browser: 'Chrome/WebKit Engine',
   });
+  
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const makeCirclePath = (cx: number, cy: number, r: number) => {
+    const k = r * 0.5522847;
+    return `M ${cx} ${cy + r} c ${k.toFixed(2)} 0 ${r} ${(-r + k).toFixed(2)} ${r} ${-r} s ${(-r + k).toFixed(2)} ${-r} ${-r} ${-r} s ${-r} ${(r - k).toFixed(2)} ${-r} ${r} s ${(r - k).toFixed(2)} ${r} ${r} ${r} z`;
+  };
+
+  const FP_1 = makeCirclePath(10.5, 11.2, 2.2);
+  const FP_2 = makeCirclePath(11.2, 10.5, 4.5);
+  const FP_3 = makeCirclePath(12.2, 10.2, 7.2);
+  const FP_4 = makeCirclePath(12.8, 9.5, 10.5);
+
+  const C_1 = makeCirclePath(12, 10, 3);
+  const C_2 = makeCirclePath(12, 10, 6);
+  const C_3 = makeCirclePath(12, 10, 9);
+  const C_4 = makeCirclePath(12, 10, 12);
+  const C_5 = makeCirclePath(12, 10, 15);
+  const C_6 = makeCirclePath(12, 10, 18);
+
+  // Synchronized scanner audio clicks on ripple waves
+  useEffect(() => {
+    if (!isHovered || isUnlocked || isLockedDown) return;
+    
+    soundFX.playScannerPing();
+    
+    const interval = setInterval(() => {
+      soundFX.playScannerPing();
+    }, 1600);
+    
+    return () => clearInterval(interval);
+  }, [isHovered, isUnlocked, isLockedDown]);
 
   // Retrieve user specifications on boot
   useEffect(() => {
     const w = window.innerWidth;
     const h = window.innerHeight;
     
+    // Simple browser detection
     let browserName = 'Generic Engine';
     const ua = navigator.userAgent;
     if (ua.indexOf('Firefox') > -1) browserName = 'Firefox Quantum';
     else if (ua.indexOf('Chrome') > -1) browserName = 'Chrome V8 Engine';
     else if (ua.indexOf('Safari') > -1) browserName = 'Safari WebKit';
     
+    // Randomized local IP suffix
     const randomIP = `192.168.1.${Math.floor(Math.random() * 240) + 10}`;
 
     setSysSpecs({
@@ -55,15 +79,16 @@ export const BiometricAuthScreen: React.FC<BiometricAuthScreenProps> = ({
     });
   }, []);
 
-  // Print system logs
+  // Print system logs letter-by-letter / sequentially
   useEffect(() => {
     const logSequence = [
-      'INITIALIZING CRYPTO-DECRYPTION INTERFACE...',
-      'LOADING CYBERNETIC ASTROLABE MODULES... OK',
+      'INITIALIZING BIOMETRIC SCAN INTERFACE...',
+      'BOOTING HARDWARE PROTOCOLS... OK',
       `RESOLVING LOCAL SUBNET ROUTE... ADDR: ${sysSpecs.ip}`,
-      `CALIBRATING RINGS TO ANGLE METRICS... RESOLUTION: ${sysSpecs.res}`,
-      'WARNING: ACCESS IS RESTRICTED TO AUTHORIZED RECRUITERS',
-      'ALIGN ALL ROTORS TO NORTH (0° / 360°) TO DECRYPT THE DECK PORTFOLIO.'
+      `DETECTING GRAPHICS DISPLAY FRAME... RESOLUTION: ${sysSpecs.res}`,
+      `VERIFYING BROWSER INSTANCE ENGINE... AGENT: ${sysSpecs.browser}`,
+      'WARNING: ACCESS IS CURRENTLY RESTRICTED TO AUTHORIZED RECRUITERS',
+      'ENTER ACCESS KEY OR ACTIVATE BYPASS SEQUENCE.'
     ];
 
     let currentIdx = 0;
@@ -74,113 +99,102 @@ export const BiometricAuthScreen: React.FC<BiometricAuthScreenProps> = ({
         soundFX.playClick();
       } else {
         clearInterval(interval);
+        if (inputRef.current) {
+          inputRef.current.focus();
+        }
       }
     }, 450);
 
     return () => clearInterval(interval);
   }, [sysSpecs]);
 
-  // Handle snapping locks
+  // Timer for lockdown countdown
   useEffect(() => {
-    if (!outerLocked && (outerAngle < 6 || outerAngle > 354)) {
-      setOuterAngle(0);
-      setOuterLocked(true);
-      soundFX.playClick();
-      setLogs((prev) => [...prev, 'CRITICAL: OUTER ROTOR SECURED [0x0F]']);
+    let timer: any;
+    if (isLockedDown && lockdownSeconds > 0) {
+      timer = setInterval(() => {
+        setLockdownSeconds((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            setIsLockedDown(false);
+            setAttempts(0);
+            soundFX.stopLockdownAlarm();
+            setLogs((prevLogs) => [
+              ...prevLogs,
+              'SECURITY SHIELD RESET. LOCKDOWN PROTOCOLS LIFTABLE.',
+              'READY TO RECEIVE ACCESS KEY CREDENTIALS.'
+            ]);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
     }
-  }, [outerAngle, outerLocked]);
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [isLockedDown, lockdownSeconds]);
 
-  useEffect(() => {
-    if (!middleLocked && (middleAngle < 6 || middleAngle > 354)) {
-      setMiddleAngle(0);
-      setMiddleLocked(true);
-      soundFX.playClick();
-      setLogs((prev) => [...prev, 'CRITICAL: MIDDLE ROTOR SECURED [0b1010]']);
-    }
-  }, [middleAngle, middleLocked]);
+  // Handle typing inputs
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (isLockedDown) return;
+    const value = e.target.value.toUpperCase();
+    setCode(value);
+    soundFX.playClick();
 
-  useEffect(() => {
-    if (!innerLocked && (innerAngle < 6 || innerAngle > 354)) {
-      setInnerAngle(0);
-      setInnerLocked(true);
-      soundFX.playClick();
-      setLogs((prev) => [...prev, 'CRITICAL: INNER ROTOR SECURED [KEY_N]']);
-    }
-  }, [innerAngle, innerLocked]);
-
-  // Check solve state
-  useEffect(() => {
-    if (outerLocked && middleLocked && innerLocked && !isUnlocked) {
+    if (value === 'NISARG') {
       setIsUnlocked(true);
-      setIsSweeping(true);
-      setLogs((prev) => [
-        ...prev,
-        'SYSTEM LOG: CRYPTOGRAPHIC ALIGNMENT REACHED.',
-        'ENGAGING GREEN DECRYPTION LASER SWEEP...',
-        'PASSPHRASE VERIFIED: SYSTEM ACCESS GRANTED.'
-      ]);
-
+      setIsExploding(true);
       setTimeout(() => {
         soundFX.playSuccess();
-      }, 400);
-
-      setTimeout(() => {
-        setIsExploding(true);
-      }, 1000);
+      }, 200);
 
       setTimeout(() => {
         onUnlock();
-      }, 2400);
+      }, 1500);
     }
-  }, [outerLocked, middleLocked, innerLocked, isUnlocked]);
+  };
 
-  // Drag-rotation handler using native pointer events
-  const handlePointerDown = (ring: 'outer' | 'middle' | 'inner', e: React.PointerEvent<SVGElement>) => {
-    if (isUnlocked) return;
-    if (ring === 'outer' && outerLocked) return;
-    if (ring === 'middle' && middleLocked) return;
-    if (ring === 'inner' && innerLocked) return;
-
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const svgEl = e.currentTarget.closest('svg');
-    if (!svgEl) return;
+    if (isUnlocked || isLockedDown || !code.trim()) return;
 
-    const rect = svgEl.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-
-    const dx = e.clientX - centerX;
-    const dy = e.clientY - centerY;
-    const startRad = Math.atan2(dy, dx);
-    const startDeg = (startRad * 180) / Math.PI;
-
-    const initialAngle = ring === 'outer' ? outerAngle : ring === 'middle' ? middleAngle : innerAngle;
-
-    const handlePointerMove = (moveEvent: PointerEvent) => {
-      const curDx = moveEvent.clientX - centerX;
-      const curDy = moveEvent.clientY - centerY;
-      const curRad = Math.atan2(curDy, curDx);
-      const curDeg = (curRad * 180) / Math.PI;
-
-      const delta = curDeg - startDeg;
-      let newAngle = (initialAngle + delta) % 360;
-      if (newAngle < 0) newAngle += 360;
-
-      if (ring === 'outer') setOuterAngle(newAngle);
-      else if (ring === 'middle') setMiddleAngle(newAngle);
-      else if (ring === 'inner') setInnerAngle(newAngle);
-    };
-
-    const handlePointerUp = () => {
-      window.removeEventListener('pointermove', handlePointerMove);
-      window.removeEventListener('pointerup', handlePointerUp);
-    };
-
-    window.addEventListener('pointermove', handlePointerMove);
-    window.addEventListener('pointerup', handlePointerUp);
+    const trimmed = code.trim().toUpperCase();
+    if (trimmed === 'NISARG') {
+      setIsUnlocked(true);
+      setIsExploding(true);
+      setTimeout(() => {
+        soundFX.playSuccess();
+      }, 200);
+      setTimeout(() => {
+        onUnlock();
+      }, 1500);
+    } else {
+      const nextAttempts = attempts + 1;
+      setAttempts(nextAttempts);
+      setCode('');
+      
+      if (nextAttempts >= 3) {
+        setIsLockedDown(true);
+        setLockdownSeconds(30);
+        soundFX.playLockdownAlarm();
+        setLogs((prev) => [
+          ...prev,
+          `[!!] ALARM: INTRUSION ATTEMPT DETECTED (REF: ACCESS_FAILURE)`,
+          `[!!] CRITICAL: BIOMETRIC TERMINAL LOCKED FOR 30 SECONDS.`
+        ]);
+      } else {
+        soundFX.playError();
+        setLogs((prev) => [
+          ...prev,
+          `[!] ACCESS DENIED: CODE ERROR. ATTEMPT ${nextAttempts}/3.`
+        ]);
+      }
+    }
   };
 
   const handleBypassClick = () => {
+    if (isLockedDown) return;
     soundFX.playClick();
     onBypass();
   };
@@ -189,6 +203,7 @@ export const BiometricAuthScreen: React.FC<BiometricAuthScreenProps> = ({
     document.body.style.overflow = 'hidden';
     return () => {
       document.body.style.overflow = '';
+      soundFX.stopLockdownAlarm();
     };
   }, []);
 
@@ -198,258 +213,331 @@ export const BiometricAuthScreen: React.FC<BiometricAuthScreenProps> = ({
       exit={{ opacity: 0, y: -40 }}
       transition={{ duration: 0.8, ease: 'easeInOut' }}
       data-lenis-prevent
-      className="fixed inset-0 z-[9999] transition-all duration-500 font-mono overflow-y-auto bg-scanlines select-none bg-[#030603] text-[#00ff41]"
+      className={`fixed inset-0 z-[9999] transition-all duration-500 font-mono overflow-y-auto bg-scanlines select-none ${
+        isLockedDown ? 'bg-[#0c0202] text-red-500' : 'bg-[#030603] text-[#00ff41]'
+      }`}
     >
+      {/* High tech background layers */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#00ff41_1px,transparent_1px),linear-gradient(to_bottom,#00ff41_1px,transparent_1px)] bg-[size:32px_32px] opacity-[0.03] z-0 pointer-events-none" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.15)_0%,rgba(0,0,0,0.9)_100%)] z-0 pointer-events-none" />
 
+      {/* Background Matrix Rain Simulation when Authorized */}
       {isExploding && (
         <div className="fixed inset-0 bg-[#000]/95 z-[10000] flex flex-col justify-center items-center text-center">
           <div className="text-[#00ff41] text-3xl md:text-5xl font-extrabold tracking-widest mb-4 animate-pulse uppercase font-orbitron font-interlaced">
-            ⚡ Decryption Complete ⚡
+            ⚡ Auth Verified ⚡
           </div>
           <div className="text-xs md:text-sm text-[#00ff41]/60 max-w-md px-4 leading-relaxed uppercase font-share-mono">
-            Security lock bypassed. Synchronizing network nodes and opening NISARG portfolio terminal...
+            System override engaged. Unlocking hidden telemetry streams and diagnostic HUD overlays...
           </div>
           <div className="absolute inset-0 pointer-events-none opacity-20 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-emerald-500/20 via-black to-black" />
         </div>
       )}
 
+      {/* Red ambient warning backlight on lockdown */}
+      {isLockedDown && (
+        <div className="absolute inset-0 bg-red-950/20 z-0 animate-pulse pointer-events-none" />
+      )}
+
+      {/* Scrollable Center Wrapper */}
       <div className="min-h-full w-full flex flex-col items-center justify-center p-4 md:p-6 z-10 relative">
-        <div className="w-full max-w-lg border rounded-2xl p-5 md:p-6 bg-black/45 backdrop-blur-md relative flex flex-col gap-4 md:gap-5 border-[#00ff41]/20 shadow-[0_0_40px_rgba(0,255,65,0.08)] cyber-glass-bezel">
-          
-          {/* Header */}
-          <div className="flex items-center justify-between border-b pb-3 text-[10px] tracking-wider font-orbitron border-[#00ff41]/20 text-[#00ff41]/60">
+        {/* Frame Container */}
+        <div className={`w-full max-w-lg border rounded-2xl p-5 md:p-6 bg-black/45 backdrop-blur-md relative flex flex-col gap-4 md:gap-5 transition-all duration-500 ${
+          isLockedDown 
+            ? 'border-red-500/40 shadow-[0_0_50px_rgba(239,68,68,0.15)]' 
+            : 'border-[#00ff41]/20 shadow-[0_0_40px_rgba(0,255,65,0.08)] cyber-glass-bezel'
+        }`}>
+          {/* Terminal Header */}
+          <div className={`flex items-center justify-between border-b pb-3 text-[10px] tracking-wider font-orbitron transition-all duration-500 ${
+            isLockedDown ? 'border-red-500/20 text-red-500/60' : 'border-[#00ff41]/20 text-[#00ff41]/60'
+          }`}>
             <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full animate-pulse bg-emerald-500" />
-              <span className="font-glow">ASTROLABE_CIPHER_SHIELD</span>
+              <span className={`w-2.5 h-2.5 rounded-full animate-pulse ${isLockedDown ? 'bg-red-600' : 'bg-red-500/80'}`} />
+              <span className="font-glow">{isLockedDown ? 'SECURITY_BREACH_ALERT' : 'GATEWAY_SECURE_AUTH'}</span>
             </div>
-            <span className="font-glow">STATUS: {isUnlocked ? 'DECRYPTED' : 'RESTRICTED'}</span>
+            <span className="font-glow">ACCESS_LEVEL: {isLockedDown ? 'LOCKED_DOWN' : 'RESTRICTED'}</span>
           </div>
 
-          {/* Concentric Cipher Wheels */}
-          <div className="relative flex justify-center py-4 bg-black/25 border border-white/5 rounded-xl overflow-hidden">
-            
-            {/* Decryption Laser Sweep Overlay */}
-            {isSweeping && (
-              <motion.div
-                initial={{ top: '0%' }}
-                animate={{ top: '100%' }}
-                transition={{ duration: 1.8, ease: 'easeInOut' }}
-                className="absolute left-0 right-0 h-0.5 bg-[#00ff41] shadow-[0_0_12px_#00ff41] z-20 pointer-events-none"
-              />
-            )}
-
-            <svg
-              width="320"
-              height="320"
-              viewBox="0 0 320 320"
-              className="overflow-visible"
+          {/* Biometric SVG Scanner */}
+          <div className="relative flex justify-center py-2 md:py-4">
+            <div 
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+              className={`w-24 h-24 md:w-28 md:h-28 border rounded-full flex items-center justify-center relative overflow-hidden transition-all duration-500 cursor-pointer ${
+                isLockedDown 
+                  ? 'border-red-500/40 bg-red-950/10 shadow-[inset_0_0_20px_rgba(239,68,68,0.15)]' 
+                  : 'border-[#00ff41]/30 bg-emerald-950/20 shadow-[inset_0_0_20px_rgba(0,255,65,0.1)]'
+              }`}
             >
-              <defs>
-                <radialGradient id="glow" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stopColor="rgba(0, 255, 65, 0.15)" />
-                  <stop offset="100%" stopColor="rgba(0, 0, 0, 0)" />
-                </radialGradient>
-              </defs>
-
-              {/* Central backing glow */}
-              <circle cx="160" cy="160" r="140" fill="url(#glow)" />
-
-              {/* Decorative Outer Rings */}
-              <circle cx="160" cy="160" r="145" stroke="rgba(0, 255, 65, 0.08)" strokeWidth="1" fill="none" />
-              <circle cx="160" cy="160" r="130" stroke="rgba(0, 255, 65, 0.05)" strokeWidth="1.5" strokeDasharray="2 6" fill="none" />
-
-              {/* North Align Guide Bracket */}
-              <path d="M 160 8 L 160 22" stroke="rgba(0, 255, 65, 0.3)" strokeWidth="1" strokeDasharray="2 2" />
-              <path d="M 152 14 L 160 22 L 168 14" stroke="#00ff41" strokeWidth="2" fill="none" />
-
-              {/* OUTER ROTOR */}
-              <g
-                transform={`rotate(${outerAngle}, 160, 160)`}
-                onPointerDown={(e) => handlePointerDown('outer', e)}
-                className={`cursor-grab active:cursor-grabbing transition-opacity duration-300 ${outerLocked ? 'opacity-90' : 'hover:opacity-100'}`}
+              {/* Pulsing Scanner Rings */}
+              <span className={`absolute inset-2 border rounded-full animate-ping ${isLockedDown ? 'border-red-500/20' : 'border-[#00ff41]/20'}`} style={{ animationDuration: '3s' }} />
+              <span className={`absolute inset-6 border rounded-full animate-pulse ${isLockedDown ? 'border-red-500/10' : 'border-[#00ff41]/10'}`} />
+              
+              {/* Fingerprint Vector */}
+              <svg 
+                className={`w-12 h-12 md:w-14 md:h-14 transition-all ${
+                  isLockedDown 
+                    ? 'text-red-500' 
+                    : isUnlocked 
+                      ? 'text-emerald-300 scale-110 shadow-emerald-500' 
+                      : 'text-[#00ff41]'
+                }`} 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
               >
-                {/* Invisible wide hit area for easy grabbing */}
-                <circle
-                  cx="160"
-                  cy="160"
-                  r="110"
-                  stroke="transparent"
-                  strokeWidth="24"
-                  fill="none"
-                  pointerEvents="stroke"
+                {/* PATH 1 - GLOW */}
+                <motion.path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={isHovered ? 2.2 : 1}
+                  d={FP_1}
+                  animate={isHovered ? {
+                    d: [FP_1, C_1, C_2, C_3],
+                    opacity: [1, 1, 0.6, 0]
+                  } : {
+                    d: FP_1,
+                    opacity: 1
+                  }}
+                  transition={isHovered ? {
+                    d: { type: "spring", stiffness: 180, damping: 12 },
+                    opacity: { duration: 1.6, repeat: Infinity, ease: "easeOut" }
+                  } : {
+                    d: { type: "spring", stiffness: 180, damping: 12 },
+                    opacity: { duration: 0.4 }
+                  }}
+                  style={{ 
+                    filter: "blur(1.5px)",
+                    opacity: isHovered ? 0.75 : 0 
+                  }}
                 />
-                <circle
-                  cx="160"
-                  cy="160"
-                  r="110"
-                  stroke={outerLocked ? "#00ff41" : "rgba(0, 255, 65, 0.25)"}
-                  strokeWidth="2"
-                  fill="none"
-                  strokeDasharray="4 8"
+                {/* PATH 1 - FOREGROUND */}
+                <motion.path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={isHovered ? 1.5 : 1}
+                  d={FP_1}
+                  animate={isHovered ? {
+                    d: [FP_1, C_1, C_2, C_3],
+                    opacity: [1, 1, 0.6, 0]
+                  } : {
+                    d: FP_1,
+                    opacity: 1
+                  }}
+                  transition={isHovered ? {
+                    d: { type: "spring", stiffness: 180, damping: 12 },
+                    opacity: { duration: 1.6, repeat: Infinity, ease: "easeOut" }
+                  } : {
+                    d: { type: "spring", stiffness: 180, damping: 12 },
+                    opacity: { duration: 0.4 }
+                  }}
                 />
-                {OUTER_LABELS.map((label, i) => {
-                  const angle = (270 + i * 45) * Math.PI / 180;
-                  const lx = 160 + 110 * Math.cos(angle);
-                  const ly = 160 + 110 * Math.sin(angle);
-                  return (
-                    <text
-                      key={i}
-                      x={lx}
-                      y={ly}
-                      fill={outerLocked ? "#00ff41" : "rgba(0, 255, 65, 0.6)"}
-                      fontSize="9"
-                      fontFamily="monospace"
-                      textAnchor="middle"
-                      dominantBaseline="middle"
-                      className="font-bold select-none transition-colors"
-                    >
-                      {label}
-                    </text>
-                  );
-                })}
-              </g>
 
-              {/* MIDDLE ROTOR */}
-              <g
-                transform={`rotate(${middleAngle}, 160, 160)`}
-                onPointerDown={(e) => handlePointerDown('middle', e)}
-                className={`cursor-grab active:cursor-grabbing transition-opacity duration-300 ${middleLocked ? 'opacity-90' : 'hover:opacity-100'}`}
-              >
-                {/* Invisible wide hit area for easy grabbing */}
-                <circle
-                  cx="160"
-                  cy="160"
-                  r="80"
-                  stroke="transparent"
-                  strokeWidth="24"
-                  fill="none"
-                  pointerEvents="stroke"
+                {/* PATH 2 - GLOW */}
+                <motion.path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={isHovered ? 2.2 : 1}
+                  d={FP_2}
+                  animate={isHovered ? {
+                    d: [FP_2, C_2, C_3, C_4],
+                    opacity: [1, 1, 0.4, 0]
+                  } : {
+                    d: FP_2,
+                    opacity: 1
+                  }}
+                  transition={isHovered ? {
+                    d: { type: "spring", stiffness: 180, damping: 12 },
+                    opacity: { duration: 1.6, repeat: Infinity, ease: "easeOut", delay: 0.2 }
+                  } : {
+                    d: { type: "spring", stiffness: 180, damping: 12 },
+                    opacity: { duration: 0.4 }
+                  }}
+                  style={{ 
+                    filter: "blur(1.5px)",
+                    opacity: isHovered ? 0.75 : 0 
+                  }}
                 />
-                <circle
-                  cx="160"
-                  cy="160"
-                  r="80"
-                  stroke={middleLocked ? "#00ff41" : "rgba(0, 255, 65, 0.25)"}
-                  strokeWidth="1.5"
-                  fill="none"
-                  strokeDasharray="2 6"
+                {/* PATH 2 - FOREGROUND */}
+                <motion.path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={isHovered ? 1.5 : 1}
+                  d={FP_2}
+                  animate={isHovered ? {
+                    d: [FP_2, C_2, C_3, C_4],
+                    opacity: [1, 1, 0.4, 0]
+                  } : {
+                    d: FP_2,
+                    opacity: 1
+                  }}
+                  transition={isHovered ? {
+                    d: { type: "spring", stiffness: 180, damping: 12 },
+                    opacity: { duration: 1.6, repeat: Infinity, ease: "easeOut", delay: 0.2 }
+                  } : {
+                    d: { type: "spring", stiffness: 180, damping: 12 },
+                    opacity: { duration: 0.4 }
+                  }}
                 />
-                {MIDDLE_LABELS.map((label, i) => {
-                  const angle = (270 + i * 45) * Math.PI / 180;
-                  const lx = 160 + 80 * Math.cos(angle);
-                  const ly = 160 + 80 * Math.sin(angle);
-                  return (
-                    <text
-                      key={i}
-                      x={lx}
-                      y={ly}
-                      fill={middleLocked ? "#00ff41" : "rgba(0, 255, 65, 0.65)"}
-                      fontSize="8"
-                      fontFamily="monospace"
-                      textAnchor="middle"
-                      dominantBaseline="middle"
-                      className="font-bold select-none transition-colors"
-                    >
-                      {label}
-                    </text>
-                  );
-                })}
-              </g>
 
-              {/* INNER ROTOR */}
-              <g
-                transform={`rotate(${innerAngle}, 160, 160)`}
-                onPointerDown={(e) => handlePointerDown('inner', e)}
-                className={`cursor-grab active:cursor-grabbing transition-opacity duration-300 ${innerLocked ? 'opacity-90' : 'hover:opacity-100'}`}
-              >
-                {/* Invisible wide hit area for easy grabbing */}
-                <circle
-                  cx="160"
-                  cy="160"
-                  r="50"
-                  stroke="transparent"
-                  strokeWidth="24"
-                  fill="none"
-                  pointerEvents="stroke"
+                {/* PATH 3 - GLOW */}
+                <motion.path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={isHovered ? 2.2 : 1}
+                  d={FP_3}
+                  animate={isHovered ? {
+                    d: [FP_3, C_3, C_4, C_5],
+                    opacity: [1, 1, 0.2, 0]
+                  } : {
+                    d: FP_3,
+                    opacity: 1
+                  }}
+                  transition={isHovered ? {
+                    d: { type: "spring", stiffness: 180, damping: 12 },
+                    opacity: { duration: 1.6, repeat: Infinity, ease: "easeOut", delay: 0.4 }
+                  } : {
+                    d: { type: "spring", stiffness: 180, damping: 12 },
+                    opacity: { duration: 0.4 }
+                  }}
+                  style={{ 
+                    filter: "blur(1.5px)",
+                    opacity: isHovered ? 0.75 : 0 
+                  }}
                 />
-                <circle
-                  cx="160"
-                  cy="160"
-                  r="50"
-                  stroke={innerLocked ? "#00ff41" : "rgba(0, 255, 65, 0.25)"}
-                  strokeWidth="1.5"
-                  fill="none"
+                {/* PATH 3 - FOREGROUND */}
+                <motion.path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={isHovered ? 1.5 : 1}
+                  d={FP_3}
+                  animate={isHovered ? {
+                    d: [FP_3, C_3, C_4, C_5],
+                    opacity: [1, 1, 0.2, 0]
+                  } : {
+                    d: FP_3,
+                    opacity: 1
+                  }}
+                  transition={isHovered ? {
+                    d: { type: "spring", stiffness: 180, damping: 12 },
+                    opacity: { duration: 1.6, repeat: Infinity, ease: "easeOut", delay: 0.4 }
+                  } : {
+                    d: { type: "spring", stiffness: 180, damping: 12 },
+                    opacity: { duration: 0.4 }
+                  }}
                 />
-                {INNER_LABELS.map((label, i) => {
-                  const angle = (270 + i * 45) * Math.PI / 180;
-                  const lx = 160 + 50 * Math.cos(angle);
-                  const ly = 160 + 50 * Math.sin(angle);
-                  return (
-                    <text
-                      key={i}
-                      x={lx}
-                      y={ly}
-                      fill={innerLocked ? "#00ff41" : "rgba(0, 255, 65, 0.7)"}
-                      fontSize="9"
-                      fontFamily="monospace"
-                      textAnchor="middle"
-                      dominantBaseline="middle"
-                      className="font-bold select-none transition-colors"
-                    >
-                      {label}
-                    </text>
-                  );
-                })}
-              </g>
 
-              {/* Center Lock core */}
-              <circle
-                cx="160"
-                cy="160"
-                r="22"
-                fill="#030603"
-                stroke={outerLocked && middleLocked && innerLocked ? "#00ff41" : "rgba(0, 255, 65, 0.3)"}
-                strokeWidth="2"
-              />
-              {/* Pulsing Lock Icon in Center */}
-              <circle
-                cx="160"
-                cy="160"
-                r="6"
-                fill={outerLocked && middleLocked && innerLocked ? "#00ff41" : "rgba(0, 255, 65, 0.1)"}
-                className={outerLocked && middleLocked && innerLocked ? "animate-pulse" : ""}
-              />
-            </svg>
+                {/* PATH 4 - GLOW */}
+                <motion.path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={isHovered ? 2.2 : 1}
+                  d={FP_4}
+                  animate={isHovered ? {
+                    d: [FP_4, C_4, C_5, C_6],
+                    opacity: [1, 1, 0.1, 0]
+                  } : {
+                    d: FP_4,
+                    opacity: 1
+                  }}
+                  transition={isHovered ? {
+                    d: { type: "spring", stiffness: 180, damping: 12 },
+                    opacity: { duration: 1.6, repeat: Infinity, ease: "easeOut", delay: 0.6 }
+                  } : {
+                    d: { type: "spring", stiffness: 180, damping: 12 },
+                    opacity: { duration: 0.4 }
+                  }}
+                  style={{ 
+                    filter: "blur(1.5px)",
+                    opacity: isHovered ? 0.75 : 0 
+                  }}
+                />
+                {/* PATH 4 - FOREGROUND */}
+                <motion.path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={isHovered ? 1.5 : 1}
+                  d={FP_4}
+                  animate={isHovered ? {
+                    d: [FP_4, C_4, C_5, C_6],
+                    opacity: [1, 1, 0.1, 0]
+                  } : {
+                    d: FP_4,
+                    opacity: 1
+                  }}
+                  transition={isHovered ? {
+                    d: { type: "spring", stiffness: 180, damping: 12 },
+                    opacity: { duration: 1.6, repeat: Infinity, ease: "easeOut", delay: 0.6 }
+                  } : {
+                    d: { type: "spring", stiffness: 180, damping: 12 },
+                    opacity: { duration: 0.4 }
+                  }}
+                />
+              </svg>
+
+              {/* Glowing Laser Scan Bar */}
+              <div className={`absolute left-0 right-0 h-0.5 animate-bounce ${
+                isLockedDown ? 'bg-red-500 shadow-[0_0_8px_#ef4444]' : 'bg-[#00ff41] shadow-[0_0_8px_#00ff41]'
+              }`} style={{ animationDuration: '4s' }} />
+            </div>
           </div>
 
-          {/* Terminal log logs output */}
-          <div
+          {/* Live Diagnostics Log output */}
+          <div 
             data-lenis-prevent
-            className="border rounded-xl p-4 text-[11px] leading-relaxed flex flex-col gap-1.5 h-28 md:h-36 overflow-y-auto backdrop-blur-md transition-all duration-500 bg-black/30 border-[#00ff41]/15 text-[#00ff41]/85 cyber-glass-card"
+            className={`border rounded-xl p-4 text-[11px] leading-relaxed flex flex-col gap-1.5 h-28 md:h-36 overflow-y-auto backdrop-blur-md transition-all duration-500 ${
+              isLockedDown 
+                ? 'bg-red-950/10 border-red-500/25 text-red-500/85' 
+                : 'bg-black/30 border-[#00ff41]/15 text-[#00ff41]/85 cyber-glass-card'
+            }`}
           >
             {logs.map((log, idx) => (
               <div key={idx} className="flex gap-2">
-                <span className="text-[#00ff41]/40">❯</span>
+                <span className={isLockedDown ? 'text-red-500/40' : 'text-[#00ff41]/40'}>❯</span>
                 <span>{log}</span>
               </div>
             ))}
           </div>
 
-          {/* Actions */}
-          <div className="flex justify-between items-center text-[10px] uppercase px-1 text-[#00ff41]/60">
-            <span>Rotor Calibration: Active</span>
-            <button
-              type="button"
-              onClick={handleBypassClick}
-              disabled={isUnlocked}
-              className="font-bold border px-3 py-1.5 rounded-lg active:scale-95 transition-all tracking-widest border-[#00ff41]/30 text-[#00ff41] hover:bg-[#00ff41]/10"
-            >
-              [ Bypass scan ]
-            </button>
-          </div>
+          {/* Console Input and Actions */}
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <div className={`flex items-center gap-3 border rounded-xl px-4 py-3 backdrop-blur-md transition-all duration-500 ${
+              isLockedDown 
+                ? 'bg-red-950/10 border-red-500/40 shadow-[0_0_15px_rgba(239,68,68,0.06)]' 
+                : 'bg-black/30 border-[#00ff41]/30 shadow-[0_0_15px_rgba(0,255,65,0.04)] cyber-glass-card'
+            }`}>
+              <span className={`font-bold select-none animate-pulse ${isLockedDown ? 'text-red-500/50' : 'text-[#00ff41]/50'}`}>❯</span>
+              <input
+                ref={inputRef}
+                type="text"
+                placeholder={isLockedDown ? `[ SYSTEM LOCKOUT: ${lockdownSeconds}s ]` : "ENTER SYSTEM DECK PASSPHRASE..."}
+                value={code}
+                onChange={handleInputChange}
+                disabled={isUnlocked || isLockedDown}
+                className={`flex-grow bg-transparent border-none outline-none tracking-wider text-xs uppercase transition-colors ${
+                  isLockedDown ? 'text-red-500 placeholder-red-500/35' : 'text-[#00ff41] placeholder-[#00ff41]/35'
+                }`}
+              />
+            </div>
 
+            <div className={`flex justify-between items-center text-[10px] uppercase px-1 transition-all duration-500 ${
+              isLockedDown ? 'text-red-500/60' : 'text-[#00ff41]/60'
+            }`}>
+              <span>CodeHint: Owner's First Name</span>
+              <button
+                type="button"
+                onClick={handleBypassClick}
+                disabled={isUnlocked || isLockedDown}
+                className={`font-bold border px-3 py-1.5 rounded-lg active:scale-95 transition-all tracking-widest ${
+                  isLockedDown 
+                    ? 'border-red-500/20 text-red-500/40 cursor-not-allowed' 
+                    : 'border-[#00ff41]/30 text-[#00ff41] hover:bg-[#00ff41]/10'
+                }`}
+              >
+                [ Bypass scan ]
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </motion.div>

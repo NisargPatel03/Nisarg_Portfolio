@@ -146,12 +146,6 @@ A cutting-edge, ultra-premium developer portfolio designed with sleek futuristic
 *   **Stereoscopic Chromatic Aberration**: Layers three separate colored outlines (Cyan, Magenta, and Green) beneath the solid foreground text. On hover, these layers undergo high-frequency micro-oscillations in opposite directions, simulating a real-time analog lens/CRT chromatic glitch.
 *   **Adaptive Light Mode Rendering**: Built with a dynamic `lightMode` property to swap the foreground fill (white vs. dark gray) depending on the background section theme, ensuring perfect contrast and readability on both white and cyber-black backdrops.
 
-### 🎡 25. Cryptographic Decryption Cipher Wheel (Auth Screen Game)
-*   **Astrolabe Concentric Rotors**: Replaces the conventional access code entry with three rotatable concentric SVG rings inscribed with hexadecimal values, binary states, and password characters (`N`, `I`, `S`, `A`, `R`, `G`, `0`, `3`).
-*   **Natural Drag Rotation Gestures**: Uses custom mouse/touch tracking math to allow continuous radial drag rotation. Transparent helper donut overlays expand hover triggers to maximize response area.
-*   **Vault Tumbler Lock-in Snapping**: Features absolute snap-to-angle anchors that align rotor symbols to North (270°). Reaching target limits plays click feedbacks and locks the dial permanently.
-*   **Green Decryption Laser Overlay**: Aligning all rotors triggers a green laser sweep animation traversing the deck face, playing victory synths, and bypassing restriction shields automatically.
-
 ---
 
 ## 🛠️ Tech Stack & Architecture
