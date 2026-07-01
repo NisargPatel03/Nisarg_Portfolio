@@ -146,6 +146,12 @@ A cutting-edge, ultra-premium developer portfolio designed with sleek futuristic
 *   **Stereoscopic Chromatic Aberration**: Layers three separate colored outlines (Cyan, Magenta, and Green) beneath the solid foreground text. On hover, these layers undergo high-frequency micro-oscillations in opposite directions, simulating a real-time analog lens/CRT chromatic glitch.
 *   **Adaptive Light Mode Rendering**: Built with a dynamic `lightMode` property to swap the foreground fill (white vs. dark gray) depending on the background section theme, ensuring perfect contrast and readability on both white and cyber-black backdrops.
 
+### 🔮 25. Holographic Rune Pattern Lock (Auth Screen Gateway)
+*   **3x3 Cybernetic Rune Grid**: Replaces the conventional PIN code and fingerprint scanner with a glowing 3x3 node matrix inscribed with futuristic runes (`ᛗ`, `ᚠ`, `ᚻ`, `ᛉ`, `ᛏ`, `ᛒ`, `ᛖ`, `ᛚ`, `ᛟ`).
+*   **Dynamic Gesture Pointer Drawing**: Allows visitors to drag and draw a continuous line connecting nodes in real-time, displaying a dotted pointer extension line tracing to the visitor's cursor.
+*   **Flashing Sequence Hint**: On loading the screen or entering an incorrect pattern, the target path (drawing an 'N' shape representing the owner's first name: `6 -> 3 -> 0 -> 4 -> 8 -> 5 -> 2`) flashes sequentially to guide the visitor.
+*   **Failure Shakes & Decryption Lasers**: Drawing an incorrect path triggers container micro-shakes and resets the field. A correct path triggers a green decryption laser sweep and decrypts the entire deck portfolio automatically.
+
 ---
 
 ## 🛠️ Tech Stack & Architecture
