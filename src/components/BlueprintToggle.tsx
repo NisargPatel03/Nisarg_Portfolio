@@ -9,14 +9,20 @@ interface BlueprintToggleProps {
 
 export const BlueprintToggle: React.FC<BlueprintToggleProps> = ({ isActive, onToggle }) => {
   const [isAiCloneOpen, setIsAiCloneOpen] = useState(false);
+  const [isHudCollapsed, setIsHudCollapsed] = useState(true);
 
   useEffect(() => {
     const handleStateChange = (e: any) => {
       setIsAiCloneOpen(e.detail.isOpen);
     };
+    const handleHudStateChange = (e: any) => {
+      setIsHudCollapsed(e.detail.isCollapsed);
+    };
     window.addEventListener('aiCloneStateChange', handleStateChange);
+    window.addEventListener('hudStateChange', handleHudStateChange);
     return () => {
       window.removeEventListener('aiCloneStateChange', handleStateChange);
+      window.removeEventListener('hudStateChange', handleHudStateChange);
     };
   }, []);
 
@@ -33,7 +39,7 @@ export const BlueprintToggle: React.FC<BlueprintToggleProps> = ({ isActive, onTo
 
   return (
     <AnimatePresence>
-      {!isAiCloneOpen && (
+      {!isAiCloneOpen && isHudCollapsed && (
         <motion.div 
           initial={{ opacity: 0, scale: 0.8, x: 20 }}
           animate={{ opacity: 1, scale: 1, x: 0 }}

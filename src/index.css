@@ -250,7 +250,7 @@
 }
 
 /* --- Premium Light-Tracking Refractive Border Overlay --- */
-.cyber-light-border:not(.fixed):not(.absolute):not(.sticky) {
+.cyber-light-border:not(.fixed):not(.absolute):not(.sticky):not(.diagnostics-hud-container) {
   position: relative;
 }
 
