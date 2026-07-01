@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { soundFX } from '../utils/terminalAudio';
 
@@ -46,6 +46,8 @@ export const BiometricAuthScreen: React.FC<BiometricAuthScreenProps> = ({
   const [hintPath, setHintPath] = useState<number[]>([]);
   const [isHintPlaying, setIsHintPlaying] = useState(false);
   const [isErrorShake, setIsErrorShake] = useState(false);
+
+  const hintIntervalRef = useRef<any>(null);
 
   const [sysSpecs, setSysSpecs] = useState({
     ip: '192.168.1.72',
@@ -107,14 +109,21 @@ export const BiometricAuthScreen: React.FC<BiometricAuthScreenProps> = ({
     setHintPath([]);
     setLogs((prev) => [...prev, 'SYSTEM HINT: DISPATCHING GLYPH SEQUENCE [N]...']);
     
+    if (hintIntervalRef.current) {
+      clearInterval(hintIntervalRef.current);
+    }
+    
     let step = 0;
-    const interval = setInterval(() => {
+    hintIntervalRef.current = setInterval(() => {
       if (step < TARGET_SEQUENCE.length) {
         setHintPath((prev) => [...prev, TARGET_SEQUENCE[step]]);
         soundFX.playClick();
         step++;
       } else {
-        clearInterval(interval);
+        if (hintIntervalRef.current) {
+          clearInterval(hintIntervalRef.current);
+          hintIntervalRef.current = null;
+        }
         setTimeout(() => {
           setHintPath([]);
           setIsHintPlaying(false);
@@ -211,6 +220,9 @@ export const BiometricAuthScreen: React.FC<BiometricAuthScreenProps> = ({
     document.body.style.overflow = 'hidden';
     return () => {
       document.body.style.overflow = '';
+      if (hintIntervalRef.current) {
+        clearInterval(hintIntervalRef.current);
+      }
     };
   }, []);
 
@@ -295,6 +307,7 @@ export const BiometricAuthScreen: React.FC<BiometricAuthScreenProps> = ({
                 if (idx === 0) return null;
                 const prevNode = NODES[displayPath[idx - 1]];
                 const currNode = NODES[nodeId];
+                if (!prevNode || !currNode) return null;
                 return (
                   <line
                     key={idx}
