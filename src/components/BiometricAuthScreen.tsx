@@ -116,7 +116,8 @@ export const BiometricAuthScreen: React.FC<BiometricAuthScreenProps> = ({
     let step = 0;
     hintIntervalRef.current = setInterval(() => {
       if (step < TARGET_SEQUENCE.length) {
-        setHintPath((prev) => [...prev, TARGET_SEQUENCE[step]]);
+        const nodeVal = TARGET_SEQUENCE[step];
+        setHintPath((prev) => [...prev, nodeVal]);
         soundFX.playClick();
         step++;
       } else {
