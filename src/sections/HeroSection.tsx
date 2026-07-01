@@ -5,6 +5,109 @@ import { ContactButton } from '../components/ContactButton';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 
+interface NavItemButtonProps {
+  item: { label: string; id: string };
+  onClick: (e?: any) => void;
+  className: string;
+  initial?: any;
+  animate?: any;
+  transition?: any;
+}
+
+const NavItemButton: React.FC<NavItemButtonProps> = ({ item, onClick, className, initial, animate, transition }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  // Folder to Gear (16 points matching node-by-node)
+  const cx = 12;
+  const cy = 12;
+  const gearPoints = Array.from({ length: 16 }, (_, i) => {
+    const angle = i * (Math.PI / 8) - Math.PI / 2;
+    const r = i % 2 === 0 ? 8.5 : 5;
+    const x = cx + r * Math.cos(angle);
+    const y = cy + r * Math.sin(angle);
+    return `${x.toFixed(2)} ${y.toFixed(2)}`;
+  });
+  const GEAR_PATH = `M ${gearPoints.join(" L ")} Z`;
+  const FOLDER_PATH = "M 3 5 L 5.5 5 L 8 5 L 10 8 L 13 8 L 16 8 L 19 8 L 21 8 L 21 13.5 L 21 19 L 15.5 19 L 10 19 L 3 19 L 3 14.5 L 3 10 L 3 7.5 Z";
+
+  // Envelope to Plane (8 points matching node-by-node)
+  const ENVELOPE_PATH = "M 2 5 L 12 12 L 22 5 L 22 12 L 22 19 L 12 19 L 2 19 L 2 12 Z";
+  const PLANE_PATH = "M 22 2 L 18.5 12 L 15 22 L 13 17.5 L 11 13 L 6.5 12.5 L 2 12 L 12 7 Z";
+
+  const renderIcon = () => {
+    if (item.id === 'projects-section') {
+      return (
+        <svg className="w-4 h-4 mr-2 overflow-visible" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <motion.path
+            d={FOLDER_PATH}
+            animate={{
+              d: isHovered ? GEAR_PATH : FOLDER_PATH,
+              rotate: isHovered ? 360 : 0
+            }}
+            transition={{
+              d: { duration: 0.35, ease: "easeInOut" },
+              rotate: isHovered 
+                ? { repeat: Infinity, duration: 4, ease: "linear" } 
+                : { duration: 0.35 }
+            }}
+            style={{ originX: "12px", originY: "12px" }}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
+    }
+
+    if (item.id === 'contact') {
+      return (
+        <svg className="w-4 h-4 mr-2 overflow-visible" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <motion.path
+            d={ENVELOPE_PATH}
+            animate={isHovered ? {
+              d: PLANE_PATH,
+              x: [0, 2, -1, 1, 0],
+              y: [0, -3, 1, -1, 0],
+            } : {
+              d: ENVELOPE_PATH,
+              x: 0,
+              y: 0,
+            }}
+            transition={isHovered ? {
+              d: { duration: 0.35, ease: "easeInOut" },
+              x: { repeat: Infinity, duration: 1.5, ease: "easeInOut" },
+              y: { repeat: Infinity, duration: 1.5, ease: "easeInOut" }
+            } : {
+              d: { duration: 0.35, ease: "easeInOut" },
+              x: { duration: 0.2 },
+              y: { duration: 0.2 }
+            }}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
+    }
+
+    return null;
+  };
+
+  return (
+    <motion.button
+      type="button"
+      onClick={onClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className={className}
+      initial={initial}
+      animate={animate}
+      transition={transition}
+    >
+      {renderIcon()}
+      {item.label}
+    </motion.button>
+  );
+};
+
 export const HeroSection: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isGlitched, setIsGlitched] = useState(false);
@@ -183,14 +286,12 @@ export const HeroSection: React.FC = () => {
           {/* Desktop links */}
           <div className="hidden md:flex items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10">
             {navItems.map((item) => (
-              <button
+              <NavItemButton
                 key={item.id}
-                type="button"
+                item={item}
                 onClick={() => handleNavClick(item.id)}
-                className="text-[#D7E2EA] font-medium uppercase tracking-wider text-xs sm:text-sm md:text-base lg:text-[1.1rem] hover:opacity-70 transition-opacity duration-200 font-orbitron font-glow"
-              >
-                {item.label}
-              </button>
+                className="text-[#D7E2EA] font-medium uppercase tracking-wider text-xs sm:text-sm md:text-base lg:text-[1.1rem] hover:opacity-70 transition-opacity duration-200 font-orbitron font-glow flex items-center"
+              />
             ))}
           </div>
 
@@ -218,8 +319,9 @@ export const HeroSection: React.FC = () => {
             className="fixed inset-0 bg-[#0C0C0C] z-30 flex flex-col justify-center items-center gap-8 md:hidden backdrop-blur-xl bg-opacity-95"
           >
             {navItems.map((item, idx) => (
-              <motion.button
+              <NavItemButton
                 key={item.id}
+                item={item}
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.05 }}
@@ -228,10 +330,8 @@ export const HeroSection: React.FC = () => {
                   setIsOpen(false);
                   handleNavClick(item.id);
                 }}
-                className="text-white font-extrabold uppercase tracking-widest text-lg sm:text-xl hover:text-[#B600A8] transition-colors font-orbitron"
-              >
-                {item.label}
-              </motion.button>
+                className="text-white font-extrabold uppercase tracking-widest text-lg sm:text-xl hover:text-[#B600A8] transition-colors font-orbitron flex items-center"
+              />
             ))}
           </motion.div>
         )}

@@ -18,6 +18,7 @@ export const BiometricAuthScreen: React.FC<BiometricAuthScreenProps> = ({
   const [attempts, setAttempts] = useState(0);
   const [isLockedDown, setIsLockedDown] = useState(false);
   const [lockdownSeconds, setLockdownSeconds] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
   const [sysSpecs, setSysSpecs] = useState({
     ip: '192.168.1.72',
     res: '1920x1080',
@@ -25,6 +26,23 @@ export const BiometricAuthScreen: React.FC<BiometricAuthScreenProps> = ({
   });
   
   const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const makeCirclePath = (cx: number, cy: number, r: number) => {
+    const k = r * 0.5522847;
+    return `M ${cx} ${cy + r} c ${k.toFixed(2)} 0 ${r} ${(-r + k).toFixed(2)} ${r} ${-r} s ${(-r + k).toFixed(2)} ${-r} ${-r} ${-r} s ${-r} ${(r - k).toFixed(2)} ${-r} ${r} s ${(r - k).toFixed(2)} ${r} ${r} ${r} z`;
+  };
+
+  const FP_1 = makeCirclePath(10.5, 11.2, 2.2);
+  const FP_2 = makeCirclePath(11.2, 10.5, 4.5);
+  const FP_3 = makeCirclePath(12.2, 10.2, 7.2);
+  const FP_4 = makeCirclePath(12.8, 9.5, 10.5);
+
+  const C_1 = makeCirclePath(12, 10, 3);
+  const C_2 = makeCirclePath(12, 10, 6);
+  const C_3 = makeCirclePath(12, 10, 9);
+  const C_4 = makeCirclePath(12, 10, 12);
+  const C_5 = makeCirclePath(12, 10, 15);
+  const C_6 = makeCirclePath(12, 10, 18);
 
   // Retrieve user specifications on boot
   useEffect(() => {
@@ -229,11 +247,15 @@ export const BiometricAuthScreen: React.FC<BiometricAuthScreenProps> = ({
 
           {/* Biometric SVG Scanner */}
           <div className="relative flex justify-center py-2 md:py-4">
-            <div className={`w-24 h-24 md:w-28 md:h-28 border rounded-full flex items-center justify-center relative overflow-hidden transition-all duration-500 ${
-              isLockedDown 
-                ? 'border-red-500/40 bg-red-950/10 shadow-[inset_0_0_20px_rgba(239,68,68,0.15)]' 
-                : 'border-[#00ff41]/30 bg-emerald-950/20 shadow-[inset_0_0_20px_rgba(0,255,65,0.1)]'
-            }`}>
+            <div 
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+              className={`w-24 h-24 md:w-28 md:h-28 border rounded-full flex items-center justify-center relative overflow-hidden transition-all duration-500 cursor-pointer ${
+                isLockedDown 
+                  ? 'border-red-500/40 bg-red-950/10 shadow-[inset_0_0_20px_rgba(239,68,68,0.15)]' 
+                  : 'border-[#00ff41]/30 bg-emerald-950/20 shadow-[inset_0_0_20px_rgba(0,255,65,0.1)]'
+              }`}
+            >
               {/* Pulsing Scanner Rings */}
               <span className={`absolute inset-2 border rounded-full animate-ping ${isLockedDown ? 'border-red-500/20' : 'border-[#00ff41]/20'}`} style={{ animationDuration: '3s' }} />
               <span className={`absolute inset-6 border rounded-full animate-pulse ${isLockedDown ? 'border-red-500/10' : 'border-[#00ff41]/10'}`} />
@@ -251,9 +273,89 @@ export const BiometricAuthScreen: React.FC<BiometricAuthScreenProps> = ({
                 stroke="currentColor" 
                 viewBox="0 0 24 24"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M12 11c0-1.105-.895-2-2-2s-2 .895-2 2M12 11c0 1.105.895 2 2 2s2-.895 2-2m-4 0v4m0 0h4m-4 0v2m8-8c0-4.418-3.582-8-8-8S4 7.582 4 12s3.582 8 8 8 8-3.582 8-8zM8 12h8" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M12 14c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M12 17c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7z" />
+                <motion.path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1"
+                  d={FP_1}
+                  animate={isHovered ? {
+                    d: [FP_1, C_1, C_2, C_3],
+                    opacity: [1, 1, 0.6, 0]
+                  } : {
+                    d: FP_1,
+                    opacity: 1
+                  }}
+                  transition={isHovered ? {
+                    duration: 1.6,
+                    repeat: Infinity,
+                    ease: "easeOut"
+                  } : {
+                    duration: 0.4
+                  }}
+                />
+                <motion.path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1"
+                  d={FP_2}
+                  animate={isHovered ? {
+                    d: [FP_2, C_2, C_3, C_4],
+                    opacity: [1, 1, 0.4, 0]
+                  } : {
+                    d: FP_2,
+                    opacity: 1
+                  }}
+                  transition={isHovered ? {
+                    duration: 1.6,
+                    repeat: Infinity,
+                    ease: "easeOut",
+                    delay: 0.2
+                  } : {
+                    duration: 0.4
+                  }}
+                />
+                <motion.path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1"
+                  d={FP_3}
+                  animate={isHovered ? {
+                    d: [FP_3, C_3, C_4, C_5],
+                    opacity: [1, 1, 0.2, 0]
+                  } : {
+                    d: FP_3,
+                    opacity: 1
+                  }}
+                  transition={isHovered ? {
+                    duration: 1.6,
+                    repeat: Infinity,
+                    ease: "easeOut",
+                    delay: 0.4
+                  } : {
+                    duration: 0.4
+                  }}
+                />
+                <motion.path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1"
+                  d={FP_4}
+                  animate={isHovered ? {
+                    d: [FP_4, C_4, C_5, C_6],
+                    opacity: [1, 1, 0.1, 0]
+                  } : {
+                    d: FP_4,
+                    opacity: 1
+                  }}
+                  transition={isHovered ? {
+                    duration: 1.6,
+                    repeat: Infinity,
+                    ease: "easeOut",
+                    delay: 0.6
+                  } : {
+                    duration: 0.4
+                  }}
+                />
               </svg>
 
               {/* Glowing Laser Scan Bar */}
