@@ -4,6 +4,7 @@ import { Magnet } from '../components/Magnet';
 import { ContactButton } from '../components/ContactButton';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
+import { soundFX } from '../utils/terminalAudio';
 
 interface NavItemButtonProps {
   item: { label: string; id: string };
@@ -37,20 +38,49 @@ const NavItemButton: React.FC<NavItemButtonProps> = ({ item, onClick, className,
   const renderIcon = () => {
     if (item.id === 'projects-section') {
       return (
-        <svg className="w-4 h-4 mr-2 overflow-visible" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+        <svg className="w-4 h-4 mr-2 overflow-visible" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          {/* Background Glow Path */}
           <motion.path
             d={FOLDER_PATH}
             animate={{
               d: isHovered ? GEAR_PATH : FOLDER_PATH,
-              rotate: isHovered ? 360 : 0
+              rotate: isHovered ? 360 : 0,
+              strokeWidth: isHovered ? 3.0 : 1.5
             }}
             transition={{
-              d: { duration: 0.35, ease: "easeInOut" },
+              d: { type: "spring", stiffness: 180, damping: 12 },
               rotate: isHovered 
                 ? { repeat: Infinity, duration: 4, ease: "linear" } 
-                : { duration: 0.35 }
+                : { duration: 0.35 },
+              strokeWidth: { duration: 0.3 }
+            }}
+            style={{ 
+              originX: "12px", 
+              originY: "12px", 
+              filter: "blur(2px)",
+              opacity: isHovered ? 0.75 : 0
+            }}
+            className="text-[#B600A8] stroke-[#B600A8]"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          {/* Foreground Path */}
+          <motion.path
+            d={FOLDER_PATH}
+            animate={{
+              d: isHovered ? GEAR_PATH : FOLDER_PATH,
+              rotate: isHovered ? 360 : 0,
+              strokeWidth: isHovered ? 2.2 : 1.5
+            }}
+            transition={{
+              d: { type: "spring", stiffness: 180, damping: 12 },
+              rotate: isHovered 
+                ? { repeat: Infinity, duration: 4, ease: "linear" } 
+                : { duration: 0.35 },
+              strokeWidth: { duration: 0.3 }
             }}
             style={{ originX: "12px", originY: "12px" }}
+            className="text-[#B600A8]"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
@@ -60,27 +90,66 @@ const NavItemButton: React.FC<NavItemButtonProps> = ({ item, onClick, className,
 
     if (item.id === 'contact') {
       return (
-        <svg className="w-4 h-4 mr-2 overflow-visible" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+        <svg className="w-4 h-4 mr-2 overflow-visible" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          {/* Background Glow Path */}
           <motion.path
             d={ENVELOPE_PATH}
             animate={isHovered ? {
               d: PLANE_PATH,
               x: [0, 2, -1, 1, 0],
               y: [0, -3, 1, -1, 0],
+              strokeWidth: 2.5
             } : {
               d: ENVELOPE_PATH,
               x: 0,
               y: 0,
+              strokeWidth: 1.5
             }}
             transition={isHovered ? {
-              d: { duration: 0.35, ease: "easeInOut" },
+              d: { type: "spring", stiffness: 180, damping: 12 },
               x: { repeat: Infinity, duration: 1.5, ease: "easeInOut" },
-              y: { repeat: Infinity, duration: 1.5, ease: "easeInOut" }
+              y: { repeat: Infinity, duration: 1.5, ease: "easeInOut" },
+              strokeWidth: { duration: 0.3 }
             } : {
-              d: { duration: 0.35, ease: "easeInOut" },
+              d: { type: "spring", stiffness: 180, damping: 12 },
               x: { duration: 0.2 },
-              y: { duration: 0.2 }
+              y: { duration: 0.2 },
+              strokeWidth: { duration: 0.3 }
             }}
+            style={{ 
+              filter: "blur(2px)",
+              opacity: isHovered ? 0.7 : 0
+            }}
+            className="text-[#7621B0] stroke-[#7621B0]"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          {/* Foreground Path */}
+          <motion.path
+            d={ENVELOPE_PATH}
+            animate={isHovered ? {
+              d: PLANE_PATH,
+              x: [0, 2, -1, 1, 0],
+              y: [0, -3, 1, -1, 0],
+              strokeWidth: 1.2
+            } : {
+              d: ENVELOPE_PATH,
+              x: 0,
+              y: 0,
+              strokeWidth: 1.5
+            }}
+            transition={isHovered ? {
+              d: { type: "spring", stiffness: 180, damping: 12 },
+              x: { repeat: Infinity, duration: 1.5, ease: "easeInOut" },
+              y: { repeat: Infinity, duration: 1.5, ease: "easeInOut" },
+              strokeWidth: { duration: 0.3 }
+            } : {
+              d: { type: "spring", stiffness: 180, damping: 12 },
+              x: { duration: 0.2 },
+              y: { duration: 0.2 },
+              strokeWidth: { duration: 0.3 }
+            }}
+            className="text-[#7621B0]"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
@@ -95,14 +164,73 @@ const NavItemButton: React.FC<NavItemButtonProps> = ({ item, onClick, className,
     <motion.button
       type="button"
       onClick={onClick}
-      onMouseEnter={() => setIsHovered(true)}
+      onMouseEnter={() => {
+        setIsHovered(true);
+        if (item.id === 'projects-section') {
+          soundFX.playClick();
+        } else if (item.id === 'contact') {
+          soundFX.playSwoosh();
+        }
+      }}
       onMouseLeave={() => setIsHovered(false)}
       className={className}
       initial={initial}
       animate={animate}
       transition={transition}
     >
-      {renderIcon()}
+      <span className="relative flex items-center mr-2">
+        {renderIcon()}
+        
+        {/* Contact airplane exhaust jet stream particles */}
+        {item.id === 'contact' && isHovered && (
+          <div className="absolute inset-0 pointer-events-none overflow-visible">
+            {[0, 1, 2].map((idx) => (
+              <motion.span
+                key={idx}
+                className="absolute w-1 h-1 bg-[#7621B0] rounded-full shadow-[0_0_3px_#7621B0]"
+                initial={{ opacity: 0.8, x: 8, y: 8, scale: 1 }}
+                animate={{
+                  opacity: 0,
+                  x: [8, -15 - idx * 6],
+                  y: [8, 12 + (idx % 2 === 0 ? 4 : -4)],
+                  scale: [1, 0.3, 0]
+                }}
+                transition={{
+                  duration: 0.8,
+                  repeat: Infinity,
+                  delay: idx * 0.2,
+                  ease: "easeOut"
+                }}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Projects gear radial embers sparks */}
+        {item.id === 'projects-section' && isHovered && (
+          <div className="absolute inset-0 pointer-events-none overflow-visible">
+            {[0, 1, 2, 3].map((idx) => (
+              <motion.span
+                key={idx}
+                className="absolute w-1 h-1 bg-[#B600A8] rounded-full shadow-[0_0_3px_#B600A8]"
+                initial={{ opacity: 0.9, x: 8, y: 8, scale: 1 }}
+                animate={{
+                  opacity: 0,
+                  x: [8, 8 + Math.cos(idx * Math.PI / 2) * 14],
+                  y: [8, 8 + Math.sin(idx * Math.PI / 2) * 14],
+                  scale: [1, 0.2, 0]
+                }}
+                transition={{
+                  duration: 0.6,
+                  repeat: Infinity,
+                  delay: idx * 0.12,
+                  ease: "easeOut"
+                }}
+              />
+            ))}
+          </div>
+        )}
+      </span>
       {item.label}
     </motion.button>
   );

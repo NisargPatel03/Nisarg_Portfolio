@@ -44,6 +44,19 @@ export const BiometricAuthScreen: React.FC<BiometricAuthScreenProps> = ({
   const C_5 = makeCirclePath(12, 10, 15);
   const C_6 = makeCirclePath(12, 10, 18);
 
+  // Synchronized scanner audio clicks on ripple waves
+  useEffect(() => {
+    if (!isHovered || isUnlocked || isLockedDown) return;
+    
+    soundFX.playScannerPing();
+    
+    const interval = setInterval(() => {
+      soundFX.playScannerPing();
+    }, 1600);
+    
+    return () => clearInterval(interval);
+  }, [isHovered, isUnlocked, isLockedDown]);
+
   // Retrieve user specifications on boot
   useEffect(() => {
     const w = window.innerWidth;
@@ -273,10 +286,11 @@ export const BiometricAuthScreen: React.FC<BiometricAuthScreenProps> = ({
                 stroke="currentColor" 
                 viewBox="0 0 24 24"
               >
+                {/* PATH 1 - GLOW */}
                 <motion.path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth="1"
+                  strokeWidth={isHovered ? 2.2 : 1}
                   d={FP_1}
                   animate={isHovered ? {
                     d: [FP_1, C_1, C_2, C_3],
@@ -286,17 +300,44 @@ export const BiometricAuthScreen: React.FC<BiometricAuthScreenProps> = ({
                     opacity: 1
                   }}
                   transition={isHovered ? {
-                    duration: 1.6,
-                    repeat: Infinity,
-                    ease: "easeOut"
+                    d: { type: "spring", stiffness: 180, damping: 12 },
+                    opacity: { duration: 1.6, repeat: Infinity, ease: "easeOut" }
                   } : {
-                    duration: 0.4
+                    d: { type: "spring", stiffness: 180, damping: 12 },
+                    opacity: { duration: 0.4 }
+                  }}
+                  style={{ 
+                    filter: "blur(1.5px)",
+                    opacity: isHovered ? 0.75 : 0 
                   }}
                 />
+                {/* PATH 1 - FOREGROUND */}
                 <motion.path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth="1"
+                  strokeWidth={isHovered ? 1.5 : 1}
+                  d={FP_1}
+                  animate={isHovered ? {
+                    d: [FP_1, C_1, C_2, C_3],
+                    opacity: [1, 1, 0.6, 0]
+                  } : {
+                    d: FP_1,
+                    opacity: 1
+                  }}
+                  transition={isHovered ? {
+                    d: { type: "spring", stiffness: 180, damping: 12 },
+                    opacity: { duration: 1.6, repeat: Infinity, ease: "easeOut" }
+                  } : {
+                    d: { type: "spring", stiffness: 180, damping: 12 },
+                    opacity: { duration: 0.4 }
+                  }}
+                />
+
+                {/* PATH 2 - GLOW */}
+                <motion.path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={isHovered ? 2.2 : 1}
                   d={FP_2}
                   animate={isHovered ? {
                     d: [FP_2, C_2, C_3, C_4],
@@ -306,18 +347,44 @@ export const BiometricAuthScreen: React.FC<BiometricAuthScreenProps> = ({
                     opacity: 1
                   }}
                   transition={isHovered ? {
-                    duration: 1.6,
-                    repeat: Infinity,
-                    ease: "easeOut",
-                    delay: 0.2
+                    d: { type: "spring", stiffness: 180, damping: 12 },
+                    opacity: { duration: 1.6, repeat: Infinity, ease: "easeOut", delay: 0.2 }
                   } : {
-                    duration: 0.4
+                    d: { type: "spring", stiffness: 180, damping: 12 },
+                    opacity: { duration: 0.4 }
+                  }}
+                  style={{ 
+                    filter: "blur(1.5px)",
+                    opacity: isHovered ? 0.75 : 0 
                   }}
                 />
+                {/* PATH 2 - FOREGROUND */}
                 <motion.path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth="1"
+                  strokeWidth={isHovered ? 1.5 : 1}
+                  d={FP_2}
+                  animate={isHovered ? {
+                    d: [FP_2, C_2, C_3, C_4],
+                    opacity: [1, 1, 0.4, 0]
+                  } : {
+                    d: FP_2,
+                    opacity: 1
+                  }}
+                  transition={isHovered ? {
+                    d: { type: "spring", stiffness: 180, damping: 12 },
+                    opacity: { duration: 1.6, repeat: Infinity, ease: "easeOut", delay: 0.2 }
+                  } : {
+                    d: { type: "spring", stiffness: 180, damping: 12 },
+                    opacity: { duration: 0.4 }
+                  }}
+                />
+
+                {/* PATH 3 - GLOW */}
+                <motion.path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={isHovered ? 2.2 : 1}
                   d={FP_3}
                   animate={isHovered ? {
                     d: [FP_3, C_3, C_4, C_5],
@@ -327,18 +394,44 @@ export const BiometricAuthScreen: React.FC<BiometricAuthScreenProps> = ({
                     opacity: 1
                   }}
                   transition={isHovered ? {
-                    duration: 1.6,
-                    repeat: Infinity,
-                    ease: "easeOut",
-                    delay: 0.4
+                    d: { type: "spring", stiffness: 180, damping: 12 },
+                    opacity: { duration: 1.6, repeat: Infinity, ease: "easeOut", delay: 0.4 }
                   } : {
-                    duration: 0.4
+                    d: { type: "spring", stiffness: 180, damping: 12 },
+                    opacity: { duration: 0.4 }
+                  }}
+                  style={{ 
+                    filter: "blur(1.5px)",
+                    opacity: isHovered ? 0.75 : 0 
                   }}
                 />
+                {/* PATH 3 - FOREGROUND */}
                 <motion.path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth="1"
+                  strokeWidth={isHovered ? 1.5 : 1}
+                  d={FP_3}
+                  animate={isHovered ? {
+                    d: [FP_3, C_3, C_4, C_5],
+                    opacity: [1, 1, 0.2, 0]
+                  } : {
+                    d: FP_3,
+                    opacity: 1
+                  }}
+                  transition={isHovered ? {
+                    d: { type: "spring", stiffness: 180, damping: 12 },
+                    opacity: { duration: 1.6, repeat: Infinity, ease: "easeOut", delay: 0.4 }
+                  } : {
+                    d: { type: "spring", stiffness: 180, damping: 12 },
+                    opacity: { duration: 0.4 }
+                  }}
+                />
+
+                {/* PATH 4 - GLOW */}
+                <motion.path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={isHovered ? 2.2 : 1}
                   d={FP_4}
                   animate={isHovered ? {
                     d: [FP_4, C_4, C_5, C_6],
@@ -348,12 +441,36 @@ export const BiometricAuthScreen: React.FC<BiometricAuthScreenProps> = ({
                     opacity: 1
                   }}
                   transition={isHovered ? {
-                    duration: 1.6,
-                    repeat: Infinity,
-                    ease: "easeOut",
-                    delay: 0.6
+                    d: { type: "spring", stiffness: 180, damping: 12 },
+                    opacity: { duration: 1.6, repeat: Infinity, ease: "easeOut", delay: 0.6 }
                   } : {
-                    duration: 0.4
+                    d: { type: "spring", stiffness: 180, damping: 12 },
+                    opacity: { duration: 0.4 }
+                  }}
+                  style={{ 
+                    filter: "blur(1.5px)",
+                    opacity: isHovered ? 0.75 : 0 
+                  }}
+                />
+                {/* PATH 4 - FOREGROUND */}
+                <motion.path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={isHovered ? 1.5 : 1}
+                  d={FP_4}
+                  animate={isHovered ? {
+                    d: [FP_4, C_4, C_5, C_6],
+                    opacity: [1, 1, 0.1, 0]
+                  } : {
+                    d: FP_4,
+                    opacity: 1
+                  }}
+                  transition={isHovered ? {
+                    d: { type: "spring", stiffness: 180, damping: 12 },
+                    opacity: { duration: 1.6, repeat: Infinity, ease: "easeOut", delay: 0.6 }
+                  } : {
+                    d: { type: "spring", stiffness: 180, damping: 12 },
+                    opacity: { duration: 0.4 }
                   }}
                 />
               </svg>
