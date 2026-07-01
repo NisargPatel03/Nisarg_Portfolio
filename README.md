@@ -11,6 +11,7 @@ A cutting-edge, ultra-premium developer portfolio designed with sleek futuristic
 *   **Responsive Mobile Switch**: On mobile viewports, the large industrial 3D lever collapses into a space-saving glassmorphic pill button displaying "CAD MODE" / "NORM MODE" alongside a layering wireframe icon.
 *   **Viewport Rulers Overlay**: Renders columns `A` to `H` and rows `1` to `8` ticks around the screen margins, complete with dotted cursor crosshair tracking and a coordinate HUD.
 *   **Clean Blueprint Layout**: The layout has been optimized by removing the bottom-right CAD Title Block, ensuring floating triggers (Command Palette, AI Chat, and footer buttons) remain fully accessible and visible on all viewports without overlaps.
+*   **CAD Switch & Telemetry Collision Avoidance**: Programmatically hides the industrial CAD Toggle Switch when the Diagnostics HUD sidebar expands, and restores it when collapsed to prevent visual clutter and layout overlap.
 *   **Dynamic Database Schema Maps**: Dynamically parses the active project's database schema checklist to render custom vector ER diagrams (with tables, primary keys, and relational linkage paths) in place of standard project mockup images.
 *   **Vector Asset Overrides**: Replaced generic image elements with high-fidelity CAD drafting vectors (concentric targets, isometric chassis blocks, mechanical gears, linkages, and a detailed cybernetic face mesh for the portrait).
 *   **Monochrome Typography**: Enforces a strict monochrome cyan color palette, grid background, cards outline offset annotations (`[SYS_MODULE]`, `W: 100% | H: AUTO`), and monospace fonts.
@@ -134,6 +135,11 @@ A cutting-edge, ultra-premium developer portfolio designed with sleek futuristic
 *   **Laser Slashes & Split Curtains**: Flashes dual animated SVG neon path laser slashes across the screen, followed by two dark glassmorphic panels sliding in diagonally at a 45-degree angle from opposite corners to meet in the center.
 *   **Topological Web Audio Sound FX**: Generates custom futuristic blade swoosh/slash sound effects dynamically in real-time using a white noise buffer swept through a BiquadFilterNode sweep.
 *   **Seamless Under-Curtain Scrolling**: Locks the scrolling experience while panels are closed and jumps instantly to the target section using `lenis.scrollTo(element, { immediate: true })` to prevent scroll-motion sickness and keep the navigation experience extremely snappy and responsive.
+
+### 🧬 23. Morphing SVG Micro-Animations (Vector Assets)
+*   **Interactive Tab Icons**: Hovering the **Projects** tab morphs the folder icon into a rotating mechanical gear. Hovering the **Contact** tab morphs the envelope icon into a flying paper airplane.
+*   **Concentric Biometric Ripples**: Hovering the biometric fingerprint scanner triggers concentric scan vectors that morph and ripple outward in waves.
+*   **Premium Sensory Enhancements**: Incorporates snappy spring physics (`stiffness: 180, damping: 12`), dual-layered neon plasma glows (foreground + blurred glow background), synchronized audio synthesis feedback (ticks, swooshes, sonar pings), and interactive exhaust/spark particle emitters.
 
 ---
 
