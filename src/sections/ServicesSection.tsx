@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FadeIn } from '../components/FadeIn';
 import { ArrowUpRight, CheckCircle2, ShieldCheck, DollarSign, Calendar, Users, Award, Tag } from 'lucide-react';
+import { GlitchHeader } from '../components/GlitchHeader';
 
 export const ServicesSection: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'blaze' | 'savaliya'>('blaze');
@@ -13,16 +14,11 @@ export const ServicesSection: React.FC = () => {
     >
       <div className="max-w-5xl mx-auto">
         {/* 1. HEADING */}
-        <FadeIn y={30} delay={0} duration={0.8} className="text-center mb-10 sm:mb-14">
-          <span className="text-[#B600A8] uppercase font-bold tracking-widest text-xs sm:text-sm">
+        <FadeIn y={30} delay={0} duration={0.8} className="text-center mb-10 sm:mb-14 w-full">
+          <span className="text-[#B600A8] uppercase font-bold tracking-widest text-xs sm:text-sm mb-4 block">
             Commercial Engagements
           </span>
-          <h2
-            className="font-black uppercase tracking-tight text-[#0C0C0C] leading-none mt-2"
-            style={{ fontSize: 'clamp(2.5rem, 9vw, 110px)' }}
-          >
-            Client Projects.
-          </h2>
+          <GlitchHeader text="Client Projects" lightMode={true} />
         </FadeIn>
 
         {/* 2. DYNAMIC SEGMENT TAB BAR */}

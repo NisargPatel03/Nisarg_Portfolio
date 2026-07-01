@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { FadeIn } from '../components/FadeIn';
 import { Briefcase, GraduationCap, Trophy, CheckCircle2 } from 'lucide-react';
+import { GlitchHeader } from '../components/GlitchHeader';
 
 interface TimelineItem {
   id: number;
@@ -70,13 +71,11 @@ export const WorkExperience: React.FC = () => {
       className="bg-[#0C0C0C] py-24 md:py-32 w-full px-6 md:px-10 relative overflow-hidden"
     >
       {/* 1. SECTION HEADING */}
-      <FadeIn y={30} delay={0} duration={0.8} className="text-center mb-16 md:mb-24">
-        <span className="text-[#B600A8] uppercase font-bold tracking-widest text-xs sm:text-sm">
+      <FadeIn y={30} delay={0} duration={0.8} className="text-center mb-16 md:mb-24 w-full">
+        <span className="text-[#B600A8] uppercase font-bold tracking-widest text-xs sm:text-sm mb-4 block">
           My Professional Path
         </span>
-        <h2 className="hero-heading font-black uppercase text-4xl sm:text-5xl md:text-6xl tracking-tight mt-2">
-          Work Experience.
-        </h2>
+        <GlitchHeader text="Work Experience" />
       </FadeIn>
 
       {/* 2. TIMELINE CONTAINER */}

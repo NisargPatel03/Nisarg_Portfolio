@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FadeIn } from '../components/FadeIn';
 import { Award, ShieldCheck, Database, Cpu, BookOpen, Trophy, BadgePercent, GraduationCap, FileText, ExternalLink } from 'lucide-react';
+import { GlitchHeader } from '../components/GlitchHeader';
 
 interface Certification {
   title: string;
@@ -174,14 +175,11 @@ export const CertificationsSection: React.FC = () => {
       className="bg-[#0C0C0C] py-24 md:py-32 w-full px-6 md:px-10 relative overflow-hidden"
     >
       <div className="max-w-5xl mx-auto">
-        {/* 1. HEADING */}
-        <FadeIn y={30} delay={0} duration={0.8} className="text-center mb-12">
-          <span className="text-[#7621B0] uppercase font-bold tracking-widest text-xs sm:text-sm">
+        <FadeIn y={30} delay={0} duration={0.8} className="text-center mb-12 w-full">
+          <span className="text-[#7621B0] uppercase font-bold tracking-widest text-xs sm:text-sm mb-4 block">
             Validated Accolades
           </span>
-          <h2 className="hero-heading font-black uppercase text-4xl sm:text-5xl md:text-6xl tracking-tight mt-2">
-            Certifications
-          </h2>
+          <GlitchHeader text="Certifications" />
         </FadeIn>
 
         {/* 2. CATEGORY TABS FILTERS */}

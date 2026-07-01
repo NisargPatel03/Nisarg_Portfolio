@@ -3,6 +3,7 @@ import { FadeIn } from '../components/FadeIn';
 import { Mail, Phone, MapPin, Send, CheckCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { EmergencyButton } from '../components/EmergencyButton';
+import { GlitchHeader } from '../components/GlitchHeader';
 
 export const ContactSection: React.FC = () => {
   const [formState, setFormState] = useState({ name: '', email: '', message: '' });
@@ -97,14 +98,12 @@ export const ContactSection: React.FC = () => {
     >
       <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-10 gap-12 sm:gap-16 items-start">
         <div className="md:col-span-4 flex flex-col gap-8 contact-panel">
-          <FadeIn y={30} delay={0} duration={0.8}>
-            <span className="text-[#B600A8] uppercase font-bold tracking-widest text-xs sm:text-sm">
+          <FadeIn y={30} delay={0} duration={0.8} className="w-full">
+            <span className="text-[#B600A8] uppercase font-bold tracking-widest text-xs sm:text-sm mb-4 block">
               Let&apos;s Build Together
             </span>
-            <h2 className="hero-heading font-black uppercase text-3xl sm:text-4xl md:text-5xl tracking-tight mt-2 leading-none">
-              Contact.
-            </h2>
-            <p className="text-[#D7E2EA]/60 text-xs sm:text-sm font-light leading-relaxed mt-4">
+            <GlitchHeader text="Contact" />
+            <p className="text-[#D7E2EA]/60 text-xs sm:text-sm font-light leading-relaxed mt-6">
               Have an exciting project, research, or development opportunity? Reach out directly via these channels or drop a message!
             </p>
           </FadeIn>

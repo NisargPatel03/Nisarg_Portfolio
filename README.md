@@ -141,6 +141,11 @@ A cutting-edge, ultra-premium developer portfolio designed with sleek futuristic
 *   **Concentric Biometric Ripples**: Hovering the biometric fingerprint scanner triggers concentric scan vectors that morph and ripple outward in waves.
 *   **Premium Sensory Enhancements**: Incorporates snappy spring physics (`stiffness: 180, damping: 12`), dual-layered neon plasma glows (foreground + blurred glow background), synchronized audio synthesis feedback (ticks, swooshes, sonar pings), and interactive exhaust/spark particle emitters.
 
+### 💈 24. Chromatic Glitch SVG Header Typography
+*   **Layered SVG Text Nodes**: Replaced traditional `<h2>` text headings in all major sections (About, Work Experience, Projects, Client Projects, Certifications, Contact) with high-performance inline SVG `<text>` elements.
+*   **Stereoscopic Chromatic Aberration**: Layers three separate colored outlines (Cyan, Magenta, and Green) beneath the solid foreground text. On hover, these layers undergo high-frequency micro-oscillations in opposite directions, simulating a real-time analog lens/CRT chromatic glitch.
+*   **Adaptive Light Mode Rendering**: Built with a dynamic `lightMode` property to swap the foreground fill (white vs. dark gray) depending on the background section theme, ensuring perfect contrast and readability on both white and cyber-black backdrops.
+
 ---
 
 ## 🛠️ Tech Stack & Architecture

@@ -4,6 +4,7 @@ import { AnimatedText } from '../components/AnimatedText';
 import { ContactButton } from '../components/ContactButton';
 import { Award, Code, BookOpen, Star } from 'lucide-react';
 import { TiltCard } from '../components/TiltCard';
+import { GlitchHeader } from '../components/GlitchHeader';
 
 
 export const AboutSection: React.FC = () => {
@@ -13,7 +14,7 @@ export const AboutSection: React.FC = () => {
       className="relative bg-[#0C0C0C] min-h-screen py-24 md:py-32 flex flex-col items-center justify-center overflow-hidden w-full px-6 md:px-10 gap-10 sm:gap-14 md:gap-16"
     >
       {/* 1. FOUR DECORATIVE 3D ASSETS IN CORNERS */}
-
+      
       {/* Top-Left: Moon Icon */}
       <div className="absolute top-[4%] left-[1%] sm:left-[2%] md:left-[4%] z-10 pointer-events-none">
         <FadeIn x={-80} y={0} delay={0.1} duration={0.9}>
@@ -63,13 +64,8 @@ export const AboutSection: React.FC = () => {
       </div>
 
       {/* 2. SECTION HEADING */}
-      <FadeIn y={40} delay={0} duration={0.8} className="z-20 text-center">
-        <h2
-          className="hero-heading font-black uppercase leading-none tracking-tight text-center"
-          style={{ fontSize: 'clamp(3rem, 10vw, 120px)' }}
-        >
-          About me
-        </h2>
+      <FadeIn y={40} delay={0} duration={0.8} className="z-20 text-center w-full">
+        <GlitchHeader text="About me" />
       </FadeIn>
 
       {/* 3. CORE SCROLL-DRIVEN BIO TEXT */}
