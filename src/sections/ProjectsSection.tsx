@@ -139,18 +139,10 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ activeTheme, s
       const built: { text: string; type: TerminalLog['t'] }[] = [];
       for (const line of logLines) {
         if (signalRef.current.cancelled) return;
-        built.push({ text: '', type: line.t });
+        built.push({ text: line.txt, type: line.t });
         setLogs([...built]);
-        for (let i = 0; i <= line.txt.length; i++) {
-          if (signalRef.current.cancelled) return;
-          built[built.length - 1] = { text: line.txt.slice(0, i), type: line.t };
-          setLogs([...built]);
-          if (i < line.txt.length) {
-            soundFX.playClick();
-            await sleep(LOG_SPEED);
-          }
-        }
-        await logGap();
+        soundFX.playClick();
+        await sleep(90 + Math.random() * 70); // realistic log line printing interval
       }
     },
     []
