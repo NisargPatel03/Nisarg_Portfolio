@@ -36,8 +36,8 @@ export const GlitchHeader: React.FC<GlitchHeaderProps> = ({ text, lightMode = fa
       fillOpacity: 1,
       stroke: 'transparent',
       transition: {
-        strokeDashoffset: { duration: 1.6, ease: 'easeInOut' },
-        fillOpacity: { delay: 1.2, duration: 0.5, ease: 'easeOut' },
+        strokeDashoffset: { duration: 1.6, ease: 'easeInOut' as const },
+        fillOpacity: { delay: 1.2, duration: 0.5, ease: 'easeOut' as const },
         stroke: { delay: 1.5, duration: 0.3 },
       },
     },
@@ -52,7 +52,7 @@ export const GlitchHeader: React.FC<GlitchHeaderProps> = ({ text, lightMode = fa
       transition: {
         delay: 1.3,
         duration: 0.5,
-        ease: 'easeOut',
+        ease: 'easeOut' as const,
       },
     },
   };
