@@ -254,219 +254,222 @@ export const DiagnosticsHUD: React.FC<DiagnosticsHUDProps> = ({
         <span className="animate-pulse text-red-500 font-bold">● REC</span>
       </div>
 
-      {/* 1. Scroll Progress Gauge */}
-      <div className="hud-panel-card flex items-center gap-4">
-        <div className="relative w-12 h-12 flex items-center justify-center">
-          <svg className="w-full h-full transform -rotate-90">
-            <circle
-              className="text-white/[0.04]"
-              strokeWidth={strokeWidth}
-              stroke="currentColor"
-              fill="transparent"
-              r={normalizedRadius}
-              cx={radius}
-              cy={radius}
-            />
-            <circle
-              style={{
-                stroke: 'var(--accent-color, #00ff41)',
-                strokeDasharray: `${circumference} ${circumference}`,
-                strokeDashoffset,
-                transition: 'stroke-dashoffset 0.1s ease-out'
-              }}
-              strokeWidth={strokeWidth}
-              strokeLinecap="round"
-              fill="transparent"
-              r={normalizedRadius}
-              cx={radius}
-              cy={radius}
-            />
-          </svg>
-          <span className="absolute text-[9px] font-bold text-white/90">
-            {Math.round(scrollPercent)}%
-          </span>
-        </div>
-        <div className="flex flex-col gap-1 text-[10px]">
-          <span className="text-[#D7E2EA]/50 uppercase tracking-widest text-[8px]">Index Scroll</span>
-          <span className="text-white/80 font-bold">PAGE_OFFSET</span>
-        </div>
-      </div>
-
-      {/* 2. Scroll Stats Readout */}
-      <div className="hud-panel-card flex flex-col gap-2 text-[10px]">
-        <div className="flex justify-between">
-          <span className="text-[#D7E2EA]/40">POS:</span>
-          <span className="text-white/85 font-mono">{String(scrollPos).padStart(5, '0')}px</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-[#D7E2EA]/40">SECT:</span>
-          <span className="text-[var(--accent-color,#00ff41)] font-bold tracking-wider">{activeSection}</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-[#D7E2EA]/40">VELOCITY:</span>
-          <span className="text-white/85">{velocityDisplay}px/f</span>
-        </div>
-      </div>
-
-      {/* 3. Oscilloscope Sparkline */}
-      <div className="hud-panel-card flex flex-col gap-1.5">
-        <div className="flex items-center justify-between text-[8px] tracking-widest text-[#D7E2EA]/40 uppercase">
-          <span>Waveform Telemetry</span>
-          <span className={velocityDisplay > 0 ? 'text-[var(--accent-color,#00ff41)]' : 'text-[#D7E2EA]/30'}>
-            {velocityDisplay > 0 ? 'ACTIVE_SCROLL' : 'SIGNAL_IDLE'}
-          </span>
-        </div>
-        <div className="bg-black/50 border border-white/5 rounded-md overflow-hidden">
-          <canvas ref={canvasRef} width={206} height={44} className="block w-full h-[44px]" />
-        </div>
-      </div>
-
-      {/* 4. Animated Telemetry Logs */}
-      <div className="hud-panel-card flex flex-col gap-1.5 text-[9px] font-mono leading-relaxed">
-        <div className="text-[8px] text-[#D7E2EA]/40 tracking-wider uppercase mb-1">
-          System telemetry logs
-        </div>
-        <div className="flex justify-between border-b border-white/[0.02] pb-1">
-          <span className="text-[#D7E2EA]/40">CPU_LOAD:</span>
-          <span className="text-white/80">{cpuLoad}%</span>
-        </div>
-        <div className="flex justify-between border-b border-white/[0.02] pb-1">
-          <span className="text-[#D7E2EA]/40">MEM_ALLOC:</span>
-          <span className={memStatus === 'OK' ? 'text-[var(--accent-color,#00ff41)]' : 'text-amber-400'}>
-            {memStatus}
-          </span>
-        </div>
-        <div className="flex justify-between border-b border-white/[0.02] pb-1">
-          <span className="text-[#D7E2EA]/40">AUDIO_SYS:</span>
-          <span className={isSoundActive ? 'text-[var(--accent-color,#00ff41)]' : 'text-[#D7E2EA]/30'}>
-            {isSoundActive ? 'LOOP_ON' : 'MUTED'}
-          </span>
-        </div>
-        <div className="flex justify-between border-b border-white/[0.02] pb-1">
-          <span className="text-[#D7E2EA]/40">SOUNDTRACK:</span>
-          <span className={isAmbientActive ? 'text-[var(--accent-color,#00ff41)]' : 'text-[#D7E2EA]/30'}>
-            {isAmbientActive ? 'PLAYING' : 'IDLE'}
-          </span>
-        </div>
-        <div className="flex justify-between border-b border-white/[0.02] pb-1">
-          <span className="text-[#D7E2EA]/40">POINTER_TR:</span>
-          <span className={isCursorTrailActive ? 'text-[var(--accent-color,#00ff41)]' : 'text-[#D7E2EA]/30'}>
-            {isCursorTrailActive ? 'CONNECTED' : 'DISCONN'}
-          </span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-[#D7E2EA]/40">MATRIX_DECK:</span>
-          <span className={isMatrixActive ? 'text-pink-500 font-bold' : 'text-[#D7E2EA]/30'}>
-            {isMatrixActive ? 'OVERRIDE' : 'INACTIVE'}
-          </span>
-        </div>
-      </div>
-
-      {/* 5. Atmosphere Sync & Overrides */}
-      <div className="hud-panel-card flex flex-col gap-2 text-[9px] font-mono leading-relaxed border-t border-white/5 pt-2">
-        <div className="flex items-center justify-between text-[8px] text-[#D7E2EA]/40 tracking-wider uppercase mb-1">
-          <span>Atmosphere telemetry</span>
-          <button 
-            type="button"
-            onClick={handleToggleOverrideMode}
-            className={`px-1.5 py-0.5 rounded text-[8px] font-bold transition-all border ${
-              isManualOverride 
-                ? 'bg-amber-500/20 text-amber-400 border-amber-500/40' 
-                : 'bg-white/5 text-[#D7E2EA]/40 border-white/10 hover:bg-white/10 hover:text-white'
-            }`}
-          >
-            {isManualOverride ? 'MANUAL' : 'AUTO_SYNC'}
-          </button>
+      {/* Scrollable content wrapper */}
+      <div className="hud-scroll-content">
+        {/* 1. Scroll Progress Gauge */}
+        <div className="hud-panel-card flex items-center gap-4">
+          <div className="relative w-12 h-12 flex items-center justify-center">
+            <svg className="w-full h-full transform -rotate-90">
+              <circle
+                className="text-white/[0.04]"
+                strokeWidth={strokeWidth}
+                stroke="currentColor"
+                fill="transparent"
+                r={normalizedRadius}
+                cx={radius}
+                cy={radius}
+              />
+              <circle
+                style={{
+                  stroke: 'var(--accent-color, #00ff41)',
+                  strokeDasharray: `${circumference} ${circumference}`,
+                  strokeDashoffset,
+                  transition: 'stroke-dashoffset 0.1s ease-out'
+                }}
+                strokeWidth={strokeWidth}
+                strokeLinecap="round"
+                fill="transparent"
+                r={normalizedRadius}
+                cx={radius}
+                cy={radius}
+              />
+            </svg>
+            <span className="absolute text-[9px] font-bold text-white/90">
+              {Math.round(scrollPercent)}%
+            </span>
+          </div>
+          <div className="flex flex-col gap-1 text-[10px]">
+            <span className="text-[#D7E2EA]/50 uppercase tracking-widest text-[8px]">Index Scroll</span>
+            <span className="text-white/80 font-bold">PAGE_OFFSET</span>
+          </div>
         </div>
 
-        {climate && (
-          <div className="flex flex-col gap-1">
-            <div className="flex justify-between border-b border-white/[0.02] pb-0.5">
-              <span className="text-[#D7E2EA]/40">LOC:</span>
-              <span className="text-white/80 max-w-[120px] truncate" title={climate.locationName}>
-                {climate.locationName}
-              </span>
-            </div>
-            <div className="flex justify-between border-b border-white/[0.02] pb-0.5">
-              <span className="text-[#D7E2EA]/40">TEMP / COND:</span>
-              <span className="text-white/80">
-                {climate.temperature.toFixed(1)}°C / {climate.conditionText}
-              </span>
-            </div>
-            
-            {isManualOverride ? (
-              <div className="flex flex-col gap-1.5 mt-1 pt-1 border-t border-white/5">
-                <div className="flex justify-between items-center">
-                  <span className="text-amber-400/70 text-[8px]">SYS_FORCE:</span>
-                  <div className="flex gap-1">
+        {/* 2. Scroll Stats Readout */}
+        <div className="hud-panel-card flex flex-col gap-2 text-[10px]">
+          <div className="flex justify-between">
+            <span className="text-[#D7E2EA]/40">POS:</span>
+            <span className="text-white/85 font-mono">{String(scrollPos).padStart(5, '0')}px</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-[#D7E2EA]/40">SECT:</span>
+            <span className="text-[var(--accent-color,#00ff41)] font-bold tracking-wider">{activeSection}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-[#D7E2EA]/40">VELOCITY:</span>
+            <span className="text-white/85">{velocityDisplay}px/f</span>
+          </div>
+        </div>
+
+        {/* 3. Oscilloscope Sparkline */}
+        <div className="hud-panel-card flex flex-col gap-1.5">
+          <div className="flex items-center justify-between text-[8px] tracking-widest text-[#D7E2EA]/40 uppercase">
+            <span>Waveform Telemetry</span>
+            <span className={velocityDisplay > 0 ? 'text-[var(--accent-color,#00ff41)]' : 'text-[#D7E2EA]/30'}>
+              {velocityDisplay > 0 ? 'ACTIVE_SCROLL' : 'SIGNAL_IDLE'}
+            </span>
+          </div>
+          <div className="bg-black/50 border border-white/5 rounded-md overflow-hidden">
+            <canvas ref={canvasRef} width={206} height={44} className="block w-full h-[44px]" />
+          </div>
+        </div>
+
+        {/* 4. Animated Telemetry Logs */}
+        <div className="hud-panel-card flex flex-col gap-1.5 text-[9px] font-mono leading-relaxed">
+          <div className="text-[8px] text-[#D7E2EA]/40 tracking-wider uppercase mb-1">
+            System telemetry logs
+          </div>
+          <div className="flex justify-between border-b border-white/[0.02] pb-1">
+            <span className="text-[#D7E2EA]/40">CPU_LOAD:</span>
+            <span className="text-white/80">{cpuLoad}%</span>
+          </div>
+          <div className="flex justify-between border-b border-white/[0.02] pb-1">
+            <span className="text-[#D7E2EA]/40">MEM_ALLOC:</span>
+            <span className={memStatus === 'OK' ? 'text-[var(--accent-color,#00ff41)]' : 'text-amber-400'}>
+              {memStatus}
+            </span>
+          </div>
+          <div className="flex justify-between border-b border-white/[0.02] pb-1">
+            <span className="text-[#D7E2EA]/40">AUDIO_SYS:</span>
+            <span className={isSoundActive ? 'text-[var(--accent-color,#00ff41)]' : 'text-[#D7E2EA]/30'}>
+              {isSoundActive ? 'LOOP_ON' : 'MUTED'}
+            </span>
+          </div>
+          <div className="flex justify-between border-b border-white/[0.02] pb-1">
+            <span className="text-[#D7E2EA]/40">SOUNDTRACK:</span>
+            <span className={isAmbientActive ? 'text-[var(--accent-color,#00ff41)]' : 'text-[#D7E2EA]/30'}>
+              {isAmbientActive ? 'PLAYING' : 'IDLE'}
+            </span>
+          </div>
+          <div className="flex justify-between border-b border-white/[0.02] pb-1">
+            <span className="text-[#D7E2EA]/40">POINTER_TR:</span>
+            <span className={isCursorTrailActive ? 'text-[var(--accent-color,#00ff41)]' : 'text-[#D7E2EA]/30'}>
+              {isCursorTrailActive ? 'CONNECTED' : 'DISCONN'}
+            </span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-[#D7E2EA]/40">MATRIX_DECK:</span>
+            <span className={isMatrixActive ? 'text-pink-500 font-bold' : 'text-[#D7E2EA]/30'}>
+              {isMatrixActive ? 'OVERRIDE' : 'INACTIVE'}
+            </span>
+          </div>
+        </div>
+
+        {/* 5. Atmosphere Sync & Overrides */}
+        <div className="hud-panel-card flex flex-col gap-2 text-[9px] font-mono leading-relaxed border-t border-white/5 pt-2">
+          <div className="flex items-center justify-between text-[8px] text-[#D7E2EA]/40 tracking-wider uppercase mb-1">
+            <span>Atmosphere telemetry</span>
+            <button 
+              type="button"
+              onClick={handleToggleOverrideMode}
+              className={`px-1.5 py-0.5 rounded text-[8px] font-bold transition-all border ${
+                isManualOverride 
+                  ? 'bg-amber-500/20 text-amber-400 border-amber-500/40' 
+                  : 'bg-white/5 text-[#D7E2EA]/40 border-white/10 hover:bg-white/10 hover:text-white'
+              }`}
+            >
+              {isManualOverride ? 'MANUAL' : 'AUTO_SYNC'}
+            </button>
+          </div>
+
+          {climate && (
+            <div className="flex flex-col gap-1">
+              <div className="flex justify-between border-b border-white/[0.02] pb-0.5">
+                <span className="text-[#D7E2EA]/40">LOC:</span>
+                <span className="text-white/80 max-w-[120px] truncate" title={climate.locationName}>
+                  {climate.locationName}
+                </span>
+              </div>
+              <div className="flex justify-between border-b border-white/[0.02] pb-0.5">
+                <span className="text-[#D7E2EA]/40">TEMP / COND:</span>
+                <span className="text-white/80">
+                  {climate.temperature.toFixed(1)}°C / {climate.conditionText}
+                </span>
+              </div>
+              
+              {isManualOverride ? (
+                <div className="flex flex-col gap-1.5 mt-1 pt-1 border-t border-white/5">
+                  <div className="flex justify-between items-center">
+                    <span className="text-amber-400/70 text-[8px]">SYS_FORCE:</span>
+                    <div className="flex gap-1">
+                      <button
+                        type="button"
+                        onClick={() => handleSetWeatherOverride('sunny')}
+                        className={`px-1 py-0.5 rounded text-[8px] ${
+                          climate.isSunny 
+                            ? 'bg-[var(--accent-color,#00ff41)]/20 text-[var(--accent-color,#00ff41)] font-bold' 
+                            : 'bg-white/5 text-white/50 hover:bg-white/10'
+                        }`}
+                      >
+                        SUN
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleSetWeatherOverride('rainy')}
+                        className={`px-1 py-0.5 rounded text-[8px] ${
+                          climate.isRainy 
+                            ? 'bg-cyan-500/20 text-cyan-400 font-bold' 
+                            : 'bg-white/5 text-white/50 hover:bg-white/10'
+                        }`}
+                      >
+                        RAIN
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleSetWeatherOverride('snowy')}
+                        className={`px-1 py-0.5 rounded text-[8px] ${
+                          climate.isSnowy 
+                            ? 'bg-blue-400/20 text-blue-300 font-bold' 
+                            : 'bg-white/5 text-white/50 hover:bg-white/10'
+                        }`}
+                      >
+                        SNOW
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-between items-center">
+                    <span className="text-amber-400/70 text-[8px]">STEALTH_MODE:</span>
                     <button
                       type="button"
-                      onClick={() => handleSetWeatherOverride('sunny')}
-                      className={`px-1 py-0.5 rounded text-[8px] ${
-                        climate.isSunny 
-                          ? 'bg-[var(--accent-color,#00ff41)]/20 text-[var(--accent-color,#00ff41)] font-bold' 
-                          : 'bg-white/5 text-white/50 hover:bg-white/10'
+                      onClick={handleToggleStealthOverride}
+                      className={`px-2 py-0.5 rounded text-[8px] font-bold ${
+                        climate.isNight 
+                          ? 'bg-indigo-500/25 text-indigo-400 border border-indigo-500/40' 
+                          : 'bg-white/5 text-white/50 hover:bg-white/10 border border-transparent'
                       }`}
                     >
-                      SUN
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleSetWeatherOverride('rainy')}
-                      className={`px-1 py-0.5 rounded text-[8px] ${
-                        climate.isRainy 
-                          ? 'bg-cyan-500/20 text-cyan-400 font-bold' 
-                          : 'bg-white/5 text-white/50 hover:bg-white/10'
-                      }`}
-                    >
-                      RAIN
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleSetWeatherOverride('snowy')}
-                      className={`px-1 py-0.5 rounded text-[8px] ${
-                        climate.isSnowy 
-                          ? 'bg-blue-400/20 text-blue-300 font-bold' 
-                          : 'bg-white/5 text-white/50 hover:bg-white/10'
-                      }`}
-                    >
-                      SNOW
+                      {climate.isNight ? 'ACTIVE_NIGHT' : 'OFF_DAYLIGHT'}
                     </button>
                   </div>
                 </div>
-
-                <div className="flex justify-between items-center">
-                  <span className="text-amber-400/70 text-[8px]">STEALTH_MODE:</span>
-                  <button
-                    type="button"
-                    onClick={handleToggleStealthOverride}
-                    className={`px-2 py-0.5 rounded text-[8px] font-bold ${
-                      climate.isNight 
-                        ? 'bg-indigo-500/25 text-indigo-400 border border-indigo-500/40' 
-                        : 'bg-white/5 text-white/50 hover:bg-white/10 border border-transparent'
-                    }`}
-                  >
-                    {climate.isNight ? 'ACTIVE_NIGHT' : 'OFF_DAYLIGHT'}
-                  </button>
+              ) : (
+                <div className="flex justify-between">
+                  <span className="text-[#D7E2EA]/40">STEALTH_RADAR:</span>
+                  <span className={climate.isNight ? 'text-indigo-400 font-bold' : 'text-[#D7E2EA]/30'}>
+                    {climate.isNight ? 'STEALTH_ON' : 'DEACTIVATED'}
+                  </span>
                 </div>
-              </div>
-            ) : (
-              <div className="flex justify-between">
-                <span className="text-[#D7E2EA]/40">STEALTH_RADAR:</span>
-                <span className={climate.isNight ? 'text-indigo-400 font-bold' : 'text-[#D7E2EA]/30'}>
-                  {climate.isNight ? 'STEALTH_ON' : 'DEACTIVATED'}
-                </span>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
+              )}
+            </div>
+          )}
+        </div>
 
-      {/* Hidden Sonar Telemetry log */}
-      <div className="text-center mt-1 pt-1 pointer-events-none">
-        <p className="sonar-target text-[8px] font-mono tracking-widest uppercase">
-          [ STATS_DECRYPT: "Caffeine: nominal. Sleep: suboptimal." ]
-        </p>
+        {/* Hidden Sonar Telemetry log */}
+        <div className="text-center mt-1 pt-1 pointer-events-none">
+          <p className="sonar-target text-[8px] font-mono tracking-widest uppercase">
+            [ STATS_DECRYPT: "Caffeine: nominal. Sleep: suboptimal." ]
+          </p>
+        </div>
       </div>
     </div>
   );
