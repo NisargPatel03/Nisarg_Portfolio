@@ -152,6 +152,12 @@ A cutting-edge, ultra-premium developer portfolio designed with sleek futuristic
 *   **Flashing Sequence Hint**: On loading the screen or entering an incorrect pattern, the target path (drawing an 'N' shape representing the owner's first name: `6 -> 3 -> 0 -> 4 -> 8 -> 5 -> 2`) flashes sequentially to guide the visitor.
 *   **Failure Shakes & Decryption Lasers**: Drawing an incorrect path triggers container micro-shakes and resets the field. A correct path triggers a green decryption laser sweep and decrypts the entire deck portfolio automatically.
 
+### 🧬 26. Scroll-Driven SVG Circuit Path Indicator
+*   **Winding Bezier Path Tracking**: A fixed sidebar scrollbar replacement that dynamically draws a smooth, undulating cubic Bezier circuit trace tracing the visitor's vertical viewport transit.
+*   **Section Anchor Sonar Nodes**: Interactive terminal connection nodes map directly to main portfolio sections (e.g., `SYS_BOOT`, `GIT_TREE`, `SANDBOX`). Includes custom sonar ripple pings (`animate-ping`) and smooth scroll target scrolling triggers accompanied by mechanical click sound FX.
+*   **Dual-Contrast Telemetry Bead**: A glowing energy bead travels along the computed path in real-time, accompanied by a scrolling percentage tracker (`VAL:[XX%]`) and an active pink glow (`#ff00c7`) styled to match the signature color of the NP logo.
+*   **Dynamic Background & Theme Adaptation**: Implements a mutation observer that monitors background color brightness to shift typography between neon colors, deep contrast blues (`#005577`), and brand pinks (`#d900a3`) for seamless readability on both white and black backgrounds.
+
 ---
 
 ## 🛠️ Tech Stack & Architecture
@@ -314,6 +320,7 @@ Nisarg_Portfolio/
 │   │   ├── MatrixRain.tsx          # Bioluminescent digital rain canvas
 │   │   ├── MeltdownOverlay.tsx     # Nuclear reactor core meltdown overlay
 │   │   ├── Preloader.tsx           # Monogram vector boot-up sequence
+│   │   ├── ScrollCircuitPath.tsx   # Scroll-driven SVG circuit sidebar
 │   │   └── ...
 │   ├── data/                # Data structures & FAQ fallback registries
 │   │   ├── cloneKnowledge.ts       # AI system instructions & offline FAQs
