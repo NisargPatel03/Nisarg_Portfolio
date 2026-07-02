@@ -175,16 +175,6 @@ export const FallbackWeatherOverlay: React.FC<FallbackWeatherOverlayProps> = ({ 
           style={{ opacity: 0.85 }}
         />
       )}
-
-      {/* CSS warm radial solar flare overlay for fallback Sun/Clear Sky */}
-      {climate.isSunny && (
-        <div
-          className="fixed top-0 left-0 right-0 h-96 pointer-events-none z-[1] transition-opacity duration-1000"
-          style={{
-            background: 'radial-gradient(circle at 50% 0%, rgba(255, 115, 20, 0.08) 0%, rgba(255, 180, 50, 0.03) 45%, transparent 75%)',
-          }}
-        />
-      )}
     </>
   );
 };
