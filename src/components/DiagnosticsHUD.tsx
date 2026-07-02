@@ -66,9 +66,13 @@ export const DiagnosticsHUD: React.FC<DiagnosticsHUDProps> = ({
   const [memStatus, setMemStatus] = useState('OK');
 
   useEffect(() => {
+    if (!enabled) {
+      window.dispatchEvent(new CustomEvent('hudStateChange', { detail: { isCollapsed: true } }));
+      return;
+    }
     const event = new CustomEvent('hudStateChange', { detail: { isCollapsed } });
     window.dispatchEvent(event);
-  }, [isCollapsed]);
+  }, [isCollapsed, enabled]);
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const velocityRef = useRef(0);

@@ -78,6 +78,25 @@ export const AiCloneTerminal: React.FC<AiCloneTerminalProps> = ({ isBlueprintMod
   const chatEndRef = useRef<HTMLDivElement | null>(null);
   const modelRef = useRef<any>(null);
 
+  const [isHudExpanded, setIsHudExpanded] = useState(false);
+
+  useEffect(() => {
+    const handleHudChange = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      setIsHudExpanded(!customEvent.detail.isCollapsed);
+    };
+    window.addEventListener('hudStateChange', handleHudChange);
+    return () => {
+      window.removeEventListener('hudStateChange', handleHudChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isHudExpanded) {
+      setIsOpen(false);
+    }
+  }, [isHudExpanded]);
+
   // Initialize Gemini model
   useEffect(() => {
     const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || "";
@@ -305,32 +324,34 @@ export const AiCloneTerminal: React.FC<AiCloneTerminalProps> = ({ isBlueprintMod
   return (
     <>
       {/* Floating launcher trigger */}
-      <div className="fixed bottom-20 right-6 md:bottom-24 md:right-8 z-[999]">
-        <button
-          type="button"
-          onClick={handleToggleOpen}
-          aria-label="Toggle AI digital clone"
-          className={`w-12 h-12 rounded-full flex items-center justify-center relative group transition-all duration-300 active:scale-90 border backdrop-blur-md ${
-            isBlueprintMode 
-              ? 'border-[#00f3ff] bg-[#040d1a] shadow-[0_0_15px_rgba(0,243,255,0.25)]' 
-              : 'border-[#00ff41]/30 bg-black/85 shadow-[0_0_15px_rgba(0,255,65,0.15)] hover:border-[#00ff41]/60'
-          }`}
-        >
-          {/* Animated beacon ring */}
-          <span className={`absolute inset-0 rounded-full animate-ping opacity-25 border ${isBlueprintMode ? 'border-[#00f3ff]' : 'border-[#00ff41]'}`} style={{ animationDuration: '3s' }} />
-          
-          <img 
-            src="/aether_avatar.png" 
-            alt="Nisarg Aether Avatar" 
-            className="w-full h-full rounded-full object-cover p-[2px] transition-transform duration-300 group-hover:scale-105 no-blueprint-override"
-          />
+      {!isHudExpanded && (
+        <div className="fixed bottom-20 right-6 md:bottom-24 md:right-8 z-[999]">
+          <button
+            type="button"
+            onClick={handleToggleOpen}
+            aria-label="Toggle AI digital clone"
+            className={`w-12 h-12 rounded-full flex items-center justify-center relative group transition-all duration-300 active:scale-90 border backdrop-blur-md ${
+              isBlueprintMode 
+                ? 'border-[#00f3ff] bg-[#040d1a] shadow-[0_0_15px_rgba(0,243,255,0.25)]' 
+                : 'border-[#00ff41]/30 bg-black/85 shadow-[0_0_15px_rgba(0,255,65,0.15)] hover:border-[#00ff41]/60'
+            }`}
+          >
+            {/* Animated beacon ring */}
+            <span className={`absolute inset-0 rounded-full animate-ping opacity-25 border ${isBlueprintMode ? 'border-[#00f3ff]' : 'border-[#00ff41]'}`} style={{ animationDuration: '3s' }} />
+            
+            <img 
+              src="/aether_avatar.png" 
+              alt="Nisarg Aether Avatar" 
+              className="w-full h-full rounded-full object-cover p-[2px] transition-transform duration-300 group-hover:scale-105 no-blueprint-override"
+            />
 
-          {/* Tooltip */}
-          <span className={`absolute right-14 text-[9px] font-mono tracking-widest px-2 py-1 rounded border backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 select-none pointer-events-none whitespace-nowrap bg-black/90 ${accentTextClass} ${accentBorderClass}`}>
-            [NISARG_AETHER: ONLINE]
-          </span>
-        </button>
-      </div>
+            {/* Tooltip */}
+            <span className={`absolute right-14 text-[9px] font-mono tracking-widest px-2 py-1 rounded border backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 select-none pointer-events-none whitespace-nowrap bg-black/90 ${accentTextClass} ${accentBorderClass}`}>
+              [NISARG_AETHER: ONLINE]
+            </span>
+          </button>
+        </div>
+      )}
 
       {/* Main expanded panel */}
       <AnimatePresence>

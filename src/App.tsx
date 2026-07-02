@@ -53,7 +53,7 @@ function App() {
   const [activeTheme, setActiveTheme] = useState<'project' | 'toxic-radar' | 'vapor-matrix' | 'amber-console' | 'blueprint-arctic'>('project');
   const [isBlueprintMode, setIsBlueprintMode] = useState(false);
   const [isDrawingComplete, setIsDrawingComplete] = useState(false);
-  const [isGlShaderActive, setIsGlShaderActive] = useState(false);
+  const [isGlShaderActive, setIsGlShaderActive] = useState(true);
   const [isStealthMode, setIsStealthMode] = useState(false);
 
   useEffect(() => {

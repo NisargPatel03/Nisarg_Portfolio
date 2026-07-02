@@ -81,7 +81,11 @@ class ClimateService {
   }
 
   public setOverride(override: Partial<ClimateData> | null) {
-    this.overrideData = override;
+    if (override === null) {
+      this.overrideData = null;
+    } else {
+      this.overrideData = { ...this.overrideData, ...override };
+    }
     this.notify();
   }
 

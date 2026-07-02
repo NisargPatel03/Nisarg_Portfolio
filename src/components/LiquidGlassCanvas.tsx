@@ -557,10 +557,10 @@ export const LiquidGlassCanvas: React.FC<LiquidGlassCanvasProps> = ({
       const targetSolar = climateRef.current.isSunny ? 1.0 : 0.0;
       const targetNight = climateRef.current.isNight ? 1.0 : 0.0;
 
-      currentRain.current += (targetRain - currentRain.current) * 0.02;
-      currentSnow.current += (targetSnow - currentSnow.current) * 0.02;
-      currentSolar.current += (targetSolar - currentSolar.current) * 0.02;
-      currentNight.current += (targetNight - currentNight.current) * 0.02;
+      currentRain.current += (targetRain - currentRain.current) * 0.05;
+      currentSnow.current += (targetSnow - currentSnow.current) * 0.05;
+      currentSolar.current += (targetSolar - currentSolar.current) * 0.05;
+      currentNight.current += (targetNight - currentNight.current) * 0.05;
 
       gl.uniform1f(uRainLoc, currentRain.current);
       gl.uniform1f(uSnowLoc, currentSnow.current);
