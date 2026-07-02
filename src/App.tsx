@@ -25,6 +25,7 @@ import { BlueprintOverlay } from './components/BlueprintOverlay';
 import { AiCloneTerminal } from './components/AiCloneTerminal';
 import { Preloader } from './components/Preloader';
 import { KatanaWipe } from './components/KatanaWipe';
+import { SonarScanner } from './components/SonarScanner';
 
 
 const SECTIONS = [
@@ -418,6 +419,9 @@ function App() {
 
           {/* Cybernetic pointer coordinate trail */}
           <CursorTrail enabled={isCursorTrailActive} />
+
+          {/* Sonar Ping Space Scanner Overlay */}
+          <SonarScanner />
 
           {/* Real-time Diagnostics HUD sidebar */}
           <DiagnosticsHUD 

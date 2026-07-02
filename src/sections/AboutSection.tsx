@@ -113,7 +113,11 @@ export const AboutSection: React.FC = () => {
       </div>
 
       {/* 4. BUTTON WITH SPACING */}
-      <FadeIn y={20} delay={0.5} className="z-20 mt-6 sm:mt-10 md:mt-12">
+      <FadeIn y={20} delay={0.5} className="z-20 mt-6 sm:mt-10 md:mt-12 flex flex-col items-center gap-4">
+        {/* Hidden Sonar Telemetry log */}
+        <p className="sonar-target text-[9px] font-mono tracking-widest uppercase text-center pointer-events-none z-30">
+          [ COGNITIVE_THREAD: "Coffee to Code conversion efficiency: 98.4%" ]
+        </p>
         <ContactButton />
       </FadeIn>
     </section>

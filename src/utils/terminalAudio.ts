@@ -539,6 +539,62 @@ class TerminalSoundFX {
       console.warn('Error playing scanner ping sound:', e);
     }
   }
+
+  playSonarPing(panValue: number = 0) {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+
+    try {
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const osc2 = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      const gain2 = this.ctx.createGain();
+
+      // Configure panning node for spatial audio feedback
+      let dest: AudioNode = this.analyser || this.ctx.destination;
+      if (this.ctx.createStereoPanner) {
+        try {
+          const panner = this.ctx.createStereoPanner();
+          panner.pan.setValueAtTime(Math.max(-1.0, Math.min(1.0, panValue)), now);
+          panner.connect(dest);
+          dest = panner;
+        } catch (err) {
+          console.warn('StereoPannerNode configuration failed:', err);
+        }
+      }
+
+      // Primary oscillator (high frequency sonar sweep)
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(1400, now);
+      osc.frequency.exponentialRampToValueAtTime(280, now + 1.4);
+
+      gain.gain.setValueAtTime(0.08, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.4);
+
+      osc.connect(gain);
+      gain.connect(dest);
+
+      // Secondary oscillator (lower metallic resonator body)
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(700, now);
+      osc2.frequency.exponentialRampToValueAtTime(140, now + 1.4);
+
+      gain2.gain.setValueAtTime(0.03, now);
+      gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.9);
+
+      osc2.connect(gain2);
+      gain2.connect(dest);
+
+      osc.start(now);
+      osc.stop(now + 1.4);
+      osc2.start(now);
+      osc2.stop(now + 1.4);
+    } catch (e) {
+      console.warn('Error playing sonar ping sound:', e);
+    }
+  }
 }
 
 export const soundFX = new TerminalSoundFX();

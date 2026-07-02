@@ -321,6 +321,13 @@ export const DiagnosticsHUD: React.FC<DiagnosticsHUDProps> = ({
           </span>
         </div>
       </div>
+
+      {/* Hidden Sonar Telemetry log */}
+      <div className="text-center mt-1 pt-1 pointer-events-none">
+        <p className="sonar-target text-[8px] font-mono tracking-widest uppercase">
+          [ STATS_DECRYPT: "Caffeine: nominal. Sleep: suboptimal." ]
+        </p>
+      </div>
     </div>
   );
 };

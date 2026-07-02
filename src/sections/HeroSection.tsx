@@ -520,6 +520,13 @@ export const HeroSection: React.FC = () => {
           <ContactButton />
         </FadeIn>
       </div>
+
+      {/* Hidden Sonar Telemetry log */}
+      <div className="absolute left-1/2 -translate-x-1/2 bottom-8 hidden md:block z-30 pointer-events-none">
+        <p className="sonar-target text-[9px] font-mono tracking-widest uppercase text-center">
+          [ DECRYPT_LOG: "Nisarg has spent 12,000+ hours in terminal consoles." ]
+        </p>
+      </div>
     </section>
   );
 };

@@ -1007,6 +1007,25 @@ h1, h2, h3, h4, h5, h6, button, nav a, .nav-link, .card-title {
   transform: translate3d(calc(100% + 22px), -50%, 0) !important;
 }
 
+/* Sonar Ping Space Scanner Reveals */
+.sonar-target {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  filter: blur(8px) !important;
+  transform: scale(0.9) !important;
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), 
+              filter 1.2s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 1.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.sonar-target.sonar-revealed {
+  opacity: 1 !important;
+  filter: blur(0px) !important;
+  transform: scale(1) !important;
+  color: var(--accent-color, #00ff41) !important;
+  text-shadow: 0 0 12px rgba(var(--accent-rgb, 0, 255, 65), 0.6) !important;
+}
+
 
 
 
