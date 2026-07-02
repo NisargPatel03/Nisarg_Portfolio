@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { soundFX } from '../utils/terminalAudio';
-import { climateService, ClimateData } from '../utils/climateService';
+import { climateService, type ClimateData } from '../utils/climateService';
 
 interface DiagnosticsHUDProps {
   enabled: boolean;
