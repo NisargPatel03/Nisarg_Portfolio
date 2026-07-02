@@ -421,6 +421,13 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ activeTheme, s
           })}
         </div>
       </div>
+
+      {/* Hidden Sonar Telemetry log */}
+      <div className="absolute left-1/2 -translate-x-1/2 bottom-4 hidden md:block z-30 pointer-events-none">
+        <p className="sonar-target text-[9px] font-mono tracking-widest uppercase text-center">
+          [ PROJ_FACT: "Blaze Overseas, Savaliya Ice-Cream, and CodeGraph repositories live." ]
+        </p>
+      </div>
     </section>
   );
 };

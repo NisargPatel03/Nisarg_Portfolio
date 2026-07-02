@@ -265,6 +265,13 @@ export const ServicesSection: React.FC = () => {
           </AnimatePresence>
         </div>
       </div>
+
+      {/* Hidden Sonar Telemetry log */}
+      <div className="absolute left-1/2 -translate-x-1/2 bottom-4 hidden md:block z-30 pointer-events-none">
+        <p className="sonar-target text-[9px] font-mono tracking-widest uppercase text-center">
+          [ SERVICE_LOG: "Full-stack development, interactive UI, and high-performance algorithms." ]
+        </p>
+      </div>
     </section>
   );
 };

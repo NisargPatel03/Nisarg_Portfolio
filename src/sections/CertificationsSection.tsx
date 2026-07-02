@@ -261,6 +261,13 @@ export const CertificationsSection: React.FC = () => {
           </AnimatePresence>
         </motion.div>
       </div>
+
+      {/* Hidden Sonar Telemetry log */}
+      <div className="absolute left-1/2 -translate-x-1/2 bottom-4 hidden md:block z-30 pointer-events-none">
+        <p className="sonar-target text-[9px] font-mono tracking-widest uppercase text-center">
+          [ CERT_HASH: "Academic validation index: 100% verified." ]
+        </p>
+      </div>
     </section>
   );
 };

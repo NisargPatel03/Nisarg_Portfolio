@@ -232,6 +232,12 @@ export const ContactSection: React.FC = () => {
         <span>© {new Date().getFullYear()} Nisarg Patel. All Rights Reserved.</span>
         <span>Curated with React, TypeScript & Tailwind CSS</span>
       </div>
+      {/* Hidden Sonar Telemetry log */}
+      <div className="absolute left-1/2 -translate-x-1/2 bottom-4 hidden md:block z-30 pointer-events-none">
+        <p className="sonar-target text-[9px] font-mono tracking-widest uppercase text-center">
+          [ COM_LINK: "Secure communication channel open for collaborations." ]
+        </p>
+      </div>
     </section>
   );
 };

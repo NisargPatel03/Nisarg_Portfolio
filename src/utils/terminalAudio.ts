@@ -541,9 +541,11 @@ class TerminalSoundFX {
   }
 
   playSonarPing(panValue: number = 0) {
-    if (!this.enabled) return;
     this.init();
     if (!this.ctx) return;
+    if (this.ctx.state === 'suspended') {
+      this.ctx.resume();
+    }
 
     try {
       const now = this.ctx.currentTime;

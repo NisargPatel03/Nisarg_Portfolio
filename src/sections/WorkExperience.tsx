@@ -215,6 +215,13 @@ export const WorkExperience: React.FC = () => {
           );
         })}
       </div>
+
+      {/* Hidden Sonar Telemetry log */}
+      <div className="absolute left-1/2 -translate-x-1/2 bottom-4 hidden md:block z-30 pointer-events-none">
+        <p className="sonar-target text-[9px] font-mono tracking-widest uppercase text-center">
+          [ TREE_HASH: "196+ LeetCode problems solved with 5-star HackerRank standing." ]
+        </p>
+      </div>
     </section>
   );
 };

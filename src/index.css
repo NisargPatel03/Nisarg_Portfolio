@@ -1026,6 +1026,13 @@ h1, h2, h3, h4, h5, h6, button, nav a, .nav-link, .card-title {
   text-shadow: 0 0 12px rgba(var(--accent-rgb, 0, 255, 65), 0.6) !important;
 }
 
+/* Light background override for sonar-revealed text readability */
+#services .sonar-target.sonar-revealed {
+  color: #0c0c0c !important;
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.25) !important;
+}
+
+
 
 
 
