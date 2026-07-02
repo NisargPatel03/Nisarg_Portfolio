@@ -58,6 +58,7 @@ void main() {
   // 1. Calculate refraction displacement
   vec2 displacement = vec2(0.0);
   float aspect = u_resolution.x / u_resolution.y;
+  float rain_glow = 0.0;
   
   // A. Speed-induced wave ripples
   for (int i = 0; i < 6; i++) {
@@ -97,13 +98,18 @@ void main() {
     float dist = length(diff);
     if (dist < 0.07) {
       float force = smoothstep(0.07, 0.0, dist);
-      displacement += normalize(diff) * force * 0.025 * u_rain_intensity;
+      displacement += normalize(diff) * force * 0.065 * u_rain_intensity; // Increased displacement force
+      
+      // Draw highlighted edges of the sliding drops
+      rain_glow += smoothstep(0.02, 0.0, abs(dist - 0.05)) * 0.28 * u_rain_intensity;
+      rain_glow += smoothstep(0.015, 0.0, dist) * 0.45 * u_rain_intensity; // specular center highlight
     }
     
     // trail lines
     float trail = smoothstep(0.03, 0.0, abs(fpos.x - dropPos.x)) * step(fpos.y, dropPos.y) * step(dropPos.y - 0.25, fpos.y);
     if (trail > 0.0) {
       displacement.x += sin(fpos.y * 30.0 + u_time * 5.0) * 0.003 * trail * u_rain_intensity;
+      rain_glow += trail * 0.08 * u_rain_intensity; // add subtle trail light reflection
     }
 
     // 2. Expanding ripples
@@ -120,8 +126,11 @@ void main() {
     float rdist = length(rdiff);
     if (rdist < rradius && rdist > rradius - 0.06) {
       float redge = smoothstep(rradius - 0.06, rradius - 0.03, rdist) * smoothstep(rradius, rradius - 0.03, rdist);
-      float rwave = sin((rdist - rradius) * 40.0) * redge * exp(-rage * 2.0) * 0.015 * u_rain_intensity;
+      float rwave = sin((rdist - rradius) * 40.0) * redge * exp(-rage * 2.0) * 0.035 * u_rain_intensity; // Increased ripple displacement wave
       displacement += normalize(rdiff) * rwave;
+      
+      // Draw highlighted ripple circles
+      rain_glow += redge * exp(-rage * 1.5) * 0.32 * u_rain_intensity;
     }
   }
   
@@ -174,30 +183,32 @@ void main() {
     st_snow.x += u_time * 0.04;
     st_snow.y += u_time * 0.12;
     
-    // Layer 1
-    vec2 grid1 = st_snow * 12.0;
+    // Layer 1 (Closer, larger flakes with glowing core)
+    vec2 grid1 = st_snow * 10.0; // reduced grid scale to make particles larger
     vec2 ipos1 = floor(grid1);
     vec2 fpos1 = fract(grid1);
     float r1 = fract(sin(dot(ipos1, vec2(12.9898, 78.233))) * 43758.5453);
     float flake1 = 0.0;
-    if (r1 > 0.94) {
+    if (r1 > 0.93) {
       vec2 center = vec2(0.5 + 0.35 * sin(u_time + r1 * 6.28), 0.5 + 0.35 * cos(u_time * 0.5 + r1 * 6.28));
-      flake1 = smoothstep(0.05, 0.0, length(fpos1 - center));
+      float dist1 = length(fpos1 - center);
+      flake1 = smoothstep(0.12, 0.0, dist1) + smoothstep(0.25, 0.0, dist1) * 0.3;
     }
     
-    // Layer 2
-    vec2 grid2 = st_snow * 7.0;
+    // Layer 2 (Background, smaller flakes)
+    vec2 grid2 = st_snow * 6.0;
     vec2 ipos2 = floor(grid2);
     vec2 fpos2 = fract(grid2);
     float r2 = fract(sin(dot(ipos2, vec2(37.9898, 48.233))) * 43758.5453);
     float flake2 = 0.0;
-    if (r2 > 0.91) {
+    if (r2 > 0.90) {
       vec2 center = vec2(0.5 + 0.35 * sin(u_time * 0.7 + r2 * 6.28), 0.5 + 0.35 * cos(u_time * 0.35 + r2 * 6.28));
-      flake2 = smoothstep(0.08, 0.0, length(fpos2 - center));
+      float dist2 = length(fpos2 - center);
+      flake2 = smoothstep(0.18, 0.0, dist2) + smoothstep(0.35, 0.0, dist2) * 0.35;
     }
     
-    float snow_val = (flake1 * 0.3 + flake2 * 0.5) * u_snow_intensity;
-    final_color += vec3(0.9, 0.95, 1.0) * snow_val * 0.5;
+    float snow_val = (flake1 * 0.65 + flake2 * 0.85) * u_snow_intensity;
+    final_color += vec3(0.92, 0.97, 1.0) * snow_val * 1.5; // brighter and more saturated
   }
 
   // 5. Solar Flare Overlay
@@ -207,6 +218,11 @@ void main() {
     vec3 warmColor = vec3(1.0, 0.45, 0.08);
     float gradient = smoothstep(1.3, 0.15, uv.y) * 0.12 * u_solar_flare;
     final_color += warmColor * f * gradient * edge_fade;
+  }
+
+  // 6. Rain Specular Highlights
+  if (u_rain_intensity > 0.0) {
+    final_color += vec3(0.85, 0.94, 1.0) * rain_glow * 0.75;
   }
   
   float baseline_alpha = 0.20 + u_audio_intensity * 0.10;
