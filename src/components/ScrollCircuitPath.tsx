@@ -263,14 +263,13 @@ export const ScrollCircuitPath: React.FC<ScrollCircuitPathProps> = ({ activeSect
               fill={beadCenterFill}
               filter="url(#circuit-neon-glow)"
             />
-            {/* Realtime percentage telemetry display */}
             <text
               x={beadPos.x - 52}
               y={beadPos.y + 3.5}
               fill={activeTextFill}
               className="font-mono text-[7px] font-bold tracking-widest"
               style={{
-                textShadow: isActive && !isLightTheme ? '0 0 5px var(--accent-glow, rgba(0, 243, 255, 0.4))' : 'none',
+                textShadow: !isLightTheme ? '0 0 5px var(--accent-glow, rgba(0, 243, 255, 0.4))' : 'none',
               }}
             >
               {`VAL:[${Math.round(scrollProgress * 100)}%]`}
