@@ -74,18 +74,26 @@ export const DrawSectionHeader: React.FC<DrawSectionHeaderProps> = ({
 
   /* ─── Framer Motion variants ────────────────────────────────────── */
   const traceVariants = {
-    hidden: { strokeDashoffset: dashLen },
+    hidden: { strokeDashoffset: dashLen, opacity: 1 },
     visible: {
       strokeDashoffset: 0,
       transition: { duration: 2.4, ease: 'easeInOut' as const, delay: 0.1 },
     },
   };
 
+  // Layer C: invisible before viewport, briefly flashes at full opacity
+  // right after the stroke finishes drawing (~2.4 s), then fades out
+  // as the fill (Layer D) takes over. Keyframe times are fractions of
+  // the total 3.4 s sequence: 0=start, 0.74≈2.5 s, 0.85≈2.9 s, 1=3.4 s.
   const strokeFadeVariants = {
-    hidden: { opacity: 1 },
+    hidden: { opacity: 0 },
     visible: {
-      opacity: 0,
-      transition: { duration: 0.5, ease: 'easeOut' as const, delay: 2.6 },
+      opacity: [0, 0, 1, 0] as number[],
+      transition: {
+        times: [0, 0.73, 0.83, 1],
+        duration: 3.4,
+        ease: 'easeOut' as const,
+      },
     },
   };
 
