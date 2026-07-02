@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { soundFX } from '../utils/terminalAudio';
 
 interface GlitchHeaderProps {
   text: string;
@@ -22,16 +23,56 @@ export const GlitchHeader: React.FC<GlitchHeaderProps> = ({ text, lightMode = fa
   const mainX = isHovered ? [0, -1, 1, -1, 0] : 0;
   const mainY = isHovered ? [0, 1, -1, 1, 0] : 0;
 
+  // Variants for scroll drawing
+  const mainTextVariants = {
+    hidden: {
+      strokeDasharray: 500,
+      strokeDashoffset: 500,
+      fillOpacity: 0,
+      stroke: lightMode ? '#005577' : 'var(--accent-color, #00f3ff)',
+    },
+    visible: {
+      strokeDashoffset: 0,
+      fillOpacity: 1,
+      stroke: 'transparent',
+      transition: {
+        strokeDashoffset: { duration: 1.6, ease: 'easeInOut' },
+        fillOpacity: { delay: 1.2, duration: 0.5, ease: 'easeOut' },
+        stroke: { delay: 1.5, duration: 0.3 },
+      },
+    },
+  };
+
+  const glowLayersVariants = {
+    hidden: {
+      opacity: 0,
+    },
+    visible: {
+      opacity: 1,
+      transition: {
+        delay: 1.3,
+        duration: 0.5,
+        ease: 'easeOut',
+      },
+    },
+  };
+
   return (
     <div
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className="relative cursor-pointer select-none w-full max-w-[850px] mx-auto flex justify-center items-center overflow-visible"
     >
-      <svg
+      <motion.svg
         viewBox="0 0 1000 160"
         className="w-full overflow-visible"
         style={{ height: 'auto', maxHeight: '160px' }}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: '-80px' }}
+        onViewportEnter={() => {
+          soundFX.playScannerPing();
+        }}
       >
         {/* Layer 1: Green Glow */}
         <motion.text
@@ -45,8 +86,9 @@ export const GlitchHeader: React.FC<GlitchHeaderProps> = ({ text, lightMode = fa
             fontFamily: 'var(--font-glow, "Orbitron", "Inter", sans-serif)',
             strokeWidth: '3px',
           }}
-          animate={{ x: greenX, y: greenY }}
-          transition={{ duration: 0.24, ease: 'linear', repeat: isHovered ? Infinity : 0 }}
+          variants={glowLayersVariants}
+          animate={isHovered ? { x: greenX, y: greenY } : undefined}
+          transition={isHovered ? { duration: 0.24, ease: 'linear', repeat: Infinity } : undefined}
         >
           {text}
         </motion.text>
@@ -63,8 +105,9 @@ export const GlitchHeader: React.FC<GlitchHeaderProps> = ({ text, lightMode = fa
             fontFamily: 'var(--font-glow, "Orbitron", "Inter", sans-serif)',
             strokeWidth: '3px',
           }}
-          animate={{ x: cyanX, y: cyanY }}
-          transition={{ duration: 0.18, ease: 'linear', repeat: isHovered ? Infinity : 0 }}
+          variants={glowLayersVariants}
+          animate={isHovered ? { x: cyanX, y: cyanY } : undefined}
+          transition={isHovered ? { duration: 0.18, ease: 'linear', repeat: Infinity } : undefined}
         >
           {text}
         </motion.text>
@@ -81,8 +124,9 @@ export const GlitchHeader: React.FC<GlitchHeaderProps> = ({ text, lightMode = fa
             fontFamily: 'var(--font-glow, "Orbitron", "Inter", sans-serif)',
             strokeWidth: '3px',
           }}
-          animate={{ x: magentaX, y: magentaY }}
-          transition={{ duration: 0.22, ease: 'linear', repeat: isHovered ? Infinity : 0 }}
+          variants={glowLayersVariants}
+          animate={isHovered ? { x: magentaX, y: magentaY } : undefined}
+          transition={isHovered ? { duration: 0.22, ease: 'linear', repeat: Infinity } : undefined}
         >
           {text}
         </motion.text>
@@ -97,13 +141,15 @@ export const GlitchHeader: React.FC<GlitchHeaderProps> = ({ text, lightMode = fa
           style={{
             fontSize: 'clamp(3.8rem, 8vw, 100px)',
             fontFamily: 'var(--font-glow, "Orbitron", "Inter", sans-serif)',
+            strokeWidth: '1.5px',
           }}
-          animate={{ x: mainX, y: mainY }}
-          transition={{ duration: 0.15, ease: 'linear', repeat: isHovered ? Infinity : 0 }}
+          variants={mainTextVariants}
+          animate={isHovered ? { x: mainX, y: mainY } : undefined}
+          transition={isHovered ? { duration: 0.15, ease: 'linear', repeat: Infinity } : undefined}
         >
           {text}
         </motion.text>
-      </svg>
+      </motion.svg>
     </div>
   );
 };

@@ -170,6 +170,12 @@ A cutting-edge, ultra-premium developer portfolio designed with sleek futuristic
 *   **Visual Ripple Propagation**: Spawns dual concentric glowing circles with spring scale animations and border masks at the cursor point, illustrating the scan wave front propagating through screen coordinates.
 *   **Automated Decay Protocol**: Restores elements back to secrecy automatically by removing the illumination class after a 3.5-second cooldown delay.
 
+### ✍️ 29. Scroll-Triggered SVG Text Outline Drawing
+*   **Sequential Outline Tracing**: Utilizes custom SVG `<text>` stroke properties combined with Framer Motion coordinates to dynamically trace letter outlines in the active theme's accent color when a section enters the viewport.
+*   **Framer Motion Viewport Gateways**: Leverages `whileInView` and `onViewportEnter` trigger states to initiate drawing animations only when sections are clearly visible to the user.
+*   **Sound Synchronizations**: Automatically fires a synthesized high-frequency cybernetic scan-ping sound effect (`soundFX.playScannerPing()`) using the Web Audio API when the outline trace starts.
+*   **Dynamic Bezel & Glitch Transition**: Once the trace concludes, the solid text fill smoothly fades in as the drawing stroke dissolves, seamlessly preparing the headers to respond to interactive RGB stereoscopic glitch mouseover vibrations.
+
 ---
 
 ## 🛠️ Tech Stack & Architecture
