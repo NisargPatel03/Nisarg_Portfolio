@@ -27,6 +27,7 @@ import { AiCloneTerminal } from './components/AiCloneTerminal';
 import { Preloader } from './components/Preloader';
 import { KatanaWipe } from './components/KatanaWipe';
 import { SonarScanner } from './components/SonarScanner';
+import { FallbackWeatherOverlay } from './components/FallbackWeatherOverlay';
 
 
 const SECTIONS = [
@@ -434,6 +435,9 @@ function App() {
                 {isMatrixActive && <MatrixRain isGlActive={false} />}
               </>
             )}
+
+            {/* Fallback weather effects when WebGL refraction is disabled */}
+            <FallbackWeatherOverlay isGlShaderActive={isGlShaderActive} />
 
           {/* Cybernetic pointer coordinate trail */}
           <CursorTrail enabled={isCursorTrailActive} />
