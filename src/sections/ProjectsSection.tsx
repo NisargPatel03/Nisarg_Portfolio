@@ -10,12 +10,9 @@ import { GlitchHeader } from '../components/GlitchHeader';
 import './projects-terminal.css';
 
 const CMD_SPEED = 20;
-const LOG_SPEED = 8;
 const GLITCH_MS = 300;
 
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
-
-const logGap = () => sleep(60 + Math.random() * 80);
 
 interface ProjectsSectionProps {
   activeTheme: 'project' | 'toxic-radar' | 'vapor-matrix' | 'amber-console' | 'blueprint-arctic';
