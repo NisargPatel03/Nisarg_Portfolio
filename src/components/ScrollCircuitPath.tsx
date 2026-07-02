@@ -137,8 +137,8 @@ export const ScrollCircuitPath: React.FC<ScrollCircuitPathProps> = ({ activeSect
           <path
             d={pathD}
             fill="none"
-            stroke="rgba(255, 255, 255, 0.04)"
-            strokeWidth="2.5"
+            stroke="rgba(255, 255, 255, 0.16)" // increased from 0.04 to 0.16 for visibility
+            strokeWidth="2"
             strokeLinecap="round"
           />
         )}
@@ -149,7 +149,7 @@ export const ScrollCircuitPath: React.FC<ScrollCircuitPathProps> = ({ activeSect
             ref={pathRef}
             d={pathD}
             fill="none"
-            stroke="url(#circuit-fill-grad)"
+            stroke="var(--accent-color)" // direct variable binding to prevent gradient rendering issues
             strokeWidth="3.5"
             strokeLinecap="round"
             strokeDasharray={pathLength}
@@ -182,7 +182,7 @@ export const ScrollCircuitPath: React.FC<ScrollCircuitPathProps> = ({ activeSect
                 cy={node.y}
                 r={isActive ? "5" : "3.5"}
                 fill={isActive ? "var(--accent-color)" : "#0b0f19"}
-                stroke={isActive ? "#ffffff" : "rgba(255, 255, 255, 0.25)"}
+                stroke={isActive ? "#ffffff" : "rgba(255, 255, 255, 0.5)"} // increased from 0.25 to 0.5
                 strokeWidth="1.5"
                 className="transition-all duration-300 group-hover:stroke-[var(--accent-color)] group-hover:scale-125"
               />
