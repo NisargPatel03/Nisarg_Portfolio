@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { soundFX } from '../utils/terminalAudio';
+import { climateService, ClimateData } from '../utils/climateService';
 
 interface DiagnosticsHUDProps {
   enabled: boolean;
@@ -21,6 +22,45 @@ export const DiagnosticsHUD: React.FC<DiagnosticsHUDProps> = ({
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [scrollPos, setScrollPos] = useState(0);
   const [scrollPercent, setScrollPercent] = useState(0);
+
+  const [climate, setClimate] = useState<ClimateData | null>(null);
+  const [isManualOverride, setIsManualOverride] = useState(false);
+
+  useEffect(() => {
+    if (!enabled) return;
+    const unsubscribe = climateService.subscribe((data) => {
+      setClimate(data);
+    });
+    return unsubscribe;
+  }, [enabled]);
+
+  const handleToggleOverrideMode = () => {
+    const nextManual = !isManualOverride;
+    setIsManualOverride(nextManual);
+    if (!nextManual) {
+      climateService.setOverride(null);
+    } else if (climate) {
+      climateService.setOverride({ ...climate });
+    }
+  };
+
+  const handleSetWeatherOverride = (type: 'sunny' | 'rainy' | 'snowy') => {
+    if (!isManualOverride || !climate) return;
+    climateService.setOverride({
+      isSunny: type === 'sunny',
+      isRainy: type === 'rainy',
+      isSnowy: type === 'snowy',
+      conditionText: type === 'sunny' ? 'Clear Sky' : type === 'rainy' ? 'Rainy' : 'Snowy',
+      weatherCode: type === 'sunny' ? 0 : type === 'rainy' ? 63 : 73,
+    });
+  };
+
+  const handleToggleStealthOverride = () => {
+    if (!isManualOverride || !climate) return;
+    climateService.setOverride({
+      isNight: !climate.isNight,
+    });
+  };
   const [velocityDisplay, setVelocityDisplay] = useState(0);
   const [cpuLoad, setCpuLoad] = useState(12);
   const [memStatus, setMemStatus] = useState('OK');
@@ -320,6 +360,106 @@ export const DiagnosticsHUD: React.FC<DiagnosticsHUDProps> = ({
             {isMatrixActive ? 'OVERRIDE' : 'INACTIVE'}
           </span>
         </div>
+      </div>
+
+      {/* 5. Atmosphere Sync & Overrides */}
+      <div className="hud-panel-card flex flex-col gap-2 text-[9px] font-mono leading-relaxed border-t border-white/5 pt-2">
+        <div className="flex items-center justify-between text-[8px] text-[#D7E2EA]/40 tracking-wider uppercase mb-1">
+          <span>Atmosphere telemetry</span>
+          <button 
+            type="button"
+            onClick={handleToggleOverrideMode}
+            className={`px-1.5 py-0.5 rounded text-[8px] font-bold transition-all border ${
+              isManualOverride 
+                ? 'bg-amber-500/20 text-amber-400 border-amber-500/40' 
+                : 'bg-white/5 text-[#D7E2EA]/40 border-white/10 hover:bg-white/10 hover:text-white'
+            }`}
+          >
+            {isManualOverride ? 'MANUAL' : 'AUTO_SYNC'}
+          </button>
+        </div>
+
+        {climate && (
+          <div className="flex flex-col gap-1">
+            <div className="flex justify-between border-b border-white/[0.02] pb-0.5">
+              <span className="text-[#D7E2EA]/40">LOC:</span>
+              <span className="text-white/80 max-w-[120px] truncate" title={climate.locationName}>
+                {climate.locationName}
+              </span>
+            </div>
+            <div className="flex justify-between border-b border-white/[0.02] pb-0.5">
+              <span className="text-[#D7E2EA]/40">TEMP / COND:</span>
+              <span className="text-white/80">
+                {climate.temperature.toFixed(1)}°C / {climate.conditionText}
+              </span>
+            </div>
+            
+            {isManualOverride ? (
+              <div className="flex flex-col gap-1.5 mt-1 pt-1 border-t border-white/5">
+                <div className="flex justify-between items-center">
+                  <span className="text-amber-400/70 text-[8px]">SYS_FORCE:</span>
+                  <div className="flex gap-1">
+                    <button
+                      type="button"
+                      onClick={() => handleSetWeatherOverride('sunny')}
+                      className={`px-1 py-0.5 rounded text-[8px] ${
+                        climate.isSunny 
+                          ? 'bg-[var(--accent-color,#00ff41)]/20 text-[var(--accent-color,#00ff41)] font-bold' 
+                          : 'bg-white/5 text-white/50 hover:bg-white/10'
+                      }`}
+                    >
+                      SUN
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleSetWeatherOverride('rainy')}
+                      className={`px-1 py-0.5 rounded text-[8px] ${
+                        climate.isRainy 
+                          ? 'bg-cyan-500/20 text-cyan-400 font-bold' 
+                          : 'bg-white/5 text-white/50 hover:bg-white/10'
+                      }`}
+                    >
+                      RAIN
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleSetWeatherOverride('snowy')}
+                      className={`px-1 py-0.5 rounded text-[8px] ${
+                        climate.isSnowy 
+                          ? 'bg-blue-400/20 text-blue-300 font-bold' 
+                          : 'bg-white/5 text-white/50 hover:bg-white/10'
+                      }`}
+                    >
+                      SNOW
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <span className="text-amber-400/70 text-[8px]">STEALTH_MODE:</span>
+                  <button
+                    type="button"
+                    onClick={handleToggleStealthOverride}
+                    className={`px-2 py-0.5 rounded text-[8px] font-bold ${
+                      climate.isNight 
+                        ? 'bg-indigo-500/25 text-indigo-400 border border-indigo-500/40' 
+                        : 'bg-white/5 text-white/50 hover:bg-white/10 border border-transparent'
+                    }`}
+                  >
+                    {climate.isNight ? 'ACTIVE_NIGHT' : 'OFF_DAYLIGHT'}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex justify-between">
+                <span className="text-[#D7E2EA]/40">STEALTH_RADAR:</span>
+                <span className={climate.isNight ? 'text-indigo-400 font-bold' : 'text-[#D7E2EA]/30'}>
+                  {climate.isNight ? 'STEALTH_ON' : 'DEACTIVATED'}
+                </span>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Hidden Sonar Telemetry log */}

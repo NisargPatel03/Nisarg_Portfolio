@@ -9,6 +9,8 @@ class TerminalSoundFX {
   private filterNode: BiquadFilterNode | null = null;
   private preloaderHumNode: OscillatorNode | null = null;
   private preloaderHumGain: GainNode | null = null;
+  private stealthModeActive = false;
+  private stealthIntervalId: any = null;
   constructor() {
     if (typeof window !== 'undefined') {
       const resumeAudio = () => {
@@ -595,6 +597,91 @@ class TerminalSoundFX {
       osc2.stop(now + 1.4);
     } catch (e) {
       console.warn('Error playing sonar ping sound:', e);
+    }
+  }
+
+  public setStealthMode(active: boolean) {
+    if (this.stealthModeActive === active) return;
+    this.stealthModeActive = active;
+
+    if (active) {
+      this.playStealthRadarPing();
+      this.scheduleNextStealthPing();
+    } else {
+      if (this.stealthIntervalId) {
+        clearTimeout(this.stealthIntervalId);
+        this.stealthIntervalId = null;
+      }
+    }
+  }
+
+  private scheduleNextStealthPing() {
+    if (this.stealthIntervalId) clearTimeout(this.stealthIntervalId);
+    if (!this.stealthModeActive) return;
+
+    const delay = 10000 + Math.random() * 8000; // 10s to 18s
+    this.stealthIntervalId = setTimeout(() => {
+      this.playStealthRadarPing();
+      this.scheduleNextStealthPing();
+    }, delay);
+  }
+
+  public playStealthRadarPing() {
+    this.init();
+    if (!this.ctx) return;
+    if (this.ctx.state === 'suspended') {
+      this.ctx.resume();
+    }
+
+    try {
+      const now = this.ctx.currentTime;
+      const oscLow = this.ctx.createOscillator();
+      const oscHigh = this.ctx.createOscillator();
+      const gainLow = this.ctx.createGain();
+      const gainHigh = this.ctx.createGain();
+
+      // Deep submarine sonar sound (frequency decay 130Hz -> 65Hz)
+      oscLow.type = 'sine';
+      oscLow.frequency.setValueAtTime(130, now);
+      oscLow.frequency.exponentialRampToValueAtTime(65, now + 3.5);
+
+      gainLow.gain.setValueAtTime(0.012, now); // Very quiet ambient sound
+      gainLow.gain.exponentialRampToValueAtTime(0.0001, now + 3.5);
+
+      // High metallic ping resonance (frequency decay 2200Hz -> 1000Hz)
+      oscHigh.type = 'sine';
+      oscHigh.frequency.setValueAtTime(2200, now);
+      oscHigh.frequency.exponentialRampToValueAtTime(1000, now + 0.15);
+
+      gainHigh.gain.setValueAtTime(0.003, now); // extremely faint metallic strike
+      gainHigh.gain.exponentialRampToValueAtTime(0.0001, now + 0.15);
+
+      // Add a random stereo pan to make it sound spatial and organic
+      let dest: AudioNode = this.analyser || this.ctx.destination;
+      if (this.ctx.createStereoPanner) {
+        try {
+          const panner = this.ctx.createStereoPanner();
+          const randomPan = (Math.random() * 2) - 1;
+          panner.pan.setValueAtTime(randomPan, now);
+          panner.connect(dest);
+          dest = panner;
+        } catch (e) {
+          // ignore panner failure
+        }
+      }
+
+      oscLow.connect(gainLow);
+      gainLow.connect(dest);
+
+      oscHigh.connect(gainHigh);
+      gainHigh.connect(dest);
+
+      oscLow.start(now);
+      oscLow.stop(now + 3.5);
+      oscHigh.start(now);
+      oscHigh.stop(now + 0.2);
+    } catch (e) {
+      console.warn('Error playing stealth radar ping:', e);
     }
   }
 }

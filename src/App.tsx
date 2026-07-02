@@ -16,6 +16,7 @@ import { soundFX } from './utils/terminalAudio';
 import { DiagnosticsHUD } from './components/DiagnosticsHUD';
 import { useRef } from 'react';
 import { LiquidGlassCanvas } from './components/LiquidGlassCanvas';
+import { climateService } from './utils/climateService';
 import { CyberGrid } from './components/CyberGrid';
 import { BiometricAuthScreen } from './components/BiometricAuthScreen';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -53,6 +54,23 @@ function App() {
   const [isBlueprintMode, setIsBlueprintMode] = useState(false);
   const [isDrawingComplete, setIsDrawingComplete] = useState(false);
   const [isGlShaderActive, setIsGlShaderActive] = useState(false);
+  const [isStealthMode, setIsStealthMode] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = climateService.subscribe((data) => {
+      setIsStealthMode(data.isNight);
+    });
+    return unsubscribe;
+  }, []);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (isStealthMode) {
+      root.classList.add('stealth-mode-active');
+    } else {
+      root.classList.remove('stealth-mode-active');
+    }
+  }, [isStealthMode]);
 
   useEffect(() => {
     const drawingTimer = setTimeout(() => {

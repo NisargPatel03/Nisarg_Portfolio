@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { soundFX } from '../utils/terminalAudio';
+import { climateService } from '../utils/climateService';
 
 interface LiquidGlassCanvasProps {
   activeTheme: 'project' | 'toxic-radar' | 'vapor-matrix' | 'amber-console' | 'blueprint-arctic';
@@ -39,6 +40,11 @@ uniform float u_warp_progress;
 uniform float u_audio_intensity;
 uniform float u_matrix_active;
 
+uniform float u_rain_intensity;
+uniform float u_snow_intensity;
+uniform float u_solar_flare;
+uniform float u_night_dim;
+
 // Ripple queue
 uniform vec2 u_ripple_pos[6];
 uniform float u_ripple_time[6];
@@ -51,26 +57,9 @@ void main() {
   
   // 1. Calculate refraction displacement
   vec2 displacement = vec2(0.0);
-  
-  // Aspect ratio correction
   float aspect = u_resolution.x / u_resolution.y;
   
-  // A. Mouse magnifying glass lens
-  vec2 mouse_uv = u_mouse / u_resolution;
-  vec2 to_mouse = uv - mouse_uv;
-  to_mouse.x *= aspect;
-  float dist_to_mouse = length(to_mouse);
-  
-  /*
-  float lens_radius = 0.18;
-  if (dist_to_mouse < lens_radius) {
-    float lens_factor = smoothstep(lens_radius, 0.0, dist_to_mouse);
-    float refract_strength = sin(lens_factor * 3.14159) * 0.025;
-    displacement += normalize(to_mouse) * refract_strength;
-  }
-  */
-  
-  // B. Speed-induced wave ripples
+  // A. Speed-induced wave ripples
   for (int i = 0; i < 6; i++) {
     float age = u_time - u_ripple_time[i];
     if (age > 0.0 && age < 1.8) {
@@ -89,17 +78,60 @@ void main() {
       }
     }
   }
+
+  // B. Rain displacement (sliding droplets + ripples)
+  if (u_rain_intensity > 0.0) {
+    vec2 aspect_vec = vec2(aspect, 1.0);
+    
+    // 1. Sliding droplets
+    vec2 st = uv * aspect_vec * 3.5;
+    st.y += u_time * 0.8;
+    vec2 ipos = floor(st);
+    vec2 fpos = fract(st);
+    float rand = fract(sin(dot(ipos, vec2(127.1, 311.7))) * 43758.5453);
+    float dropTime = u_time * (0.6 + rand * 0.4) + rand * 6.28;
+    float dropY = fract(dropTime);
+    vec2 dropPos = vec2(0.5 + (rand - 0.5) * 0.4, 1.0 - dropY);
+    vec2 diff = fpos - dropPos;
+    diff.x *= aspect;
+    float dist = length(diff);
+    if (dist < 0.07) {
+      float force = smoothstep(0.07, 0.0, dist);
+      displacement += normalize(diff) * force * 0.025 * u_rain_intensity;
+    }
+    
+    // trail lines
+    float trail = smoothstep(0.03, 0.0, abs(fpos.x - dropPos.x)) * step(fpos.y, dropPos.y) * step(dropPos.y - 0.25, fpos.y);
+    if (trail > 0.0) {
+      displacement.x += sin(fpos.y * 30.0 + u_time * 5.0) * 0.003 * trail * u_rain_intensity;
+    }
+
+    // 2. Expanding ripples
+    vec2 rst = uv * aspect_vec * 5.0;
+    vec2 ripos = floor(rst);
+    vec2 rfpos = fract(rst);
+    float rrand = fract(sin(dot(ripos, vec2(93.1, 117.7))) * 43758.5453);
+    float rippleTime = u_time * (0.35 + rrand * 0.25) + rrand * 10.0;
+    float rage = fract(rippleTime);
+    float rradius = rage * 0.35;
+    vec2 rcenter = vec2(0.5 + (rrand - 0.5) * 0.5, 0.5 + (fract(rrand * 7.0) - 0.5) * 0.5);
+    vec2 rdiff = rfpos - rcenter;
+    rdiff.x *= aspect;
+    float rdist = length(rdiff);
+    if (rdist < rradius && rdist > rradius - 0.06) {
+      float redge = smoothstep(rradius - 0.06, rradius - 0.03, rdist) * smoothstep(rradius, rradius - 0.03, rdist);
+      float rwave = sin((rdist - rradius) * 40.0) * redge * exp(-rage * 2.0) * 0.015 * u_rain_intensity;
+      displacement += normalize(rdiff) * rwave;
+    }
+  }
   
   vec2 displaced_uv = uv + displacement;
   
   // 2. Draw Grid Pattern
   vec2 grid_uv = displaced_uv;
   grid_uv.x *= aspect;
-  
-  // Apply scrolling parallax offset
   grid_uv.y += u_scroll_offset * 0.00015;
   
-  // 3D perspective warp
   if (u_warp_progress > 0.0) {
     grid_uv.x -= aspect * 0.5;
     float z = 1.0 + grid_uv.y * 1.5 * u_warp_progress;
@@ -108,7 +140,6 @@ void main() {
     grid_uv.y += u_scroll_offset * 0.0002 * u_warp_progress;
   }
   
-  // Anti-aliased grid lines drawing
   float grid_scale = 12.0;
   grid_scale *= (1.0 - u_audio_intensity * 0.04);
   
@@ -117,32 +148,71 @@ void main() {
   float thickness = 1.2 + u_audio_intensity * 1.2;
   float grid_strength = 1.0 - min(line / thickness, 1.0);
   
-  // Soft border vignette
   float edge_fade = smoothstep(0.0, 0.15, uv.x) * smoothstep(1.0, 0.85, uv.x) *
                     smoothstep(0.0, 0.15, uv.y) * smoothstep(1.0, 0.85, uv.y);
   
-  vec3 grid_color = u_theme_color * grid_strength * (0.07 + u_audio_intensity * 0.08) * edge_fade;
+  float night_mult = 1.0 - u_night_dim * 0.55;
+  vec3 grid_color = u_theme_color * grid_strength * (0.07 + u_audio_intensity * 0.08) * edge_fade * night_mult;
   
-  // 3. Sample distorted Matrix Rain texture
   vec3 final_color = grid_color;
+  
+  // 3. Sample Distorted Matrix Rain
   if (u_matrix_active > 0.0) {
     vec4 rain = texture(u_matrix_tex, displaced_uv);
     vec3 rain_tinted = rain.rgb;
-    // If not default green matrix color, color-blend to match current active theme
     if (u_theme_color != vec3(0.0, 1.0, 0.25)) {
       float luminance = dot(rain.rgb, vec3(0.299, 0.587, 0.114));
       rain_tinted = u_theme_color * luminance * 1.5;
     }
-    final_color += rain_tinted * 0.22;
+    final_color += rain_tinted * 0.22 * night_mult;
+  }
+
+  // 4. Snowy Particles
+  if (u_snow_intensity > 0.0) {
+    vec2 aspect_vec = vec2(aspect, 1.0);
+    vec2 st_snow = uv * aspect_vec;
+    st_snow.x += u_time * 0.04;
+    st_snow.y += u_time * 0.12;
+    
+    // Layer 1
+    vec2 grid1 = st_snow * 12.0;
+    vec2 ipos1 = floor(grid1);
+    vec2 fpos1 = fract(grid1);
+    float r1 = fract(sin(dot(ipos1, vec2(12.9898, 78.233))) * 43758.5453);
+    float flake1 = 0.0;
+    if (r1 > 0.94) {
+      vec2 center = vec2(0.5 + 0.35 * sin(u_time + r1 * 6.28), 0.5 + 0.35 * cos(u_time * 0.5 + r1 * 6.28));
+      flake1 = smoothstep(0.05, 0.0, length(fpos1 - center));
+    }
+    
+    // Layer 2
+    vec2 grid2 = st_snow * 7.0;
+    vec2 ipos2 = floor(grid2);
+    vec2 fpos2 = fract(grid2);
+    float r2 = fract(sin(dot(ipos2, vec2(37.9898, 48.233))) * 43758.5453);
+    float flake2 = 0.0;
+    if (r2 > 0.91) {
+      vec2 center = vec2(0.5 + 0.35 * sin(u_time * 0.7 + r2 * 6.28), 0.5 + 0.35 * cos(u_time * 0.35 + r2 * 6.28));
+      flake2 = smoothstep(0.08, 0.0, length(fpos2 - center));
+    }
+    
+    float snow_val = (flake1 * 0.3 + flake2 * 0.5) * u_snow_intensity;
+    final_color += vec3(0.9, 0.95, 1.0) * snow_val * 0.5;
+  }
+
+  // 5. Solar Flare Overlay
+  if (u_solar_flare > 0.0) {
+    float f = sin(uv.x * 2.0 + u_time * 0.3) * cos(uv.y * 1.5 - u_time * 0.2);
+    f = f * 0.5 + 0.5;
+    vec3 warmColor = vec3(1.0, 0.45, 0.08);
+    float gradient = smoothstep(1.3, 0.15, uv.y) * 0.12 * u_solar_flare;
+    final_color += warmColor * f * gradient * edge_fade;
   }
   
-  // 4. Subtle ambient backlight glow centered on mouse
-  /*
-  float cursor_glow = smoothstep(0.25, 0.0, dist_to_mouse);
-  final_color += u_theme_color * cursor_glow * 0.08;
-  */
+  float baseline_alpha = 0.20 + u_audio_intensity * 0.10;
+  float alpha = baseline_alpha * night_mult;
   
-  outColor = vec4(final_color, 0.20 + u_audio_intensity * 0.10);
+  outColor = vec4(final_color, alpha);
 }
 `;
 
@@ -160,6 +230,35 @@ export const LiquidGlassCanvas: React.FC<LiquidGlassCanvasProps> = ({
   const rippleIndexRef = useRef(0);
   const isWarpingRef = useRef(false);
   const warpProgressRef = useRef(0);
+
+  const climateRef = useRef({
+    isNight: false,
+    isRainy: false,
+    isSnowy: false,
+    isSunny: false,
+  });
+
+  const currentRain = useRef(0);
+  const currentSnow = useRef(0);
+  const currentSolar = useRef(0);
+  const currentNight = useRef(0);
+
+  useEffect(() => {
+    const unsubscribe = climateService.subscribe((data) => {
+      climateRef.current = {
+        isNight: data.isNight,
+        isRainy: data.isRainy,
+        isSnowy: data.isSnowy,
+        isSunny: data.isSunny,
+      };
+      // Synchronize stealth mode sound loop
+      soundFX.setStealthMode(data.isNight);
+    });
+    return () => {
+      unsubscribe();
+      soundFX.setStealthMode(false);
+    };
+  }, []);
 
   // Convert theme name to normalized float RGB values
   const getThemeColor = () => {
@@ -293,6 +392,12 @@ export const LiquidGlassCanvas: React.FC<LiquidGlassCanvasProps> = ({
     const uAudioLoc = gl.getUniformLocation(program, 'u_audio_intensity');
     const uMatrixActiveLoc = gl.getUniformLocation(program, 'u_matrix_active');
     const uMatrixTexLoc = gl.getUniformLocation(program, 'u_matrix_tex');
+
+    // Climate Uniforms
+    const uRainLoc = gl.getUniformLocation(program, 'u_rain_intensity');
+    const uSnowLoc = gl.getUniformLocation(program, 'u_snow_intensity');
+    const uSolarLoc = gl.getUniformLocation(program, 'u_solar_flare');
+    const uNightLoc = gl.getUniformLocation(program, 'u_night_dim');
 
     // Ripple locations lookup
     const uRipplePosLocs = Array.from({ length: 6 }, (_, i) =>
@@ -445,6 +550,22 @@ export const LiquidGlassCanvas: React.FC<LiquidGlassCanvasProps> = ({
         gl.uniform1f(uRippleTimeLocs[i], ripple.time);
         gl.uniform1f(uRippleIntensLocs[i], ripple.intensity);
       }
+
+      // Interpolate climate uniform variables smoothly
+      const targetRain = climateRef.current.isRainy ? 1.0 : 0.0;
+      const targetSnow = climateRef.current.isSnowy ? 1.0 : 0.0;
+      const targetSolar = climateRef.current.isSunny ? 1.0 : 0.0;
+      const targetNight = climateRef.current.isNight ? 1.0 : 0.0;
+
+      currentRain.current += (targetRain - currentRain.current) * 0.02;
+      currentSnow.current += (targetSnow - currentSnow.current) * 0.02;
+      currentSolar.current += (targetSolar - currentSolar.current) * 0.02;
+      currentNight.current += (targetNight - currentNight.current) * 0.02;
+
+      gl.uniform1f(uRainLoc, currentRain.current);
+      gl.uniform1f(uSnowLoc, currentSnow.current);
+      gl.uniform1f(uSolarLoc, currentSolar.current);
+      gl.uniform1f(uNightLoc, currentNight.current);
 
       // Draw quad
       gl.drawArrays(gl.TRIANGLES, 0, 6);

@@ -1032,6 +1032,43 @@ h1, h2, h3, h4, h5, h6, button, nav a, .nav-link, .card-title {
   text-shadow: 0 0 8px rgba(0, 0, 0, 0.25) !important;
 }
 
+/* Deep Sleep Radar Stealth Mode Atmospheric Styling */
+html.stealth-mode-active {
+  filter: brightness(0.82) contrast(1.05);
+  transition: filter 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html.stealth-mode-active body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background: radial-gradient(circle, transparent 35%, rgba(0, 5, 12, 0.45) 100%);
+  mix-blend-mode: multiply;
+  transition: opacity 1.5s ease-in-out;
+}
+
+/* Add custom diagnostic blinking radar-stealth indicator when active */
+html.stealth-mode-active .diagnostics-hud-container::before {
+  content: 'STEALTH_RADAR_LOCK';
+  position: absolute;
+  top: -16px;
+  left: 10px;
+  font-size: 8px;
+  font-family: monospace;
+  color: #ff9900;
+  text-shadow: 0 0 6px rgba(255, 153, 0, 0.5);
+  letter-spacing: 1px;
+  animation: stealth-blink 2s infinite ease-in-out;
+}
+
+@keyframes stealth-blink {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+
 
 
 
