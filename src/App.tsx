@@ -28,6 +28,7 @@ import { Preloader } from './components/Preloader';
 import { KatanaWipe } from './components/KatanaWipe';
 import { SonarScanner } from './components/SonarScanner';
 import { FallbackWeatherOverlay } from './components/FallbackWeatherOverlay';
+import { ScrollCircuitPath } from './components/ScrollCircuitPath';
 
 
 const SECTIONS = [
@@ -444,6 +445,9 @@ function App() {
 
           {/* Sonar Ping Space Scanner Overlay */}
           <SonarScanner />
+
+          {/* Scroll-Driven Dynamic SVG Circuit Path */}
+          <ScrollCircuitPath activeSection={activeSection} />
 
           {/* Real-time Diagnostics HUD sidebar */}
           <DiagnosticsHUD 
