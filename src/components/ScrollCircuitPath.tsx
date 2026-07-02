@@ -10,9 +10,43 @@ export const ScrollCircuitPath: React.FC<ScrollCircuitPathProps> = ({ activeSect
   const [dimensions, setDimensions] = useState({ width: 80, height: 800 });
   const [pathLength, setPathLength] = useState(0);
   const [beadPos, setBeadPos] = useState({ x: 40, y: 50 });
+  const [isLightTheme, setIsLightTheme] = useState(false);
 
   const pathRef = useRef<SVGPathElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
+
+  // Monitor background brightness to support light themes automatically
+  useEffect(() => {
+    const checkTheme = () => {
+      const bg = getComputedStyle(document.body).backgroundColor;
+      if (bg) {
+        const rgbValues = bg.match(/\d+/g);
+        if (rgbValues && rgbValues.length >= 3) {
+          const r = parseInt(rgbValues[0], 10);
+          const g = parseInt(rgbValues[1], 10);
+          const b = parseInt(rgbValues[2], 10);
+          // Calculate perceived brightness (standard formula)
+          const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+          setIsLightTheme(brightness > 128);
+          return;
+        }
+      }
+      setIsLightTheme(false);
+    };
+
+    checkTheme();
+
+    // Set up a MutationObserver to detect theme or style shifts on the document
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'style'] });
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class', 'style'] });
+
+    window.addEventListener('resize', checkTheme);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', checkTheme);
+    };
+  }, []);
 
   // Resize listener to adapt SVG coordinates to viewport height
   useEffect(() => {
@@ -64,7 +98,7 @@ export const ScrollCircuitPath: React.FC<ScrollCircuitPathProps> = ({ activeSect
   // Calculate coordinates for nodes
   for (let i = 0; i < sectionLabels.length; i++) {
     const y = startY + (i * (endY - startY)) / (sectionLabels.length - 1);
-    // Alternate left/right wave displacement around the horizontal center line (x=30)
+    // Alternate left/right wave displacement around the horizontal center line (x=32)
     const x = 32 + (i % 2 === 0 ? 15 : -15);
     nodes.push({ x, y, label: sectionLabels[i].label, sectionId: sectionLabels[i].id });
   }
@@ -109,6 +143,14 @@ export const ScrollCircuitPath: React.FC<ScrollCircuitPathProps> = ({ activeSect
     }
   };
 
+  // SVG color definitions depending on light or dark background
+  const trackStroke = isLightTheme ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.16)';
+  const inactiveNodeFill = isLightTheme ? '#ffffff' : '#0b0f19';
+  const inactiveNodeStroke = isLightTheme ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.5)';
+  const inactiveTextFill = isLightTheme ? 'rgba(0, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.4)';
+  const activeTextFill = 'var(--accent-color, #00f3ff)';
+  const beadCenterFill = isLightTheme ? '#0b0f19' : '#ffffff';
+
   return (
     <div
       ref={containerRef}
@@ -124,12 +166,6 @@ export const ScrollCircuitPath: React.FC<ScrollCircuitPathProps> = ({ activeSect
               <feMergeNode in="SourceGraphic"/>
             </feMerge>
           </filter>
-          
-          {/* Active fill gradient */}
-          <linearGradient id="circuit-fill-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="var(--accent-color)" stopOpacity="0.8" />
-            <stop offset="100%" stopColor="var(--accent-color)" stopOpacity="1" />
-          </linearGradient>
         </defs>
 
         {/* Background track path */}
@@ -137,7 +173,7 @@ export const ScrollCircuitPath: React.FC<ScrollCircuitPathProps> = ({ activeSect
           <path
             d={pathD}
             fill="none"
-            stroke="rgba(255, 255, 255, 0.16)" // increased from 0.04 to 0.16 for visibility
+            stroke={trackStroke}
             strokeWidth="2"
             strokeLinecap="round"
           />
@@ -149,7 +185,7 @@ export const ScrollCircuitPath: React.FC<ScrollCircuitPathProps> = ({ activeSect
             ref={pathRef}
             d={pathD}
             fill="none"
-            stroke="var(--accent-color)" // direct variable binding to prevent gradient rendering issues
+            stroke="var(--accent-color, #00f3ff)" // variable binding with cyan fallback
             strokeWidth="3.5"
             strokeLinecap="round"
             strokeDasharray={pathLength}
@@ -171,7 +207,7 @@ export const ScrollCircuitPath: React.FC<ScrollCircuitPathProps> = ({ activeSect
                   cy={node.y}
                   r="9"
                   fill="none"
-                  stroke="var(--accent-color)"
+                  stroke="var(--accent-color, #00f3ff)"
                   strokeWidth="1"
                   className="animate-ping opacity-60"
                 />
@@ -181,21 +217,22 @@ export const ScrollCircuitPath: React.FC<ScrollCircuitPathProps> = ({ activeSect
                 cx={node.x}
                 cy={node.y}
                 r={isActive ? "5" : "3.5"}
-                fill={isActive ? "var(--accent-color)" : "#0b0f19"}
-                stroke={isActive ? "#ffffff" : "rgba(255, 255, 255, 0.5)"} // increased from 0.25 to 0.5
+                fill={isActive ? "var(--accent-color, #00f3ff)" : inactiveNodeFill}
+                stroke={isActive ? "var(--accent-color, #00f3ff)" : inactiveNodeStroke}
                 strokeWidth="1.5"
-                className="transition-all duration-300 group-hover:stroke-[var(--accent-color)] group-hover:scale-125"
+                className="transition-all duration-300 group-hover:scale-125"
               />
               
               {/* Side tooltip text */}
               <text
                 x={node.x + 14}
                 y={node.y + 3.5}
-                className={`font-mono text-[8px] tracking-widest font-semibold transition-all duration-300 fill-white/40 group-hover:fill-white group-hover:opacity-100 ${
-                  isActive ? 'fill-[var(--accent-color)] translate-x-1 opacity-100' : 'opacity-0'
+                fill={isActive ? activeTextFill : inactiveTextFill}
+                className={`font-mono text-[8px] tracking-widest font-semibold transition-all duration-300 group-hover:opacity-100 ${
+                  isActive ? 'translate-x-1 opacity-100' : 'opacity-0'
                 }`}
                 style={{
-                  textShadow: isActive ? '0 0 8px var(--accent-glow)' : 'none',
+                  textShadow: isActive ? '0 0 8px var(--accent-glow, rgba(0, 243, 255, 0.4))' : 'none',
                 }}
               >
                 {node.label}
@@ -213,7 +250,7 @@ export const ScrollCircuitPath: React.FC<ScrollCircuitPathProps> = ({ activeSect
               cy={beadPos.y}
               r="7"
               fill="none"
-              stroke="var(--accent-color)"
+              stroke="var(--accent-color, #00f3ff)"
               strokeWidth="1.5"
               filter="url(#circuit-neon-glow)"
               className="animate-pulse"
@@ -223,16 +260,17 @@ export const ScrollCircuitPath: React.FC<ScrollCircuitPathProps> = ({ activeSect
               cx={beadPos.x}
               cy={beadPos.y}
               r="3.5"
-              fill="#ffffff"
+              fill={beadCenterFill}
               filter="url(#circuit-neon-glow)"
             />
             {/* Realtime percentage telemetry display */}
             <text
               x={beadPos.x - 52}
               y={beadPos.y + 3.5}
-              className="font-mono text-[7px] font-bold tracking-widest fill-[var(--accent-color)]"
+              fill="var(--accent-color, #00f3ff)"
+              className="font-mono text-[7px] font-bold tracking-widest"
               style={{
-                textShadow: '0 0 5px var(--accent-glow)',
+                textShadow: '0 0 5px var(--accent-glow, rgba(0, 243, 255, 0.4))',
               }}
             >
               {`VAL:[${Math.round(scrollProgress * 100)}%]`}
