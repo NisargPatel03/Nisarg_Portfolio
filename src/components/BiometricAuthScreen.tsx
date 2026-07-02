@@ -48,6 +48,7 @@ export const BiometricAuthScreen: React.FC<BiometricAuthScreenProps> = ({
   const [isErrorShake, setIsErrorShake] = useState(false);
 
   const hintIntervalRef = useRef<any>(null);
+  const activePathRef = useRef<number[]>([]);
 
   const [sysSpecs, setSysSpecs] = useState({
     ip: '192.168.1.72',
@@ -139,6 +140,7 @@ export const BiometricAuthScreen: React.FC<BiometricAuthScreenProps> = ({
     if (isHintPlaying || isUnlocked || isErrorShake) return;
     e.preventDefault();
     setIsDrawing(true);
+    activePathRef.current = [nodeId];
     setActivePath([nodeId]);
     soundFX.playClick();
     
@@ -151,17 +153,34 @@ export const BiometricAuthScreen: React.FC<BiometricAuthScreenProps> = ({
   const handleSvgPointerMove = (e: React.PointerEvent<SVGSVGElement>) => {
     if (!isDrawing || isHintPlaying || isUnlocked || isErrorShake) return;
     const rect = e.currentTarget.getBoundingClientRect();
-    const px = e.clientX - rect.left;
-    const py = e.clientY - rect.top;
+    const px = ((e.clientX - rect.left) / rect.width) * 240;
+    const py = ((e.clientY - rect.top) / rect.height) * 240;
     setPointerPos({ x: px, y: py });
+
+    // Check if pointer is near any node to automatically connect it (touch drag support)
+    for (const node of NODES) {
+      const dx = px - node.x;
+      const dy = py - node.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 28) {
+        if (!activePathRef.current.includes(node.id)) {
+          activePathRef.current.push(node.id);
+          setActivePath([...activePathRef.current]);
+          soundFX.playClick();
+          setLogs((prev) => [...prev, `RUNE_${RUNES[node.id]} CONNECTED [INDEX_${node.id}]`]);
+        }
+        break;
+      }
+    }
   };
 
-  // Node hover handler (pointer enter) to connect nodes
+  // Node hover handler (pointer enter) to connect nodes (keeps mouse fallback fully working)
   const handleNodePointerEnter = (nodeId: number) => {
     if (!isDrawing || isHintPlaying || isUnlocked || isErrorShake) return;
-    if (activePath.includes(nodeId)) return; // Prevent duplicate node connections
+    if (activePathRef.current.includes(nodeId)) return; // Prevent duplicate node connections
     
-    setActivePath((prev) => [...prev, nodeId]);
+    activePathRef.current.push(nodeId);
+    setActivePath([...activePathRef.current]);
     soundFX.playClick();
     setLogs((prev) => [...prev, `RUNE_${RUNES[nodeId]} CONNECTED [INDEX_${nodeId}]`]);
   };
@@ -172,9 +191,11 @@ export const BiometricAuthScreen: React.FC<BiometricAuthScreenProps> = ({
     setIsDrawing(false);
     setPointerPos(null);
 
+    const currentPath = activePathRef.current;
+
     // Validate path length and sequence
-    const isValid = activePath.length === TARGET_SEQUENCE.length && 
-                    activePath.every((val, index) => val === TARGET_SEQUENCE[index]);
+    const isValid = currentPath.length === TARGET_SEQUENCE.length && 
+                    currentPath.every((val, index) => val === TARGET_SEQUENCE[index]);
 
     if (isValid) {
       setIsUnlocked(true);
@@ -198,10 +219,11 @@ export const BiometricAuthScreen: React.FC<BiometricAuthScreenProps> = ({
         onUnlock();
       }, 2400);
     } else {
-      if (activePath.length > 0) {
+      if (currentPath.length > 0) {
         soundFX.playError();
         setIsErrorShake(true);
         setLogs((prev) => [...prev, 'ACCESS DENIED: INCORRECT GLYPH SEQUENCE LOCK.']);
+        activePathRef.current = [];
         setActivePath([]);
         
         setTimeout(() => {
@@ -235,6 +257,7 @@ export const BiometricAuthScreen: React.FC<BiometricAuthScreenProps> = ({
       exit={{ opacity: 0, y: -40 }}
       transition={{ duration: 0.8, ease: 'easeInOut' }}
       data-lenis-prevent
+      onPointerUp={handlePointerUp}
       className="fixed inset-0 z-[9999] transition-all duration-500 font-mono overflow-y-auto bg-scanlines select-none bg-[#030603] text-[#00ff41]"
     >
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#00ff41_1px,transparent_1px),linear-gradient(to_bottom,#00ff41_1px,transparent_1px)] bg-[size:32px_32px] opacity-[0.03] z-0 pointer-events-none" />
