@@ -148,7 +148,7 @@ export const ScrollCircuitPath: React.FC<ScrollCircuitPathProps> = ({ activeSect
   const inactiveNodeFill = isLightTheme ? '#ffffff' : '#0b0f19';
   const inactiveNodeStroke = isLightTheme ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.5)';
   const inactiveTextFill = isLightTheme ? 'rgba(0, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.4)';
-  const activeTextFill = 'var(--accent-color, #00f3ff)';
+  const activeTextFill = isLightTheme ? '#005577' : 'var(--accent-color, #00f3ff)';
   const beadCenterFill = isLightTheme ? '#0b0f19' : '#ffffff';
 
   return (
@@ -232,7 +232,7 @@ export const ScrollCircuitPath: React.FC<ScrollCircuitPathProps> = ({ activeSect
                   isActive ? 'translate-x-1 opacity-100' : 'opacity-0'
                 }`}
                 style={{
-                  textShadow: isActive ? '0 0 8px var(--accent-glow, rgba(0, 243, 255, 0.4))' : 'none',
+                  textShadow: isActive && !isLightTheme ? '0 0 8px var(--accent-glow, rgba(0, 243, 255, 0.4))' : 'none',
                 }}
               >
                 {node.label}
@@ -267,10 +267,10 @@ export const ScrollCircuitPath: React.FC<ScrollCircuitPathProps> = ({ activeSect
             <text
               x={beadPos.x - 52}
               y={beadPos.y + 3.5}
-              fill="var(--accent-color, #00f3ff)"
+              fill={activeTextFill}
               className="font-mono text-[7px] font-bold tracking-widest"
               style={{
-                textShadow: '0 0 5px var(--accent-glow, rgba(0, 243, 255, 0.4))',
+                textShadow: isActive && !isLightTheme ? '0 0 5px var(--accent-glow, rgba(0, 243, 255, 0.4))' : 'none',
               }}
             >
               {`VAL:[${Math.round(scrollProgress * 100)}%]`}
