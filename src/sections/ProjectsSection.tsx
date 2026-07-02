@@ -6,7 +6,7 @@ import {
   type TerminalProject,
 } from '../data/projectsTerminal';
 import { soundFX } from '../utils/terminalAudio';
-import { GlitchHeader } from '../components/GlitchHeader';
+import { DrawSectionHeader } from '../components/DrawSectionHeader';
 import './projects-terminal.css';
 
 const CMD_SPEED = 20;
@@ -335,7 +335,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ activeTheme, s
     >
       <div className="projects-terminal-heading w-full">
         <span className="mb-4 block">Featured Repositories</span>
-        <GlitchHeader text="Projects" />
+        <DrawSectionHeader text="Projects" />
       </div>
 
       <div id="terminal-wrap" className="projects-terminal-sticky">

@@ -4,7 +4,7 @@ import { AnimatedText } from '../components/AnimatedText';
 import { ContactButton } from '../components/ContactButton';
 import { Award, Code, BookOpen, Star } from 'lucide-react';
 import { TiltCard } from '../components/TiltCard';
-import { GlitchHeader } from '../components/GlitchHeader';
+import { DrawSectionHeader } from '../components/DrawSectionHeader';
 
 
 export const AboutSection: React.FC = () => {
@@ -65,7 +65,7 @@ export const AboutSection: React.FC = () => {
 
       {/* 2. SECTION HEADING */}
       <FadeIn y={40} delay={0} duration={0.8} className="z-20 text-center w-full">
-        <GlitchHeader text="About me" />
+        <DrawSectionHeader text="About me" />
       </FadeIn>
 
       {/* 3. CORE SCROLL-DRIVEN BIO TEXT */}

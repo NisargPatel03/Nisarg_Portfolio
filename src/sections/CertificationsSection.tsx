@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FadeIn } from '../components/FadeIn';
 import { Award, ShieldCheck, Database, Cpu, BookOpen, Trophy, BadgePercent, GraduationCap, FileText, ExternalLink } from 'lucide-react';
-import { GlitchHeader } from '../components/GlitchHeader';
+import { DrawSectionHeader } from '../components/DrawSectionHeader';
 
 interface Certification {
   title: string;
@@ -179,7 +179,7 @@ export const CertificationsSection: React.FC = () => {
           <span className="text-[#7621B0] uppercase font-bold tracking-widest text-xs sm:text-sm mb-4 block">
             Validated Accolades
           </span>
-          <GlitchHeader text="Certifications" />
+          <DrawSectionHeader text="Certifications" />
         </FadeIn>
 
         {/* 2. CATEGORY TABS FILTERS */}

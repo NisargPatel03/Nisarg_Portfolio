@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { FadeIn } from '../components/FadeIn';
 import { Briefcase, GraduationCap, Trophy, CheckCircle2 } from 'lucide-react';
-import { GlitchHeader } from '../components/GlitchHeader';
+import { DrawSectionHeader } from '../components/DrawSectionHeader';
 
 interface TimelineItem {
   id: number;
@@ -75,7 +75,7 @@ export const WorkExperience: React.FC = () => {
         <span className="text-[#B600A8] uppercase font-bold tracking-widest text-xs sm:text-sm mb-4 block">
           My Professional Path
         </span>
-        <GlitchHeader text="Work Experience" />
+        <DrawSectionHeader text="Work Experience" />
       </FadeIn>
 
       {/* 2. TIMELINE CONTAINER */}

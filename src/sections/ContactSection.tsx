@@ -3,7 +3,7 @@ import { FadeIn } from '../components/FadeIn';
 import { Mail, Phone, MapPin, Send, CheckCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { EmergencyButton } from '../components/EmergencyButton';
-import { GlitchHeader } from '../components/GlitchHeader';
+import { DrawSectionHeader } from '../components/DrawSectionHeader';
 
 export const ContactSection: React.FC = () => {
   const [formState, setFormState] = useState({ name: '', email: '', message: '' });
@@ -102,7 +102,7 @@ export const ContactSection: React.FC = () => {
             <span className="text-[#B600A8] uppercase font-bold tracking-widest text-xs sm:text-sm mb-4 block">
               Let&apos;s Build Together
             </span>
-            <GlitchHeader text="Contact" />
+            <DrawSectionHeader text="Contact" />
             <p className="text-[#D7E2EA]/60 text-xs sm:text-sm font-light leading-relaxed mt-6">
               Have an exciting project, research, or development opportunity? Reach out directly via these channels or drop a message!
             </p>
