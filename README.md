@@ -158,6 +158,18 @@ A cutting-edge, ultra-premium developer portfolio designed with sleek futuristic
 *   **Dual-Contrast Telemetry Bead**: A glowing energy bead travels along the computed path in real-time, accompanied by a scrolling percentage tracker (`VAL:[XX%]`) and an active pink glow (`#ff00c7`) styled to match the signature color of the NP logo.
 *   **Dynamic Background & Theme Adaptation**: Implements a mutation observer that monitors background color brightness to shift typography between neon colors, deep contrast blues (`#005577`), and brand pinks (`#d900a3`) for seamless readability on both white and black backgrounds.
 
+### 🌦️ 27. Dynamic Climate & Time-Reactive Atmosphere
+*   **Automatic Geolocation Sync**: Integrates the HTML5 Geolocation API and Open-Meteo current forecast query parameter to automatically resolve the visitor's local weather coordinates (falling back to Vadodara, India if permissions are restricted).
+*   **Adaptive Environment Rendering**: Seamlessly maps weather states to custom shaders on the `LiquidGlassCanvas` (rain drips, snowy flakes, or sunny brightness). Runs a background polling loop checking weather metrics every 15 minutes.
+*   **High-Performance 2D Particle Fallback**: If the WebGL canvas is disabled via the Command Palette, it seamlessly falls back to a 2D HTML5 canvas particle renderer to draw realistic rain drizzles (with diagonal wind drift offsets) or snowflakes (with swaying sine swing math).
+*   **Time-Reactive Ambient Tone**: Automatically detects local device time to toggle night mode/day mode visual templates.
+
+### 🔊 28. Sonar Ping Space Scanner
+*   **Spatial Audio Sonar Pings**: Click events on non-interactive regions of the layout synthesize a real-time synthwave sonar ping via the Web Audio API, adjusting stereo panning dynamically based on the click's horizontal screen coordinates.
+*   **Physical Wave Propagation Delay**: Scans the page for hidden elements (`.sonar-target`) and illuminates them (applying a `.sonar-revealed` class) exactly when the expanding visual ripple wavefront sweeps across their coordinate bounds.
+*   **Visual Ripple Propagation**: Spawns dual concentric glowing circles with spring scale animations and border masks at the cursor point, illustrating the scan wave front propagating through screen coordinates.
+*   **Automated Decay Protocol**: Restores elements back to secrecy automatically by removing the illumination class after a 3.5-second cooldown delay.
+
 ---
 
 ## 🛠️ Tech Stack & Architecture
@@ -317,10 +329,12 @@ Nisarg_Portfolio/
 │   │   ├── DiagnosticsHUD.tsx      # Sidebar telemetry oscilloscope
 │   │   ├── KatanaWipe.tsx          # Diagonal SVG slice section transition
 │   │   ├── LiquidGlassCanvas.tsx   # WebGL 2 liquid glass shader
+│   │   ├── FallbackWeatherOverlay.tsx # 2D particle rain/snow weather canvas
 │   │   ├── MatrixRain.tsx          # Bioluminescent digital rain canvas
 │   │   ├── MeltdownOverlay.tsx     # Nuclear reactor core meltdown overlay
 │   │   ├── Preloader.tsx           # Monogram vector boot-up sequence
 │   │   ├── ScrollCircuitPath.tsx   # Scroll-driven SVG circuit sidebar
+│   │   ├── SonarScanner.tsx        # Spatial audio sonar ripple scanner
 │   │   └── ...
 │   ├── data/                # Data structures & FAQ fallback registries
 │   │   ├── cloneKnowledge.ts       # AI system instructions & offline FAQs
