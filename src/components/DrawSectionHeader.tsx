@@ -123,9 +123,9 @@ export const DrawSectionHeader: React.FC<DrawSectionHeaderProps> = ({
     >
       {/* ── SVG drawing canvas ──────────────────────────────────── */}
       <svg
-        viewBox="0 0 1000 180"
+        viewBox="0 0 1000 210"
         className="w-full overflow-visible"
-        style={{ height: 'auto', maxHeight: '180px' }}
+        style={{ height: 'auto', maxHeight: '210px' }}
         aria-label={text}
       >
         <defs>
@@ -151,6 +151,8 @@ export const DrawSectionHeader: React.FC<DrawSectionHeaderProps> = ({
         </defs>
 
         {/* ── Layer A: wide background halo (decorative glow blob) ── */}
+        {/* fontSize="155" is in SVG user units — scales with container width,
+            e.g. 155 × (375/1000) = 58 px on mobile, 155 × 0.86 = 133 px desktop */}
         <motion.text
           x="50%"
           y="52%"
@@ -161,9 +163,9 @@ export const DrawSectionHeader: React.FC<DrawSectionHeaderProps> = ({
           strokeWidth="6"
           strokeLinecap="round"
           strokeLinejoin="round"
+          fontSize="155"
           filter={`url(#draw-halo-${text.replace(/\s/g, '')})`}
           style={{
-            fontSize: 'clamp(3.6rem, 8.5vw, 108px)',
             fontFamily: '"Dancing Script", cursive',
             fontWeight: 700,
             strokeDasharray: dashLen,
@@ -187,9 +189,9 @@ export const DrawSectionHeader: React.FC<DrawSectionHeaderProps> = ({
           strokeWidth="2.5"
           strokeLinecap="round"
           strokeLinejoin="round"
+          fontSize="155"
           filter={`url(#draw-glow-${text.replace(/\s/g, '')})`}
           style={{
-            fontSize: 'clamp(3.6rem, 8.5vw, 108px)',
             fontFamily: '"Dancing Script", cursive',
             fontWeight: 700,
             strokeDasharray: dashLen,
@@ -208,8 +210,8 @@ export const DrawSectionHeader: React.FC<DrawSectionHeaderProps> = ({
           fill="none"
           stroke={strokeColor}
           strokeWidth="2.5"
+          fontSize="155"
           style={{
-            fontSize: 'clamp(3.6rem, 8.5vw, 108px)',
             fontFamily: '"Dancing Script", cursive',
             fontWeight: 700,
           }}
@@ -228,8 +230,8 @@ export const DrawSectionHeader: React.FC<DrawSectionHeaderProps> = ({
           dominantBaseline="central"
           fill={fillColor}
           stroke="none"
+          fontSize="155"
           style={{
-            fontSize: 'clamp(3.6rem, 8.5vw, 108px)',
             fontFamily: '"Dancing Script", cursive',
             fontWeight: 700,
           }}
